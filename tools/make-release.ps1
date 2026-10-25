@@ -6,11 +6,12 @@
 # The zip MentorSlicer-<version>-win64.zip holds one folder with:
 #   MentorSlicer.exe, its DLLs, mentorslicer-mcp.exe, mesa\, resources\ (the real tree, not the
 #   junction of the build folder), LICENSE.txt, README.md, and the Visual C++ runtime DLLs the
-#   binaries import (app-local deployment of Microsoft.VC143.CRT, so no redistributable install).
+#   binaries import (app-local deployment of Microsoft.VC14x.CRT, so no redistributable install).
 #   The Universal C Runtime (api-ms-win-crt-*) is part of Windows 10 and 11.
-# Next to it: <zip>.sha256. Then a smoke test unpacks the zip into a temporary folder and starts
-# MentorSlicer.exe with a temporary --datadir (no printer, no user data), checks that it is still
-# running after 25 s and closes it.
+# Next to it: <zip>.sha256. Then a smoke test unpacks the zip into a temporary folder, starts
+# MentorSlicer.exe with a temporary --datadir (no printer, no user data), waits for its main
+# window (at most 60 s) and closes it, then runs the offline MCP smoke test on the packaged
+# mentorslicer-mcp.exe (needs node and tools\print-advisor-mcp\node_modules).
 # Version: by default MENTORSLICER_VERSION of src\slic3r\GUI\MentorSlicerVersion.hpp.
 
 [CmdletBinding()]
@@ -44,10 +45,23 @@ foreach ($required in @('MentorSlicer.exe', 'MentorSlicer_Slicer.dll', 'mentorsl
 $resSrc = Get-Item -LiteralPath (Join-Path $build 'resources')
 if ($resSrc.LinkType) { $resSrc = Get-Item -LiteralPath (@($resSrc.Target)[0]) }
 
-# Visual C++ runtime of the newest MSVC redist folder of Visual Studio 2022.
-$redist = Get-ChildItem 'C:\Program Files*\Microsoft Visual Studio\2022\*\VC\Redist\MSVC\*\x64\Microsoft.VC143.CRT' -Directory -ErrorAction SilentlyContinue |
-    Sort-Object { [version]($_.Parent.Parent.Name -replace '[^0-9.]', '') } -Descending | Select-Object -First 1
-if (-not $redist) { throw 'Cartella Microsoft.VC143.CRT di Visual Studio 2022 non trovata.' }
+# Visual C++ runtime: the redist folder of the toolset in use (VCToolsRedistDir, set by VsDevCmd),
+# otherwise the newest one of the Visual Studio found by vswhere.
+$redistRoots = @()
+if ($env:VCToolsRedistDir) { $redistRoots += $env:VCToolsRedistDir }
+$vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+if (Test-Path -LiteralPath $vswhere) {
+    foreach ($vs in @(& $vswhere -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath)) {
+        $msvc = Join-Path $vs 'VC\Redist\MSVC'
+        if (Test-Path -LiteralPath $msvc) {
+            $redistRoots += Get-ChildItem -LiteralPath $msvc -Directory | Where-Object { $_.Name -match '^\d+\.\d+\.\d+$' } |
+                Sort-Object { [version]$_.Name } -Descending | ForEach-Object { $_.FullName }
+        }
+    }
+}
+$redist = $redistRoots | ForEach-Object { Get-ChildItem -LiteralPath (Join-Path $_ 'x64') -Directory -Filter 'Microsoft.VC14*.CRT' -ErrorAction SilentlyContinue } |
+    Select-Object -First 1
+if (-not $redist) { throw 'Runtime Visual C++ (x64\Microsoft.VC14*.CRT) non trovato: esegui lo script da un prompt di Visual Studio o installa i Build Tools.' }
 $crt = @('vcruntime140.dll', 'vcruntime140_1.dll', 'msvcp140.dll', 'msvcp140_codecvt_ids.dll', 'concrt140.dll')
 
 # Staging folder.
@@ -85,14 +99,33 @@ if (-not $NoSmokeTest) {
     New-Item -ItemType Directory -Force $test | Out-Null
     try {
         & "$env:SystemRoot\System32\tar.exe" -x -f $zip -C $test
+        if ($LASTEXITCODE -ne 0) { throw 'Estrazione dello zip non riuscita.' }
         $exe = Join-Path $test "$name\MentorSlicer.exe"
         $data = Join-Path $test 'data'
         $proc = Start-Process -FilePath $exe -ArgumentList "--datadir `"$data`"" -WorkingDirectory (Split-Path $exe) -PassThru
-        Start-Sleep -Seconds 25
+        # The main window must appear: an error box at startup would keep the process alive too.
+        $deadline = (Get-Date).AddSeconds(60)
+        do {
+            Start-Sleep -Seconds 2
+            $proc.Refresh()
+        } until ($proc.HasExited -or $proc.MainWindowTitle -like '*MentorSlicer*' -or (Get-Date) -gt $deadline)
         if ($proc.HasExited) { throw "Prova non riuscita: MentorSlicer si e' chiuso subito (codice $($proc.ExitCode))." }
-        Write-Host 'Prova riuscita: MentorSlicer avviato dal pacchetto.'
+        if ($proc.MainWindowTitle -notlike '*MentorSlicer*') {
+            Stop-Process -Id $proc.Id -Force
+            throw "Prova non riuscita: nessuna finestra principale di MentorSlicer (titolo: '$($proc.MainWindowTitle)')."
+        }
+        Write-Host "Prova riuscita: MentorSlicer avviato dal pacchetto ($($proc.MainWindowTitle))."
         $null = $proc.CloseMainWindow()
         if (-not $proc.WaitForExit(15000)) { Stop-Process -Id $proc.Id -Force }
+
+        # The packaged MCP server: offline smoke test (tool list and "MentorSlicer is not open").
+        $smoke = Join-Path $root 'tools\print-advisor-mcp\scripts\smoke.mjs'
+        if ((Get-Command node -ErrorAction SilentlyContinue) -and (Test-Path -LiteralPath (Join-Path $root 'tools\print-advisor-mcp\node_modules'))) {
+            & node $smoke --offline --exe (Join-Path $test "$name\mentorslicer-mcp.exe")
+            if ($LASTEXITCODE -ne 0) { throw 'Prova non riuscita: mentorslicer-mcp.exe del pacchetto non risponde come previsto.' }
+        } else {
+            Write-Warning 'node o tools\print-advisor-mcp\node_modules mancanti: prova di mentorslicer-mcp.exe saltata.'
+        }
     } finally {
         Start-Sleep -Seconds 2
         Remove-Item -LiteralPath $test -Recurse -Force -ErrorAction SilentlyContinue

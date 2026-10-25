@@ -355,7 +355,7 @@ msgid "Register it in Claude Code with this command (once: it is valid in every 
 msgstr "Registralo in Claude Code con questo comando (una volta sola: vale in tutte le cartelle). Poi riavvia Claude Code o usa /mcp."
 
 msgid "mentorslicer-mcp.exe was not found next to MentorSlicer.exe: this build runs the sidecar from its sources with Node.js."
-msgstr "mentorslicer-mcp.exe non è accanto a MentorSlicer.exe: questa build esegue il sidecar dai sorgenti con Node.js."
+msgstr "mentorslicer-mcp.exe non è stato trovato accanto a MentorSlicer.exe: questa build esegue il sidecar dai sorgenti con Node.js."
 
 msgid "Copy command"
 msgstr "Copia comando"
@@ -403,7 +403,7 @@ msgid "Asks GitHub, GitLab and NuGet for the latest release of each library. Not
 msgstr "Chiede a GitHub, GitLab e NuGet l'ultima versione di ogni libreria. Non viene inviato nulla oltre alle richieste; il risultato viene conservato per la volta successiva."
 
 msgid "Checking %d of %d..."
-msgstr "Verifica %d di %d..."
+msgstr "Controllo %d di %d..."
 
 msgid "Latest versions as of %s (reference check)."
 msgstr "Ultime versioni al %s (controllo di riferimento)."
@@ -526,7 +526,7 @@ msgid "Decodes the RTSP camera video of older Creality printers."
 msgstr "Decodifica il video RTSP della telecamera delle stampanti Creality più vecchie."
 
 msgid "8.1 is the series of the monthly LGPL builds (BtbN) used by the fork: move on when a monthly build of the newer series exists."
-msgstr "La 8.1 è la serie delle build LGPL mensili (BtbN) usate dal fork: passare alla serie nuova quando ne esiste una build mensile."
+msgstr "L'8.1 è la serie delle build LGPL mensili (BtbN) usate dal fork: passare alla serie nuova quando ne esiste una build mensile."
 
 msgid "Renders fonts for text on models (Open Cascade)."
 msgstr "Disegna i caratteri del testo sui modelli (Open Cascade)."
@@ -577,7 +577,7 @@ msgid "Automatic arrangement of objects on the plate."
 msgstr "Disposizione automatica degli oggetti sul piatto."
 
 msgid "Noise patterns for fuzzy skin."
-msgstr "Rumore per la superficie ruvida (fuzzy skin)."
+msgstr "Rumore per la superficie crespa (fuzzy skin)."
 
 msgid "PNG images (icons, thumbnails, textures)."
 msgstr "Immagini PNG (icone, miniature, texture)."
@@ -586,7 +586,7 @@ msgid "TIFF images in the interface toolkit."
 msgstr "Immagini TIFF nella libreria dell'interfaccia."
 
 msgid "Fuzzy matching in the settings search."
-msgstr "Ricerca approssimata nella ricerca delle impostazioni."
+msgstr "Confronto approssimato per la ricerca delle impostazioni."
 
 msgid "Mesh cutting (Cut tool)."
 msgstr "Taglio delle mesh (strumento Taglia)."
@@ -625,7 +625,7 @@ msgid "Imports STEP CAD files and renders text on models."
 msgstr "Importa i file CAD STEP e disegna il testo sui modelli."
 
 msgid "2026 CVEs in the STEP/IGES/STL readers: update when a release with the fixes is confirmed (large update, STEP API changed)."
-msgstr "CVE del 2026 nei lettori STEP/IGES/STL: aggiornare quando è confermata una versione con le correzioni (aggiornamento grosso, API STEP cambiata)."
+msgstr "CVE del 2026 nei lettori STEP/IGES/STL: aggiornare quando è confermata una versione con le correzioni (aggiornamento ampio, API STEP cambiata)."
 
 msgid "Decodes the textures of imported models."
 msgstr "Decodifica le texture dei modelli importati."
@@ -679,7 +679,7 @@ msgid "Fast hash tables."
 msgstr "Tabelle hash veloci."
 
 msgid "Interface toolkit (windows, buttons, dialogs)."
-msgstr "Libreria dell'interfaccia (finestre, pulsanti, dialoghi)."
+msgstr "Libreria dell'interfaccia (finestre, pulsanti, finestre di dialogo)."
 
 msgid "OrcaSlicer fork, long rebuild; no relevant security issue."
 msgstr "Fork di OrcaSlicer, ricompilazione lunga; nessun problema di sicurezza rilevante."

@@ -13,10 +13,10 @@
   <a href="https://github.com/MirkoUgoliniDev/MentorSlicer/releases/latest">All releases and SHA-256</a> · <a href="#how-to-install">How to install</a> · <a href="#how-to-test-the-package">How to test the package</a>
 </p>
 
-MentorSlicer is a fork of [Creality Print](https://github.com/CrealityOfficial/CrealityPrint) 7.3, an open source slicer for FDM printers. It adds the **Print Advisor**: a local service that an MCP client (Claude Code, Codex) uses to read the slicing context, diagnose defects, propose profile changes and control a LAN printer, with every change confirmed by the user inside the app. The LLM stays in the client; the app contains only the domain service.
+MentorSlicer is a fork of [Creality Print](https://github.com/CrealityOfficial/CrealityPrint) 7.3, an open-source slicer for FDM printers. It adds the **Print Advisor**: a local service that an MCP client (Claude Code; Codex not yet verified) uses to read the slicing context, diagnose defects, propose profile changes and control a LAN printer, with every change confirmed by the user inside the app. The LLM stays in the client; the app contains only the domain service.
 
 Differences from Creality Print:
-- no Creality account, cloud, analytics or update check: the app works offline and prints over the local network (tested with a Creality K1C);
+- no Creality account, cloud, analytics or automatic update check: the app works offline and prints over the local network (tested with a Creality K1C);
 - the Print Advisor (`src/slic3r/GUI/simple/printAdvisor/`, sidecar in `tools/print-advisor-mcp/`) and engine options such as heat soak and multi-layer brim;
 - data folder `%APPDATA%\MentorSlicer` (`MentorSlicer.conf`). On its first start MentorSlicer copies the Creality Print 7.3 Alpha data folder once and leaves the original untouched;
 - G-code and 3MF files stay compatible with Creality Print (same G-code header and 3MF application tag).
@@ -30,18 +30,18 @@ MentorSlicer is not affiliated with or endorsed by Creality.
 ## 🔥 Chamber preheat
 Printers like the K1C have a chamber temperature sensor but no chamber heater: the chamber only warms up from the hot bed. MentorSlicer can preheat the chamber **before** you send the print, so ASA and ABS start in a warm enclosure instead of a cold one.
 
-- **One button on the Device page**: the "Temp camera" card has a **Preriscalda / Stop** button and an optional **°C** field for the chamber target (for example 35 °C). While it runs, the card shows the elapsed time and the target (`Preriscaldo 12:30 → 35°`).
+- **One button on the Device page**: the **Chamber Temp** card has a **Preriscalda / Stop** button (Italian label in every language; *Preriscalda* = Preheat) and an optional **°C** field for the chamber target (for example 35 °C). While it runs, the card shows the elapsed time and the target (`Preriscaldo 12:30 → 35°`).
 - **From the AI assistant**: the Print Advisor tool `preheat_chamber` does the same, with a confirmation in the app.
-- **Safe by design**: the bed is set to the printer maximum (at most 100 °C) and is **switched off automatically** when the target is reached, when the chamber stops rising (plateau), after `max_minutes` (5–120, default 60), or when the Print Advisor is stopped (if recent data shows the printer idle; otherwise you get a notification). If the printer goes offline during a preheat, the bed is switched off as soon as it is reachable and idle again. Only one preheat at a time, and it stops by itself when a print starts.
+- **Safe by design**: the Device-page button sets the bed to the printer maximum (at most 100 °C), while `preheat_chamber` uses the bed temperature you confirm. The bed is **switched off automatically** 20 minutes after the chamber target is reached or the chamber stops rising (plateau: less than 1 °C in 10 min, checked from minute 15), after `max_minutes` (5–120, default 60), or when the Print Advisor is stopped (if recent data shows the printer idle; otherwise you get a notification). If the printer goes offline during a preheat, the bed is switched off as soon as it is reachable and idle again. Only one preheat at a time, and it stops by itself when a print starts.
 - **Preflight warning**: for ASA/ABS, the pre-print check warns when the chamber is still cold (below 30 °C) and suggests a preheat and a longer soak.
 
 ```mermaid
 stateDiagram-v2
     direction LR
     [*] --> Heating: Preheat button or preheat_chamber (confirmed)
-    Heating: Bed at printer maximum, chamber rising
-    Heating --> BedOff: chamber target reached
-    Heating --> BedOff: plateau (less than 1 °C in 10 min)
+    Heating: Bed hot, chamber rising
+    Heating --> BedOff: 20 min after the chamber target
+    Heating --> BedOff: 20 min after a plateau (less than 1 °C in 10 min)
     Heating --> BedOff: max_minutes elapsed
     Heating --> BedOff: Stop button
     Heating --> Waiting: printer offline
@@ -64,10 +64,10 @@ For warping-prone materials a single-layer brim often is not enough. MentorSlice
 
 ![Side section of a three-layer brim: layer 1 touches the part, layers 2 and 3 keep a small gap](doc/images/brim-layers.svg)
 
-Tested on a 130 mm ASA part on a Creality K1C (with glue stick on smooth PEI): see the ASA notes in [CLAUDE.md](CLAUDE.md).
+Tested on a 130 mm ASA part on a Creality K1C (glue stick on smooth PEI, chamber at 33–37 °C, brim on 3 layers).
 
 ## 🤖 Print Advisor for AI assistants
-The Print Advisor lets Claude Code or Codex read the slicing context, diagnose defects, propose profile changes and control the printer over the LAN, with every change confirmed inside MentorSlicer. The MCP server ships as `mentorslicer-mcp.exe` next to `MentorSlicer.exe`, so **no Node.js installation is needed**: open **AI Integration → Print Advisor MCP…**, copy the command and press **Enable**. Details in [tools/print-advisor-mcp/README.md](tools/print-advisor-mcp/README.md).
+The Print Advisor lets Claude Code (and other MCP clients such as Codex, not yet verified) read the slicing context, diagnose defects, propose profile changes and control the printer over the LAN, with every change confirmed inside MentorSlicer. The MCP server ships as `mentorslicer-mcp.exe` next to `MentorSlicer.exe`, so **no Node.js installation is needed**: open **AI Integration → Print Advisor MCP…**, copy the command and press **Enable**. Details in [tools/print-advisor-mcp/README.md](tools/print-advisor-mcp/README.md).
 
 ```mermaid
 flowchart LR
@@ -82,7 +82,7 @@ flowchart LR
 
 # Main features (inherited from Creality Print)
 - Auto calibrations for all printers
-- Sandwich(inner-outer-inner) mode - an improved version of the `External perimeters first` mode
+- Sandwich (inner-outer-inner) mode: an improved version of the `External perimeters first` mode
 - Polyholes conversion support [SuperSlicer Wiki: Polyholes](https://github.com/supermerill/SuperSlicer/wiki/Polyholes)
 - Klipper support
 - More granular controls
@@ -96,18 +96,20 @@ flowchart LR
 Steps:
 
 1. Download **[MentorSlicer-1.0.1-win64.zip](https://github.com/MirkoUgoliniDev/MentorSlicer/releases/download/v1.0.1/MentorSlicer-1.0.1-win64.zip)** (211 MB). On the [release page](https://github.com/MirkoUgoliniDev/MentorSlicer/releases/latest) the same file and its `.sha256` are under **Assets**, at the bottom.
-2. Optional but recommended, verify the download in PowerShell; the two values must match:
+2. Optional but recommended: verify the download in PowerShell (the two hashes must match):
    ```powershell
    (Get-FileHash -Algorithm SHA256 .\MentorSlicer-1.0.1-win64.zip).Hash.ToLower()
    Get-Content .\MentorSlicer-1.0.1-win64.zip.sha256
    ```
-3. Right-click the zip → **Properties** → tick **Unblock** if present → OK. Then extract it to a folder of your choice, for example `C:\MentorSlicer`. Nothing is installed: the Visual C++ runtime and the MCP server (`mentorslicer-mcp.exe`) are in the folder.
-4. Start `MentorSlicer.exe`. The executables are **not code-signed**, so Windows SmartScreen may show *"Windows protected your PC"*: choose **More info → Run anyway**.
+3. Right-click the zip → **Properties** → tick **Unblock** if present → OK. Then extract it to a folder of your choice, for example `C:\`: the zip contains one folder, `MentorSlicer-1.0.1-win64`, with `MentorSlicer.exe`, the Visual C++ runtime and the MCP server (`mentorslicer-mcp.exe`) inside.
+4. Start `MentorSlicer.exe` from that folder. The executables are **not code-signed**, so Windows SmartScreen may show *"Windows protected your PC"*: choose **More info → Run anyway**.
 5. The app needs the Microsoft Edge WebView2 Runtime, included in Windows 11 and in up-to-date Windows 10. If MentorSlicer reports it missing, install it from [Microsoft](https://go.microsoft.com/fwlink/p/?LinkId=2124703).
 
-Data are stored in `%APPDATA%\MentorSlicer`. On the first start, if a Creality Print 7.3 data folder exists, MentorSlicer copies it once (profiles and settings) and never modifies the original. To update, extract the new zip over the old folder (close MentorSlicer first); to uninstall, delete the folder and, if you want, `%APPDATA%\MentorSlicer`.
+Data is stored in `%APPDATA%\MentorSlicer`. On the first start, if a Creality Print 7.3 Alpha data folder (`%APPDATA%\Creality\Creality Print\7.3 Alpha`) exists, MentorSlicer copies it once (profiles and settings) and never modifies the original.
 
-**From source**: see [How to compile](#how-to-compile). `tools\publish-stable.ps1` copies a tested build to `C:\MentorSlicer` with a desktop shortcut, and `tools\make-release.ps1` creates the release zip.
+To update: close MentorSlicer, extract the new zip (it creates a new `MentorSlicer-<version>-win64` folder; your data stays in `%APPDATA%\MentorSlicer`), delete the old folder and, if you use the Print Advisor, register the MCP command again from the new folder. To uninstall, delete the folder and, if you want, `%APPDATA%\MentorSlicer`.
+
+**From source**: see [How to compile](#how-to-compile). For developers, `tools\publish-stable.ps1` copies a tested build to the fixed folder `C:\MentorSlicer` with a desktop shortcut, and `tools\make-release.ps1` creates the release zip.
 
 **macOS / Linux**: no package is provided. The code inherited from Creality Print still has the macOS and Linux build scripts, but MentorSlicer has been built and tested only on Windows.
 
@@ -119,10 +121,10 @@ A quick check that takes about ten minutes and does not touch your existing data
    ```powershell
    .\MentorSlicer.exe --datadir "$env:TEMP\MentorSlicer-test"
    ```
-   You should see the window **"Welcome to MentorSlicer"** (localized). Choose **Skip printer connection for now**, or **Connect printer via LAN** to check that your printer is found once.
+   You should see the window **"Welcome to MentorSlicer"** (localized). Choose **Skip Printer Connection for Now**, or **Connect Printer via LAN** to check that your printer is found once.
 2. **Slice something**: in **Prepare**, pick a printer and filament, add a model (**File → Import**, or right-click the empty plate → **Add testing Primitive**), press **Slice plate** and look at the **Preview**: time and filament usage are shown.
-3. **New options**: in the process settings (**Advanced** on), search for *Brim layers* and *Brim-object gap on upper brim layers*; in the filament settings, *Heat soak time*. Set *Brim layers* to 3, slice again and check the brim in the preview.
-4. **Print Advisor** (optional, needs Claude Code): open **AI Integration → Print Advisor MCP…**, press **Enable** and copy the command. Since this test uses `--datadir`, the copied command already includes the matching `MENTORSLICER_ADVISOR_DESCRIPTOR`. Run it in a terminal (it replaces an existing `mentorslicer-advisor` registration), start Claude Code and ask *"Read my print context with the Print Advisor"*: Claude should list your printer, filament and process profiles. Afterwards remove the test registration with `claude mcp remove mentorslicer-advisor -s user`, and register again the command shown by a normal start of MentorSlicer.
+3. **New options**: in the process settings, search for *Brim layers* and *Brim-object gap on upper brim layers*; in the filament settings, *Heat soak time*. Set *Brim layers* to 3, slice again and check the brim in the preview.
+4. **Print Advisor** (optional, needs Claude Code): open **AI Integration → Print Advisor MCP…**, press **Enable** and copy the command. Since this test uses `--datadir`, the copied command already includes the matching `MENTORSLICER_ADVISOR_DESCRIPTOR`. If `mentorslicer-advisor` is already registered, first run `claude mcp remove mentorslicer-advisor -s user`; then run the copied command in a terminal, start Claude Code and ask *"Read my print context with the Print Advisor"*: Claude should list your printer, filament and process profiles. Afterwards remove the test registration with `claude mcp remove mentorslicer-advisor -s user`, and register again the command shown by a normal start of MentorSlicer.
 5. **Third-party libraries**: **Help → Third-party libraries → Check for updates** should complete and show the date of the check.
 6. **Clean up**: close MentorSlicer and delete `%TEMP%\MentorSlicer-test`.
 
@@ -179,25 +181,27 @@ Run `MentorSlicer.exe --help` to see the full list of supported command line opt
   - See `CLAUDE.md` for the VS Code tasks, the build pitfalls and the Print Advisor notes.
 
 - Mac 64-bit  
-  - Tools needed: Xcode, Cmake, git, gettext, libtool, automake, autoconf, texinfo
+  - Untested for MentorSlicer (inherited from Creality Print).
+  - Tools needed: Xcode, CMake, git, gettext, libtool, automake, autoconf, texinfo
       - You can install most of them by running `brew install cmake gettext libtool automake autoconf texinfo`
   - run `build_release_macos.sh`
-  - To build and debug in XCode:
-      - run `XCode.app`
-      - open ``build_`arch`/CrealityPrint.xcodeproj``
-      - menu bar: Product => Scheme => CrealityPrint
+  - To build and debug in Xcode:
+      - run `Xcode.app`
+      - open ``build_`arch`/MentorSlicer.xcodeproj``
+      - menu bar: Product => Scheme => MentorSlicer
       - menu bar: Product => Scheme => Edit Scheme...
           - Run => Info tab => Build Configuration: `RelWithDebInfo`
           - Run => Options tab => Document Versions: uncheck `Allow debugging when browsing versions`
       - menu bar: Product => Run
 
-- Ubuntu 
-  - Dependencies **Will be auto installed with the shell script**: `libmspack-dev libgstreamerd-3-dev libsecret-1-dev libwebkit2gtk-4.0-dev libosmesa6-dev libssl-dev libcurl4-openssl-dev eglexternalplatform-dev libudev-dev libdbus-1-dev extra-cmake-modules libgtk2.0-dev libglew-dev libudev-dev libdbus-1-dev cmake git texinfo`
-  - run 'sudo ./BuildLinux.sh -u'
-  - run './BuildLinux.sh -dsir'
+- Ubuntu
+  - Untested for MentorSlicer (inherited from Creality Print).
+  - The dependencies are installed by the script (`BuildLinux.sh -u`); see the script for the package list.
+  - run `sudo ./BuildLinux.sh -u`
+  - run `./BuildLinux.sh -dsir`
 
 
-# Note: 
+# Klipper note
 If you're running Klipper, it's recommended to add the following configuration to your `printer.cfg` file.
 ```
 # Enable object exclusion
@@ -216,9 +220,9 @@ MentorSlicer is a personal, independent project. The best ways to help:
 
 Security issues: see [SECURITY.md](SECURITY.md).
 
-## Some background
+# Some background
 MentorSlicer is forked from [Creality Print](https://github.com/CrealityOfficial/CrealityPrint) by Creality.
-Creality Print is originally forked from [Orca Slicer](https://github.com/SoftFever/OrcaSlicer) by SoftFever.
+Creality Print is originally forked from [Orca Slicer](https://github.com/OrcaSlicer/OrcaSlicer) by SoftFever.
 Orca Slicer is forked from [Bambu Studio](https://github.com/bambulab/BambuStudio) by Bambu Lab.
 Bambu Studio is forked from [PrusaSlicer](https://github.com/prusa3d/PrusaSlicer) by Prusa Research, which is from [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro Ranellucci and the RepRap community.
 Creality Print and Orca Slicer incorporate many features from [SuperSlicer](https://github.com/supermerill/SuperSlicer) by @supermerill.
@@ -236,7 +240,7 @@ PrusaSlicer is licensed under the GNU Affero General Public License, version 3. 
 
 Slic3r is licensed under the GNU Affero General Public License, version 3. Slic3r was created by Alessandro Ranellucci with the help of many other contributors.
 
-The GNU Affero General Public License, version 3 ensures that if you use any part of this software in any way (even behind a web server), your software must be released under the same license.
+The GNU Affero General Public License, version 3 ensures that if you distribute this software or a modified version of it, or let users interact with a modified version over a network, you must make its source code available under the same license.
 
 MentorSlicer, like Creality Print, includes a pressure advance calibration pattern test adapted from Andrew Ellis' generator, which is licensed under GNU General Public License, version 3. Ellis' generator is itself adapted from a generator developed by Sineos for Marlin, which is licensed under GNU General Public License, version 3.
 

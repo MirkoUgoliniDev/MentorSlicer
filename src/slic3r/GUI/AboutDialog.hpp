@@ -12,6 +12,7 @@
 
 #include <atomic>
 #include <memory>
+#include <thread>
 
 namespace Slic3r { 
 namespace GUI {
@@ -49,6 +50,7 @@ private:
     wxButton*                   m_check_button { nullptr };
     LibraryCheckCache           m_cache;
     std::shared_ptr<CheckState> m_check_state;
+    std::thread                 m_check_thread;
 
     void onLinkClicked(wxHtmlLinkEvent &event);
     void onCloseDialog(wxEvent &);

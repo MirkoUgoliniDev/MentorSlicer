@@ -408,7 +408,7 @@ The whole statement pair is removed (cleanup of 2026-10-24). `aliyunOssSdk` is i
 
 ### 27. First-run screen: "Welcome to MentorSlicer", no cloud subtitle
 
-The first-run screen of the Home (shown with an empty data folder) said "Welcome to Creality Print" and "Add printers and manage print jobs from the cloud", in each of its 24 languages (found while testing the 1.0.1 release package, 2026-10-25). The two render calls are patched instead of the 24 translations:
+The first-run screen of the Home (shown with an empty data folder) said "Welcome to Creality Print" and "Add printers and manage print jobs from the cloud", in each of its 22 languages (found while testing the 1.0.1 release package, 2026-10-25). The two render calls are patched instead of the 22 translations:
 
 ```js
 toDisplayString$1(U.$t("Welcome to Creality Print"))

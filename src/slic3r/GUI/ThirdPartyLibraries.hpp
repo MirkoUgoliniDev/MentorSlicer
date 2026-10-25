@@ -1,6 +1,7 @@
 #ifndef slic3r_GUI_ThirdPartyLibraries_hpp_
 #define slic3r_GUI_ThirdPartyLibraries_hpp_
 
+#include <atomic>
 #include <map>
 #include <string>
 #include <vector>
@@ -71,8 +72,10 @@ bool              save_library_check_cache(const LibraryCheckCache& cache);
 
 // Blocking HTTPS query of one source; call it from a worker thread.
 // `github_limited` is set when GitHub answers with its rate limit and makes later GitHub
-// queries fail at once (60 requests per hour without an account).
-LibraryCheckResult check_latest_library_version(const LibraryVersionSource& source, bool& github_limited);
+// queries fail at once (60 requests per hour without an account). Setting `cancelled`
+// aborts the request in progress within about a second.
+LibraryCheckResult check_latest_library_version(const LibraryVersionSource& source, bool& github_limited,
+                                                const std::atomic<bool>& cancelled);
 
 } // namespace GUI
 } // namespace Slic3r

@@ -82,8 +82,13 @@ LibraryStatus library_status(const ThirdPartyLibrary &lib, const LibraryCheckCac
     return status;
 }
 
-// wxGetTranslation("") returns the catalogue header: never translate an empty string.
-wxString translate_text(const std::string &s) { return s.empty() ? wxString() : _(s); }
+// wxGetTranslation("") returns the catalogue header: never translate an empty string, including
+// text that is not valid UTF-8 (an error message from the network) and converts to nothing.
+wxString translate_text(const std::string &s)
+{
+    const wxString text = from_u8(s);
+    return text.empty() ? wxString() : wxGetTranslation(text);
+}
 
 wxString html_escape(const wxString &s)
 {
@@ -147,14 +152,20 @@ CopyrightsDialog::CopyrightsDialog()
 
 CopyrightsDialog::~CopyrightsDialog()
 {
+    // The running request sees the flag in its progress callback and aborts within about a
+    // second; joining keeps the thread from outliving the application.
     if (m_check_state)
         m_check_state->cancelled = true;
+    if (m_check_thread.joinable())
+        m_check_thread.join();
 }
 
 void CopyrightsDialog::start_check()
 {
     if (m_check_state)
         return;
+    if (m_check_thread.joinable())
+        m_check_thread.join();
 
     std::vector<std::pair<std::string, LibraryVersionSource>> sources;
     for (const ThirdPartyLibrary &lib : third_party_library_list())
@@ -166,16 +177,18 @@ void CopyrightsDialog::start_check()
     m_check_button->Disable();
     m_check_label->SetLabel(wxString::Format(_L("Checking %d of %d..."), 0, int(sources.size())));
 
-    // The worker never touches the dialog: it only queues callbacks on the GUI thread,
-    // which do nothing once the dialog has been closed.
-    std::thread([this, state, sources]() {
+    // The worker never touches the dialog: it only queues callbacks on the GUI thread, which do
+    // nothing once the dialog has been closed. The destructor joins it.
+    m_check_thread = std::thread([this, state, sources]() {
         std::map<std::string, LibraryCheckResult> results;
         bool                                      github_limited = false;
         const int                                 total          = int(sources.size());
         for (int i = 0; i < total; ++i) {
             if (state->cancelled)
                 return;
-            results[sources[i].first] = check_latest_library_version(sources[i].second, github_limited);
+            results[sources[i].first] = check_latest_library_version(sources[i].second, github_limited, state->cancelled);
+            if (state->cancelled)
+                return;
             wxGetApp().CallAfter([this, state, done = i + 1, total]() {
                 if (!state->cancelled)
                     m_check_label->SetLabel(wxString::Format(_L("Checking %d of %d..."), done, total));
@@ -185,7 +198,7 @@ void CopyrightsDialog::start_check()
             if (!state->cancelled)
                 on_check_finished(results);
         });
-    }).detach();
+    });
 }
 
 void CopyrightsDialog::on_check_finished(const std::map<std::string, LibraryCheckResult> &results)

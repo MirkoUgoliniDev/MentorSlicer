@@ -4,7 +4,7 @@
 
 Please report security issues privately through GitHub: **Security → Report a vulnerability** on this repository. Do not open a public issue for them.
 
-Useful details: the MentorSlicer commit or version (Help → About), what an attacker needs (a crafted project or model file, access to the local network, a malicious MCP client), and the steps to reproduce.
+Useful details: the MentorSlicer commit or version (Help → About MentorSlicer), what an attacker needs (a crafted project or model file, access to the local network, a malicious MCP client), and the steps to reproduce.
 
 ## Scope
 
@@ -16,4 +16,4 @@ Issues in Creality Print code that also affect the upstream project should be re
 
 ## Supported versions
 
-There are no binary releases: fixes go to the `main` branch, and users rebuild from it.
+Only the latest release (see [Releases](https://github.com/MirkoUgoliniDev/MentorSlicer/releases)) and the `main` branch receive fixes; there are no backports to older releases.

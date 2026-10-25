@@ -184,6 +184,7 @@ src/slic3r/GUI/NotificationManager.hpp
 src/slic3r/GUI/Downloader.cpp
 src/slic3r/GUI/ConfigManipulation.hpp
 src/slic3r/GUI/AboutDialog.cpp
+src/slic3r/GUI/ThirdPartyLibraries.cpp
 src/slic3r/GUI/LinuxDisplayBackend.cpp
 src/slic3r/GUI/ObjColorDialog.hpp
 src/slic3r/GUI/StepMeshDialog.hpp

@@ -116,9 +116,12 @@ Invoke-GhApi PUT "repos/$Repo/topics" @{
 
 # 3. Visibility.
 $isPublic = $false
-if (-not $DryRun) {
-    $info = Invoke-GhApi GET "repos/$Repo"
-    $isPublic = ($info.visibility -eq 'public')
+if (Get-Command gh -ErrorAction SilentlyContinue) {
+    # A read: done in dry run too, so the plan below matches the real repository.
+    $ErrorActionPreference = 'Continue'
+    $visibility = (& gh api "repos/$Repo" --jq '.visibility' 2>$null | Out-String).Trim()
+    $ErrorActionPreference = 'Stop'
+    $isPublic = ($visibility -eq 'public')
 }
 if ($MakePublic -and -not $isPublic) {
     # The initial import still carries Creality's notarization password and Firebase keys in
@@ -127,6 +130,12 @@ if ($MakePublic -and -not $isPublic) {
         throw "La storia contiene ancora il commit iniziale 4c67b6d (password di notarizzazione e configurazione Firebase di Creality). Ripulisci la storia prima, oppure usa -AllowOldHistory."
     }
     $global:LASTEXITCODE = 0
+    # Local tags or branches that still hold the old history (e.g. a backup tag) must never be
+    # pushed: "git push --tags" would publish it again.
+    $oldRefs = (Invoke-GitQuiet @('for-each-ref', '--contains', '4c67b6d', '--format=%(refname:short)')).Output
+    if ($oldRefs) {
+        Write-Warning "Questi riferimenti locali contengono ancora la vecchia storia: non pubblicarli mai (niente 'git push --tags'): $($oldRefs -replace '\s+', ', ')"
+    }
     Write-Host '3. Visibilita'': pubblico'
     Invoke-GhApi PATCH "repos/$Repo" @{ visibility = 'public' } | Out-Null
     $isPublic = $true
@@ -138,7 +147,7 @@ if ($MakePublic -and -not $isPublic) {
 
 # 4. Security features (free on public repositories).
 if ($isPublic -or $DryRun) {
-    Write-Host '4. Sicurezza'
+    Write-Host "4. Sicurezza$(if ($DryRun) { ' (solo se il repository e'' pubblico)' })"
     Invoke-GhApi PUT "repos/$Repo/vulnerability-alerts" -AllowFailure | Out-Null
     Invoke-GhApi PUT "repos/$Repo/automated-security-fixes" -AllowFailure | Out-Null
     Invoke-GhApi PUT "repos/$Repo/private-vulnerability-reporting" -AllowFailure | Out-Null
@@ -153,7 +162,7 @@ if ($isPublic -or $DryRun) {
 }
 
 # 5. Ruleset protecting main (no deletion, no force push). Direct pushes stay allowed.
-Write-Host '5. Regole per main'
+Write-Host '5. Regole per main (sui repository privati servono un piano a pagamento)'
 $ruleset = @{
     name        = 'Protect main'
     target      = 'branch'

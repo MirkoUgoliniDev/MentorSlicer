@@ -720,7 +720,7 @@ export const patches = [
     dir: HOME,
     fileContains: "Add printers and manage print jobs from the cloud",
     edits: [
-      { // the title keeps its translation (24 languages) with the app name swapped at render time
+      { // the title keeps its translation (22 languages) with the app name swapped at render time
         marker: "/*PA:27*/",
         applied: /\/\*PA:27\*\//,
         find: new RegExp(String.raw`(?<t>${ID})\.\$t\("Welcome to Creality Print"\)`, "g"),

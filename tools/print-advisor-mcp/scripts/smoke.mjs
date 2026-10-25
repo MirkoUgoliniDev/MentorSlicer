@@ -19,7 +19,7 @@
 import { Client } from '@modelcontextprotocol/client';
 import { StdioClientTransport } from '@modelcontextprotocol/client/stdio';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -29,7 +29,13 @@ const args = new Set(process.argv.slice(2));
 const offline = args.has('--offline');
 const updateExpected = args.has('--update-expected');
 const argList = process.argv.slice(2);
-const exePath = argList.includes('--exe') ? argList[argList.indexOf('--exe') + 1] : undefined;
+// --exe is relative to the current folder (the sidecar itself is started from its own folder).
+const exeArg = argList.includes('--exe') ? argList[argList.indexOf('--exe') + 1] : undefined;
+if (argList.includes('--exe') && (!exeArg || exeArg.startsWith('--'))) {
+  console.error('--exe needs the path of mentorslicer-mcp.exe');
+  process.exit(2);
+}
+const exePath = exeArg ? resolve(exeArg) : undefined;
 
 // Read-only tools the smoke test may call, with the maximum accepted response time (ms).
 // GUI-thread routes (preflight, model analysis, overhangs) wait behind the GUI: wider limit.

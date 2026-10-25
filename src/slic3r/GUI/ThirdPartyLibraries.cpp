@@ -104,7 +104,9 @@ std::vector<long> version_parts(const std::string& version)
     long              current = -1;
     for (char c : version) {
         if (c >= '0' && c <= '9') {
-            current = (current < 0 ? 0 : current * 10) + (c - '0');
+            // Capped: a long digit run from the network or a hand-edited cache must not overflow.
+            if (current < 100000000)
+                current = (current < 0 ? 0 : current * 10) + (c - '0');
         } else if (current >= 0) {
             parts.push_back(current);
             current = -1;
@@ -144,7 +146,8 @@ boost::filesystem::path cache_path()
 }
 
 // GET with certificate verification; returns false and fills `error` on failure.
-bool https_get(const std::string& url, bool is_github, std::string& body, std::string& error, bool& github_limited)
+bool https_get(const std::string& url, bool is_github, std::string& body, std::string& error, bool& github_limited,
+               const std::atomic<bool>& cancelled)
 {
     bool ok = false;
     auto http = Http::get(url);
@@ -153,20 +156,23 @@ bool https_get(const std::string& url, bool is_github, std::string& body, std::s
     http.timeout_connect(10)
         .timeout_max(30)
         .ssl_verify_with_system_store()
+        .on_progress([&cancelled](Http::Progress, bool& cancel) { cancel = cancelled.load(); })
         .on_complete([&](std::string response, unsigned) {
             body = std::move(response);
             ok   = true;
         })
         .on_error([&](std::string, std::string err, unsigned status) {
-            if (is_github && (status == 403 || status == 429)) {
+            // A transport or TLS failure comes with curl's message (and its error code in
+            // `status`); an HTTP error status comes without a message.
+            if (!err.empty()) {
+                error = err;
+            } else if (is_github && (status == 403 || status == 429)) {
                 github_limited = true;
                 error          = L("GitHub request limit reached (60 per hour): try again later.");
             } else if (status == 404) {
                 error = L("Release list not found.");
-            } else if (status != 0) {
-                error = "HTTP " + std::to_string(status);
             } else {
-                error = err;
+                error = "HTTP " + std::to_string(status);
             }
         })
         .perform_sync();
@@ -221,18 +227,29 @@ bool save_library_check_cache(const LibraryCheckCache& cache)
             results[name] = { { "latest", result.latest }, { "error", result.error } };
         const nlohmann::json j = { { "checked_at", cache.checked_at }, { "results", results } };
 
+        // Written to a temporary file and renamed: the stable and the development copy share the
+        // data folder, and an interrupted write must not leave a truncated cache.
         const boost::filesystem::path path = cache_path();
         boost::filesystem::create_directories(path.parent_path());
-        boost::nowide::ofstream file(path.string(), std::ios::trunc);
-        file << j.dump(2, ' ', false, nlohmann::json::error_handler_t::replace);
-        return bool(file);
+        boost::filesystem::path tmp = path;
+        tmp += ".tmp";
+        {
+            boost::nowide::ofstream file(tmp.string(), std::ios::trunc);
+            file << j.dump(2, ' ', false, nlohmann::json::error_handler_t::replace);
+            file.close();
+            if (!file)
+                return false;
+        }
+        boost::filesystem::rename(tmp, path);
+        return true;
     } catch (const std::exception& e) {
         BOOST_LOG_TRIVIAL(warning) << "Third-party libraries: cannot write the version cache: " << e.what();
         return false;
     }
 }
 
-LibraryCheckResult check_latest_library_version(const LibraryVersionSource& source, bool& github_limited)
+LibraryCheckResult check_latest_library_version(const LibraryVersionSource& source, bool& github_limited,
+                                                const std::atomic<bool>& cancelled)
 {
     LibraryCheckResult result;
     if (source.kind == Kind::None)
@@ -254,7 +271,7 @@ LibraryCheckResult check_latest_library_version(const LibraryVersionSource& sour
     }
 
     std::string body;
-    if (!https_get(url, is_github, body, result.error, github_limited))
+    if (!https_get(url, is_github, body, result.error, github_limited, cancelled))
         return result;
 
     try {
