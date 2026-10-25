@@ -55,6 +55,9 @@ orcaslicer_add_cmake_project(OpenCV
        -DBUILD_PERE_TESTS=OFF
        -DBUILD_TESTS=OFF
        -DBUILD_opencv_python_tests=OFF
+       # No Python detection: the build summary embedded in the library would record the path of
+       # the build machine's Python (often under the user profile). Python is not used here.
+       -DOPENCV_PYTHON_SKIP_DETECTION=ON
        -DBUILD_EXAMPLES=OFF
        -DBUILD_JASPER=OFF
        -DBUILD_JAVA=OFF
