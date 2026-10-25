@@ -1,0 +1,86 @@
+# UOS (Unity Operating System) configuration
+# UOS is based on Debian and uses apt package manager
+# This configuration is optimized for UOS specific requirements
+
+FOUND_GTK3=$(dpkg -l libgtk* | grep gtk-3)
+
+REQUIRED_DEV_PACKAGES=(
+    autoconf
+    build-essential
+    cmake
+    eglexternalplatform-dev
+    extra-cmake-modules
+    file
+    gettext
+    git
+    libcurl4-openssl-dev
+    libdbus-1-dev
+    libglew-dev
+    # UOS specific: use gstreamer1.0 instead of gstreamerd-3
+    libgstreamer1.0-dev
+    libgstreamer-plugins-base1.0-dev
+    libgtk-3-dev
+    libmspack-dev
+    libosmesa6-dev
+    libsecret-1-dev
+    libssl-dev
+    libtool
+    libudev-dev
+    libwebkit2gtk-4.0-dev
+    ninja-build
+    patchelf
+    texinfo
+    wget
+    libx264-dev
+    libusrsctp-dev
+    libsrtp2-dev
+    libasound2-dev
+    libopus-dev
+    libspeexdsp-dev
+    # UOS specific packages
+    libdeflate-dev
+    liblzma-dev
+    # Additional packages for UOS compatibility
+    pkg-config
+    libfontconfig1-dev
+    libfreetype6-dev
+)
+
+if [[ -n "$UPDATE_LIB" ]]
+then
+    # Check UOS version from /etc/os-release
+    uos_version="$(grep VERSION_ID /etc/os-release | cut -d "=" -f 2 | cut -d "." -f 1 | tr -d /\"/)"
+    
+    # UOS 20+ compatibility packages
+    if [ "$uos_version" -ge "20" ]
+    then
+        REQUIRED_DEV_PACKAGES+=(curl libfuse-dev libssl-dev libcurl4-openssl-dev m4)
+    fi
+    
+    # Debug build specific packages
+    if [[ -n "$BUILD_DEBUG" ]]
+    then
+        REQUIRED_DEV_PACKAGES+=(libssl-dev libcurl4-openssl-dev gdb valgrind)
+    fi
+    
+    # UOS specific: check if running in UOS environment
+    if grep -q "UOS" /etc/os-release || grep -q "UnionTech" /etc/os-release
+    then
+        echo "Detected UOS system, applying UOS-specific configurations..."
+        # Add UOS specific repositories if needed
+        # sudo add-apt-repository universe
+    fi
+    
+    # TODO: optimize this by checking which, if any, packages are already installed
+    echo "Updating package lists for UOS..."
+    sudo apt update
+    
+    echo "Installing required development packages for UOS..."
+    sudo apt install -y ${REQUIRED_DEV_PACKAGES[@]}
+    
+    echo -e "UOS package installation completed\n"
+    exit 0
+fi
+
+FOUND_GTK3_DEV=$(dpkg -l libgtk* | grep gtk-3-dev || echo '')
+

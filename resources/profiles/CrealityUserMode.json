@@ -1,0 +1,305 @@
+{
+    "name": "paramsPriority",
+    "version": "0.0.0",
+    "description": "type字段: 0 ：不做处理保持原来状态 1 : 变为不可编辑 2 : 隐藏",
+ 
+    "params_list": [
+        {
+            "key": "retract_length_toolchange",
+            "type": "1"
+
+        },
+         {
+            "key": "retract_restart_extra_toolchange",
+            "type": "1"
+        },
+        {
+            "key": "emit_machine_limits_to_gcode",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_speed_x",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_speed_y",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_speed_z",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_speed_e",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_acceleration_x",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_acceleration_y",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_acceleration_z",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_acceleration_e",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_acceleration_extruding",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_acceleration_retracting",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_acceleration_travel",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_jerk_x",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_jerk_y",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_jerk_z",
+            "type": "1"
+        },
+        {
+            "key": "machine_max_jerk_e",
+            "type": "1"
+        },
+        {
+            "key": "accel_to_decel_enable",
+            "type": "2"
+        },
+        {
+            "key": "accel_to_decel_factor",
+            "type": "0"
+        },
+        {
+            "key": "bed_mesh_probe_distance",
+            "type": "2"
+        },
+        {
+            "key": "filename_format",
+            "type": "0"
+        },
+        {
+            "key": "during_print_exhaust_fan_speed",
+            "type": "0"
+        },
+        {
+            "key": "complete_print_exhaust_fan_speed",
+            "type": "0"
+        },
+        {
+            "key": "chamber_temperature",
+            "type": "0"
+        },
+        {
+            "key": "extruder_clearance_radius",
+            "type": "1"
+        },
+        {
+            "key": "extruder_clearance_height_to_rod",
+            "type": "1"
+        },
+        {
+            "key": "extruder_clearance_height_to_lid",
+            "type": "1"
+        },
+        {
+            "key": "nozzle_volume",
+            "type": "1"
+        },
+        {
+            "key": "z_offset",
+            "type": "0"
+        },
+        {
+            "key": "gcode_flavor",
+            "type": "1"
+        },
+        {
+            "key": "thumbnails",
+            "type": "2"
+        },
+        {
+            "key": "use_relative_e_distances",
+            "type": "1"
+        },
+        {
+            "key": "use_firmware_retraction",
+            "type": "2"
+        },
+        {
+            "key": "time_cost",
+            "type": "0"
+        },
+        {
+            "key": "bed_mesh_max",
+            "type": "2"
+        },
+        {
+            "key": "bed_mesh_min",
+            "type": "2"
+        },
+        {
+            "key": "adaptive_bed_mesh_margin",
+            "type": "2"
+        },
+        {
+            "key": "nozzle_type",
+            "type": "2"
+        },
+        {
+            "key": "auxiliary_fan",
+            "type": "1"
+        },
+        {
+            "key": "support_air_filtration",
+            "type": "1"
+        },
+        {
+            "key": "machine_LED_light_exist",
+            "type": "1"
+        },
+        {
+            "key": "machine_platform_motion_enable",
+            "type": "2"
+        },
+        {
+            "key": "machine_ptc_exist",
+            "type": "1"
+        },
+        {
+            "key": "default_jerk",
+            "type": "0"
+        },
+        {
+            "key": "outer_wall_jerk",
+            "type": "0"
+        },
+        {
+            "key": "inner_wall_jerk",
+            "type": "0"
+        },
+        {
+            "key": "infill_jerk",
+            "type": "0"
+        },
+        {
+            "key": "top_surface_jerk",
+            "type": "0"
+        },
+        {
+            "key": "initial_layer_jerk",
+            "type": "0"
+        },
+        {
+            "key": "travel_jerk",
+            "type": "0"
+        },
+        {
+            "key": "filament_loading_speed_start",
+            "type": "2"
+        },
+        {
+            "key": "filament_loading_speed",
+            "type": "2"
+        },
+        {
+            "key": "filament_unloading_speed_start",
+            "type": "2"
+        },
+        {
+            "key": "filament_unloading_speed",
+            "type": "2"
+        },
+        {
+            "key": "filament_load_time",
+            "type": "2"
+        },
+        {
+            "key": "filament_unload_time",
+            "type": "2"
+        },
+        {
+            "key": "filament_toolchange_delay",
+            "type": "2"
+        },
+        {
+            "key": "filament_cooling_moves",
+            "type": "2"
+        },
+        {
+            "key": "filament_cooling_initial_speed",
+            "type": "2"
+        },
+        {
+            "key": "filament_cooling_final_speed",
+            "type": "2"
+        },
+        {
+            "key": "filament_stamping_loading_speed",
+            "type": "2"
+        },
+        {
+            "key": "filament_stamping_distance",
+            "type": "2"
+        },
+        {
+            "key": "filament_ramming_parameters",
+            "type": "2"
+        },
+        {
+            "key": "filament_density",
+            "type": "0"
+        },
+        {
+            "key": "filament_cost",
+            "type": "0"
+        },
+        {
+            "key": "temperature_vitrification",
+            "type": "0"
+        },
+        {
+            "key": "single_extruder_multi_material",
+            "type": "1"
+        },
+		{
+            "key": "flush_box_first_clean_length",
+            "type": "2"
+        },
+		{
+            "key": "flush_box_need_clean_length",
+            "type": "2"
+        },
+		{
+            "key": "flush_box_need_clean_length_max",
+            "type": "2"
+        },
+        {
+            "key": "wall_filament",
+            "type": "0"
+        },
+        {
+            "key": "sparse_infill_filament",
+            "type": "0"
+        },
+        {
+            "key": "solid_infill_filament",
+            "type": "0"
+        }
+    ]
+}

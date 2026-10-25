@@ -1,0 +1,23 @@
+#ifndef slic3r_VariableWidth_hpp_
+#define slic3r_VariableWidth_hpp_
+
+#include "Polygon.hpp"
+#include "ExtrusionEntity.hpp"
+#include "Flow.hpp"
+
+namespace Slic3r {
+ExtrusionMultiPath thick_polyline_to_multi_path(const ThickPolyline&           thick_polyline,
+                                                ExtrusionRole                  role,
+                                                const Flow&                    flow,
+                                                const float                    tolerance,
+                                                const float                    merge_tolerance,
+                                                double                         overhang,
+                                                const std::optional<uint32_t>& perimeter_index = std::nullopt);
+void               variable_width(const ThickPolylines&          polylines,
+                                  ExtrusionRole                  role,
+                                  const Flow&                    flow,
+                                  const std::optional<uint32_t>& perimeter_index,
+                                  std::vector<ExtrusionEntity*>& out);
+} // namespace Slic3r
+
+#endif

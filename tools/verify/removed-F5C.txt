@@ -1,0 +1,113 @@
+# F5-C - Bambu send, bind and print-job dialogs: SelectMachine, the Bambu SendToPrinter, BindDialog, ConnectPrinter,
+# AmsMappingPopup, Widgets/AMSControl, PrintJob/SendJob/BindJob, Utils/CalibUtils, InputIpAddressDialog
+# (spec doc/specs/F5-codice-bambu-spec.md, section 4). One entry per line; "#" starts a comment.
+# Left to stage D on purpose (still present): DeviceManager, NetworkAgent, HMS, UserManager, MachineObject.
+# Kept on purpose: print_manage/App/SendToPrinter.* (Creality CxSentToPrinterDialog), BBLStatusBar.*, BBLStatusBarSend.*,
+# PrintPrepareData (moved into Plater.cpp), Plater::send_to_local_net_printer, EVT_CHECKBOX_CHANGE, the AMS_CONTROL_* colours
+# (Widgets/AmsColors.hpp), EVT_GLTOOLBAR_SEND_TO_PRINTER(_ALL) (GLToolbar events, now unbound), the string "send_to_printer"
+# (LAN cache folder and bridge action name).
+# The kept Creality header has a comment that happens to use the Bambu class name:
+allow:src/slic3r/GUI/print_manage/App/SendToPrinter.hpp
+# Deleted files
+file:src/slic3r/GUI/SelectMachine.cpp
+file:src/slic3r/GUI/SelectMachine.hpp
+file:src/slic3r/GUI/SendToPrinter.cpp
+file:src/slic3r/GUI/SendToPrinter.hpp
+file:src/slic3r/GUI/BindDialog.cpp
+file:src/slic3r/GUI/BindDialog.hpp
+file:src/slic3r/GUI/BBLStatusBarBind.cpp
+file:src/slic3r/GUI/BBLStatusBarBind.hpp
+file:src/slic3r/GUI/ConnectPrinter.cpp
+file:src/slic3r/GUI/ConnectPrinter.hpp
+file:src/slic3r/GUI/AmsMappingPopup.cpp
+file:src/slic3r/GUI/AmsMappingPopup.hpp
+file:src/slic3r/GUI/Widgets/AMSControl.cpp
+file:src/slic3r/GUI/Widgets/AMSControl.hpp
+file:src/slic3r/GUI/Jobs/BindJob.cpp
+file:src/slic3r/GUI/Jobs/BindJob.hpp
+file:src/slic3r/GUI/Jobs/PrintJob.cpp
+file:src/slic3r/GUI/Jobs/PrintJob.hpp
+file:src/slic3r/GUI/Jobs/SendJob.cpp
+file:src/slic3r/GUI/Jobs/SendJob.hpp
+file:src/slic3r/Utils/CalibUtils.cpp
+file:src/slic3r/Utils/CalibUtils.hpp
+# Removed classes, events and symbols
+word:SelectMachineDialog
+word:SelectMachinePopup
+word:MachineObjectPanel
+word:MachineListModel
+word:EditDevNameDialog
+word:PinCodePanel
+word:PrintFromType
+word:PrintPageMode
+word:ThumbnailPanel
+word:PrintDialogStatus
+word:SendToPrinterDialog
+word:BindMachineDialog
+word:UnBindMachineDialog
+word:PingCodeBindDialog
+word:BBLStatusBarBind
+word:ConnectPrinterDialog
+word:AmsMappingPopup
+word:AmsMapingPopup
+word:AmsMapingTipPopup
+word:AmsTutorialPopup
+word:AmsHumidityTipPopup
+word:AmsIntroducePopup
+word:AmsReplaceMaterialDialog
+word:MaterialItem
+word:MappingItem
+word:MappingContainer
+word:AMSControl
+word:AmsCans
+word:AMSLib
+word:AMSItem
+word:AMSRoad
+word:AMSextruder
+word:BindJob
+word:PrintJob
+word:SendJob
+word:PlateListData
+word:PRINT_JOB_SENDING_TIMEOUT
+word:CalibUtils
+word:CalibInfo
+word:InputIpAddressDialog
+word:EVT_SHOW_IP_DIALOG
+word:EVT_PRINT_FROM_SDCARD_VIEW
+word:EVT_PRINT_FINISHED
+word:EVT_SEND_CALIBRATION_FINISHED
+word:EVT_SEND_FINISHED
+word:EVT_ENTER_IP_ADDRESS
+word:EVT_CLOSE_IPADDRESS_DLG
+word:EVT_CHECK_IP_ADDRESS_FAILED
+word:EVT_CLEAR_IPADDRESS
+word:EVT_BIND_MACHINE
+word:EVT_UNBIND_MACHINE
+word:EVT_CONNECT_LAN_PRINT
+word:EVT_SET_FINISH_MAPPING
+word:EVT_DISSMISS_MACHINE_LIST
+word:popup_ping_bind_dialog
+word:remove_ping_bind_dialog
+word:m_ping_code_binding_dialog
+word:show_ip_address_enter_dialog
+word:show_ip_address_enter_dialog_handler
+word:show_modal_ip_address_enter_dialog
+word:update_print_required_data
+word:get_select_machine_dialog
+word:update_print_error_info
+word:print_job_finished
+word:send_job_finished
+word:send_calibration_job_finished
+word:get_print_job_data
+word:get_print_finished_event
+word:get_send_finished_event
+word:get_send_calibration_finished_event
+word:on_action_print_plate_from_sdcard
+word:on_action_send_to_printer
+word:on_action_export_to_sdcard
+word:on_action_export_to_sdcard_all
+word:hide_select_machine_dlg
+word:enter_prepare_mode
+word:hide_send_to_printer_dlg
+word:m_select_machine_dlg
+word:m_send_to_sdcard_dlg

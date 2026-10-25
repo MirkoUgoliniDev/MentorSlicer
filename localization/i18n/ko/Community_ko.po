@@ -1,0 +1,1167 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2025-05-13 09:29+0900\n"
+"Last-Translator: crwusiz <crwusiz@gmail.com>\n"
+"Language-Team: Korean (https://app.transifex.com/jmtechn/teams/205284/ko/)\n"
+"Language: ko_KR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.6\n"
+
+msgid "Submit"
+msgstr "제출"
+
+msgid "The file cannot be larger than 0.5M, please choose another SVG"
+msgstr "파일 크기가 0.5M보다 클 수 없으므로 다른 SVG를 선택하세요"
+
+msgid "Export 3mf"
+msgstr "3mf 내보내기"
+
+msgid "Export stl"
+msgstr "stl 내보내기"
+
+msgid "project saved"
+msgstr "프로젝트 저장"
+
+msgid "signage work"
+msgstr "표지판 작업"
+
+msgid "Corner Radius"
+msgstr "모서리 반경"
+
+msgid "Select"
+msgstr "선택"
+
+msgid "Pan"
+msgstr "팬"
+
+msgid "Copy(ctr+c)"
+msgstr "복사(ctr+c)"
+
+msgid "Paste(ctr+v)"
+msgstr "붙여넣기(ctr+v)"
+
+msgid "Undo(ctr+z)"
+msgstr "실행 취소(ctrl+z)"
+
+msgid "Redo(ctr+shift+z)"
+msgstr "다시 실행(ctrl+shift+z)"
+
+msgid "Delete(Del)"
+msgstr "삭제(Del)"
+
+msgid "Reached the limit of 30 works per person"
+msgstr "1인당 30개 작품 제한에 도달했습니다"
+
+msgid "Comming Soon"
+msgstr "곧 출시 예정"
+
+msgid "Current Device"
+msgstr "현재 장치"
+
+msgid "Recently Printed Files"
+msgstr "최근 출력한 파일"
+
+msgid "My Devices"
+msgstr "내 장치"
+
+msgid "Type"
+msgstr "유형"
+
+msgid "Device Name"
+msgstr "장치 이름"
+
+msgid "Idle"
+msgstr "유휴"
+
+msgid "Printing"
+msgstr "출력"
+
+msgid "Complete"
+msgstr "완료"
+
+msgid "Print complete"
+msgstr "출력 완료"
+
+msgid "Printing failed"
+msgstr "출력 실패"
+
+msgid "Print termination"
+msgstr "출력 중단"
+
+msgid "Printing paused"
+msgstr "출력 일시 중지됨"
+
+msgid "Pause in progress"
+msgstr "일시 중지 진행 중"
+
+msgid "STOPPING"
+msgstr "중단"
+
+msgid "In recovery"
+msgstr "복구 중"
+
+msgid "Executing print termination command"
+msgstr "출력 종료 명령 실행"
+
+msgid "Executing pause printing command"
+msgstr "출력 일시 중지 명령 실행"
+
+msgid "Executing the command to continue printing"
+msgstr "명령을 실행하여 출력 계속하기"
+
+msgid "Off Line"
+msgstr "오프라인"
+
+msgid "Printing File"
+msgstr "파일 출력"
+
+msgid "Printing Progress"
+msgstr "출력 진행률"
+
+msgid "Layer Height"
+msgstr "레이어 높이"
+
+msgid "Consumables Length"
+msgstr "필라멘트 길이"
+
+msgid "Sync Consumables"
+msgstr "필라멘트 동기화"
+
+msgid "Time required"
+msgstr "필요한 시간"
+
+msgid "Material Rack"
+msgstr "재료 선반"
+
+msgid "Connection method"
+msgstr "연결 방법"
+
+msgid "No shelf data available"
+msgstr "사용 가능한 선반 데이터 없음"
+
+msgid ""
+"The number of printer presets cached in the cloud has reached the upper "
+"limit (20). Newly created user presets will not be synchronized to the cloud."
+msgstr ""
+"클라우드에 캐시된 프린터 프리셋의 수가 상한(20개)에 도달했습니다. 새로 생성"
+"된 사용자 프리셋은 클라우드에 동기화되지 않습니다."
+
+msgid ""
+"The presets have not been synced to Creality Cloud yet. Click here to enable "
+"it."
+msgstr ""
+"프리셋이 아직 Creality Cloud와 동기화되지 않았습니다. 활성화하려면 여기를 클"
+"릭하십시오."
+
+msgid "Please Input"
+msgstr "입력하세요"
+
+msgid "Consumables"
+msgstr "필라멘트"
+
+msgid "Technology"
+msgstr "기술"
+
+msgid "Printer"
+msgstr "프린터"
+
+msgid "Parameter Name"
+msgstr "매개 변수 이름"
+
+msgid "Update Time"
+msgstr "업데이트 시간"
+
+msgid "Modifications"
+msgstr "수정 사항"
+
+msgid "Operation"
+msgstr "운영"
+
+msgid "There are currently no presets synced to Creality Cloud~"
+msgstr "현재 Creality Cloud와 동기화된 프리셋이 없습니다~"
+
+msgid "Are you sure delete this preset?"
+msgstr "이 프리셋을 정말 삭제하시겠습니까?"
+
+msgid "No"
+msgstr "아니요"
+
+msgid "Yes"
+msgstr "네"
+
+msgid "The current search results are empty~"
+msgstr "현재 검색 결과는 비어 있습니다~"
+
+msgid "You haven't added a device yet"
+msgstr "아직 장치를 추가하지 않았습니다"
+
+msgid "The current account is not associated with any devices"
+msgstr "현재 계정은 어떤 장치와도 연결되지 않습니다"
+
+msgid "Please follow the instructions below to add a new device"
+msgstr "다음 절차에 따라 새 장치를 추가하십시오"
+
+msgid "Mode One"
+msgstr "모드 1"
+
+msgid "Mode Two"
+msgstr "모드 2"
+
+msgid "Scan the QR code below"
+msgstr "아래 QR 코드를 스캔하세요"
+
+msgid "Add new device"
+msgstr "새 장치 추가"
+
+msgid "If you have already downloaded it"
+msgstr "이미 다운로드한 경우"
+
+msgid "Download Creality Cloud App"
+msgstr "Creality Cloud 앱 다운로드"
+
+msgid "Open the Creality Cloud App"
+msgstr "Creality Cloud 앱 열기"
+
+msgid "Click on the status bar"
+msgstr "상태 표시줄을 클릭하세요"
+
+msgid "Multiple devices"
+msgstr "여러 장치"
+
+msgid "Through the multi device list interface"
+msgstr "다중 장치 목록 인터페이스를 통해"
+
+msgid "Scan and Add"
+msgstr "스캔 및 추가"
+
+msgid "OR"
+msgstr "또는"
+
+msgid "Manually Add"
+msgstr "수동으로 추가"
+
+msgid "Add a new device and click"
+msgstr "새로운 장치를 추가하고 클릭하세요"
+
+msgid "Associate my device"
+msgstr "내 장치를 연결"
+
+msgid "Add to your account"
+msgstr "계정에 추가하기"
+
+msgid "Default Grouping"
+msgstr "기본 그룹화"
+
+msgid "Equipment Model"
+msgstr "장비 모델"
+
+msgid "Equipment Name"
+msgstr "장비 이름"
+
+msgid "IP Address"
+msgstr "IP 주소"
+
+msgid "Equipment Status"
+msgstr "장비 상태"
+
+msgid "Print Document"
+msgstr "문서 출력"
+
+msgid "Printing Speed"
+msgstr "출력 속도"
+
+msgid "Action"
+msgstr "동작"
+
+msgid "Prepare"
+msgstr "준비"
+
+msgid "Preview"
+msgstr "미리 보기"
+
+msgid "Genshin Impact Kerry"
+msgstr "Genshin Impact Kerry"
+
+msgid "CFS data temporarily unavailable"
+msgstr "CFS 데이터를 일시적으로 사용할 수 없음"
+
+msgid "Success"
+msgstr "성공"
+
+msgid "Time"
+msgstr "시간"
+
+msgid "Lan"
+msgstr "LAN"
+
+msgid "Wan"
+msgstr "Wan"
+
+msgid "Last Sync"
+msgstr "마지막 동기화"
+
+msgid "Connected"
+msgstr "연결됨"
+
+msgid "Not connected"
+msgstr "연결되지 않음"
+
+msgid "Rack"
+msgstr "선반"
+
+msgid "Refresh"
+msgstr "새로 고침"
+
+msgid "Please first"
+msgstr "먼저 다음을 수행하세요."
+
+msgid "Internet unavailable, please try reconnecting!"
+msgstr "인터넷에 연결할 수 없습니다. 다시 연결해 보세요!"
+
+msgid "obtain account binding device"
+msgstr "계정에 연결된 장치 가져오기"
+
+msgid "New Project"
+msgstr "새 프로젝트"
+
+msgid "Open Project"
+msgstr "프로젝트 열기"
+
+msgid "Home Page"
+msgstr "홈페이지"
+
+msgid "Workbench"
+msgstr "워크벤치"
+
+msgid "Online Resource"
+msgstr "온라인 리소스"
+
+msgid "Online Models"
+msgstr "온라인 모델"
+
+msgid "Online Params"
+msgstr "온라인 매개변수"
+
+msgid "Modeling Tools"
+msgstr "모델링 도구"
+
+msgid "Guide Forum"
+msgstr "가이드 포럼"
+
+msgid "Personal Center"
+msgstr "개인 센터"
+
+msgid "My Models"
+msgstr "내 모델"
+
+msgid "My Presets"
+msgstr "내 프리셋"
+
+msgid "My Downloads"
+msgstr "내 다운로드"
+
+msgid "Recently opened"
+msgstr "최근 오픈"
+
+msgid "More"
+msgstr "자세히 보기"
+
+msgid "Login"
+msgstr "로그인"
+
+msgid "Logout"
+msgstr "로그아웃"
+
+msgid "Register"
+msgstr "등록하기"
+
+msgid "Mobile Login"
+msgstr "모바일 로그인"
+
+msgid "Email Login"
+msgstr "이메일 로그인"
+
+msgid "Password Login"
+msgstr "비밀번호 로그인"
+
+msgid "scan code to login"
+msgstr "코드 스캔 로그인"
+
+msgid "Have no account?"
+msgstr "계정이 없으신가요?"
+
+msgid "Please click"
+msgstr "클릭하세요"
+
+msgid "Verification Code Login"
+msgstr "인증 코드 로그인"
+
+msgid "Forgot password?"
+msgstr "비밀번호를 잊으셨나요?"
+
+msgid "Other login methods"
+msgstr "다른 로그인 방법"
+
+msgid "Open the Creality Cloud App - Personal Center Scan"
+msgstr "Creality Cloud 앱 열기 - 개인 센터 스캔"
+
+msgid "You are currently on the"
+msgstr "현재 당신은"
+
+msgid "Chinese website (+86),"
+msgstr "중국어 웹사이트 (+86),"
+
+msgid "please use"
+msgstr "사용하세요"
+
+msgid "Chinese version App"
+msgstr "중국어 버전 앱"
+
+msgid "scan then login"
+msgstr "스캔 후 로그인"
+
+msgid "Register Now"
+msgstr "지금 등록하기"
+
+msgid "Input Phone Number"
+msgstr "전화번호 입력"
+
+msgid "Mobile Register"
+msgstr "모바일 등록"
+
+msgid "Email Register"
+msgstr "이메일 등록"
+
+msgid "Already have account?"
+msgstr "이미 계정이 있으신가요?"
+
+msgid "Input Verification Code"
+msgstr "인증 코드 입력"
+
+msgid "Send Verification Code"
+msgstr "인증 코드 보내기"
+
+msgid "6-18 characters"
+msgstr "6-18 문자"
+
+msgid "I have read and agree"
+msgstr "읽었으며 동의합니다"
+
+msgid "Creality Cloud User Registration Agreement"
+msgstr "Creality Cloud 사용자 등록 계약"
+
+msgid "And"
+msgstr "그리고"
+
+msgid "Privacy Policy"
+msgstr "개인 정보 보호 정책"
+
+msgid "Reset Password"
+msgstr "비밀번호 재설정"
+
+msgid "Email Password Retrieval"
+msgstr "이메일 비밀번호 검색"
+
+msgid "Return To Login"
+msgstr "로그인으로 돌아가기"
+
+msgid "Cancel"
+msgstr "취소"
+
+msgid "Confirm"
+msgstr "확인"
+
+msgid "Tip"
+msgstr "팁"
+
+msgid "Confirm to logout?"
+msgstr "로그아웃 하시겠습니까?"
+
+msgid "Model Details"
+msgstr "모델 세부 정보"
+
+msgid "Category"
+msgstr "카테고리"
+
+msgid "models total"
+msgstr "총모델"
+
+msgid "Print Settings"
+msgstr "출력 설정"
+
+msgid "Files"
+msgstr "파일"
+
+msgid "No Print Settings"
+msgstr "출력 설정 없음"
+
+msgid "No Print Models"
+msgstr "출력 모델 없음"
+
+msgid "Download All"
+msgstr "모두 다운로드"
+
+msgid "Download Then Load"
+msgstr "다운로드 후 로드"
+
+msgid "Upload"
+msgstr "업로드"
+
+msgid "Recommend"
+msgstr "추천"
+
+msgid "VIP Free"
+msgstr "VIP 무료"
+
+msgid "Exclusive"
+msgstr "독점"
+
+msgid "Multi Color"
+msgstr "멀티 컬러"
+
+msgid "All"
+msgstr "모두"
+
+msgid "Format"
+msgstr "형식"
+
+msgid "Price"
+msgstr "가격"
+
+msgid "Sort"
+msgstr "정렬"
+
+msgid "Free model"
+msgstr "무료 모델"
+
+msgid "Fee model"
+msgstr "유료 모델"
+
+msgid "Comprehensive Trends"
+msgstr "종합적인 트렌드"
+
+msgid "Latest Upload"
+msgstr "최근 업로드"
+
+msgid "Browse"
+msgstr "찾아보기"
+
+msgid "Like"
+msgstr "좋아요"
+
+msgid "Favorites"
+msgstr "즐겨 찾기"
+
+msgid "Download"
+msgstr "다운로드"
+
+msgid "Purchase"
+msgstr "구매"
+
+msgid "History"
+msgstr "기록"
+
+msgid "Clear History"
+msgstr "기록 지우기"
+
+msgid "Popular Search"
+msgstr "인기 검색"
+
+msgid "Models"
+msgstr "모델"
+
+msgid "Print Files"
+msgstr "파일 출력"
+
+msgid "My Upload"
+msgstr "내 업로드"
+
+msgid "My Like"
+msgstr "내 좋아요"
+
+msgid "My Purchase"
+msgstr "내 구매 내역"
+
+msgid "My Favorites"
+msgstr "내 즐겨 찾기"
+
+msgid "Creative Works"
+msgstr "창작 작품"
+
+msgid "Print Config"
+msgstr "출력 구성"
+
+msgid "Main Page"
+msgstr "메인 페이지"
+
+msgid "Project List"
+msgstr "프로젝트 목록"
+
+msgid "Project Editing"
+msgstr "프로젝트 편집"
+
+msgid "Make My Sign"
+msgstr "내 사인 만들기"
+
+msgid "Name plate, badge, sign, anything flat"
+msgstr "명판, 배지, 간판, 평평한 모든 것"
+
+msgid "Make My Sign Feedback Collection Form"
+msgstr "내 서명 피드백 수집 양식 만들기"
+
+msgid "Details"
+msgstr "세부 정보"
+
+msgid "Cloud Slicing"
+msgstr "클라우드 슬라이싱"
+
+msgid "Start"
+msgstr "시작"
+
+msgid "Input Project Name"
+msgstr "프로젝트 이름 입력"
+
+msgid "Name Can Not Be Empty"
+msgstr "이름은 공백일수 없습니다"
+
+msgid "Confirm To Delete?"
+msgstr "삭제 하시겠습니까?"
+
+msgid "Last Modified Time"
+msgstr "마지막 수정 시간"
+
+msgid "Input New Name"
+msgstr "새 이름 입력"
+
+msgid "Load"
+msgstr "로드"
+
+msgid "Duplicate"
+msgstr "중복"
+
+msgid "Rename"
+msgstr "이름 바꾸기"
+
+msgid "Delete"
+msgstr "삭제"
+
+msgid "Confirm to delete?"
+msgstr "삭제 하시겠습니까?"
+
+msgid "Confirm to cancel favorite?"
+msgstr "즐겨찾기를 취소하시겠습니까?"
+
+msgid "Confirm to cancel like?"
+msgstr "좋아요를 취소하시겠습니까?"
+
+msgid "Please Login First"
+msgstr "먼저 로그인하세요"
+
+msgid "Verification code sent successfully"
+msgstr "인증 코드가 성공적으로 전송되었습니다"
+
+msgid "Please agree the User Agreement and Privacy Policy"
+msgstr "사용자 계약 및 개인정보 취급방침에 동의해 주세요"
+
+msgid "Please enter the correct email address"
+msgstr "올바른 이메일 주소를 입력하세요"
+
+msgid "Please enter a password that meets the requirements"
+msgstr "요구 사항을 충족하는 비밀번호를 입력하세요"
+
+msgid "successfully"
+msgstr "성공"
+
+msgid "Reset password successfully"
+msgstr "비밀번호 재설정에 성공했습니다"
+
+msgid "Saved successfully"
+msgstr "저장 성공"
+
+msgid "Please enter email"
+msgstr "이메일을 입력하세요"
+
+msgid "Please enter password"
+msgstr "비밀번호를 입력하세요"
+
+msgid "Chinese Mainland"
+msgstr "중국 본토"
+
+msgid "Click to refresh"
+msgstr "새로 고치려면 클릭"
+
+msgid "The QR code has expired"
+msgstr "QR 코드가 만료되었습니다"
+
+msgid "Please confirm login on your phone"
+msgstr "휴대폰에서 로그인을 확인해 주세요"
+
+msgid "Retrieve password by phone"
+msgstr "전화로 비밀번호 검색"
+
+msgid "File Name"
+msgstr "파일 이름"
+
+msgid "Open Time"
+msgstr "영업 시간"
+
+msgid "Remove"
+msgstr "제거"
+
+msgid "Open Containing Folder"
+msgstr "폴더 포함 열기"
+
+msgid "Print"
+msgstr "출력"
+
+msgid "Characters"
+msgstr "문자"
+
+msgid "3D printer"
+msgstr "3D 프린터"
+
+msgid "Animals"
+msgstr "동물"
+
+msgid "Nature&Plants"
+msgstr "자연&식물"
+
+msgid "Vehicle"
+msgstr "차량"
+
+msgid "Biomedical"
+msgstr "생물의학"
+
+msgid "Ships"
+msgstr "배"
+
+msgid "Aircraft/Plane"
+msgstr "항공기/비행기"
+
+msgid "Architecture"
+msgstr "건축"
+
+msgid "Entertainment/Toys"
+msgstr "엔터테인먼트/장난감"
+
+msgid "Sculpture/Cultural Relics"
+msgstr "조각/문화 유물"
+
+msgid "Mechanical Drawing"
+msgstr "기계 도면"
+
+msgid "Electronic appliances"
+msgstr "전자 기기"
+
+msgid "Daily Home Furnishings"
+msgstr "데일리 홈 퍼니싱"
+
+msgid "Clothing and jewelry"
+msgstr "의류 및 장신구"
+
+msgid "Sports"
+msgstr "스포츠"
+
+msgid "Food"
+msgstr "음식"
+
+msgid "DIY"
+msgstr "DIY"
+
+msgid "Plate"
+msgstr "플레이트"
+
+msgid "Tag"
+msgstr "태그"
+
+msgid "Uploaded"
+msgstr "업로드"
+
+msgid "Purchase Now"
+msgstr "지금 구매하기"
+
+msgid "You can’t collect your own models!"
+msgstr "나만의 모델을 수집할 수 없습니다!"
+
+msgid "Knowledge Sharing (CC) License Agreement"
+msgstr "지식 공유(CC) 라이선스 계약"
+
+msgid ""
+"Creality Cloud adopts the internationally recognized Copyright License 4.0 "
+"to protect the rights and interests of model owners. The models of "
+"Chuangxiang Cloud platform are shared by a large number of enthusiasts in "
+"the community. If you find any violations of relevant laws and infringement, "
+"please contact us in a timely manner. "
+msgstr ""
+"Creality Cloud는 모델 소유자의 권리와 이익을 보호하기 위해 국제적으로 인정받"
+"는 저작권 라이선스 4.0을 채택하고 있습니다. Chuangxiang 클라우드 플랫폼의 모"
+"델은 커뮤니티의 많은 애호가들이 공유하고 있습니다. 관련 법률 위반 및 침해 사"
+"항을 발견한 경우 적시에 당사에 연락해 주시기 바랍니다. "
+
+msgid ""
+"Indicates that the original work is created by the creator, and users can "
+"freely use the creator's work"
+msgstr ""
+"원본 저작물이 창작자가 만든 것이며, 사용자가 창작자의 저작물을 자유롭게 사용"
+"할 수 있음을 나타냅니다"
+
+msgid ""
+"Indicate that the original work is the creator. If changes are made to the "
+"original work, the revised work must still indicate the original author"
+msgstr ""
+"원본 저작물이 창작자임을 표시합니다. 원본 저작물을 변경한 경우에도 수정된 저"
+"작물에는 원저작자를 표시해야 합니다"
+
+msgid ""
+"Indicate that the original work is created by the creator, and users can "
+"freely use the creator's work (except for commercial purposes)"
+msgstr ""
+"원본 저작물이 창작자가 만든 것이며, 사용자는 창작자의 저작물을 자유롭게 사용"
+"할 수 있음을 표시합니다(상업적 목적 제외)."
+
+msgid ""
+"Indicate that the original work is created by the creator, and the user "
+"cannot change the work or use it for commercial purposes"
+msgstr ""
+"원본 저작물은 창작자가 만든 것이며, 사용자는 저작물을 변경하거나 상업적 목적"
+"으로 사용할 수 없음을 표시합니다"
+
+msgid ""
+"Indicate that the original work is created by the creator and the user "
+"cannot change the work"
+msgstr ""
+"원본 저작물은 창작자가 만든 것이며 사용자가 저작물을 변경할 수 없음을 표시합"
+"니다"
+
+msgid ""
+"Abandon copyright and publicly disclose that anyone can use my work at any "
+"time without permission"
+msgstr ""
+"저작권을 포기하고 누구나 언제든지 내 저작물을 허가 없이 사용할 수 있음을 공개"
+"적으로 공개합니다"
+
+msgid ""
+"The 3D model files sold on Creality Cloud have standard licenses and are "
+"subject to certain restrictions upon purchase and download. In particular, "
+"these files cannot be used for any commercial purposes; they are for "
+"personal use only. They may not be shared, transmitted, distributed, "
+"modified, copied, or resold in the form of files or items, including 3D "
+"models or any parts of models"
+msgstr ""
+"Creality Cloud에서 판매되는 3D 모델 파일에는 표준 라이선스가 적용되며 구매 "
+"및 다운로드 시 특정 제한 사항이 적용됩니다. 특히 이러한 파일은 상업적 목적으"
+"로 사용할 수 없으며 개인 용도로만 사용할 수 있습니다. 3D 모델 또는 모델의 일"
+"부를 포함하여 파일이나 아이템의 형태로 공유, 전송, 배포, 수정, 복사 또는 재판"
+"매할 수 없습니다"
+
+msgid "No Data"
+msgstr "데이터 없음"
+
+msgid "No results were found for"
+msgstr "다음에 대한 결과를 찾을 수 없습니다"
+
+msgid "Select All"
+msgstr "모두 선택"
+
+msgid "Import"
+msgstr "가져오기"
+
+msgid "You haven't uploaded the model yet, go ahead and upload it~"
+msgstr "아직 모델을 업로드하지 않으셨나요? 어서 업로드하세요~"
+
+msgid "You haven't liked the model yet, go ahead and like the model~"
+msgstr "아직 모델이 마음에 들지 않으셨다면 좋아요를 눌러주세요~"
+
+msgid "You haven't purchased the model yet, go ahead and buy the model~"
+msgstr "아직 구매하지 않으셨다면 지금 바로 구매하세요~"
+
+msgid "You haven't collected the model yet, go collect the model~"
+msgstr "아직 모델을 수집하지 않으셨다면 가서 모델을 수집하세요~"
+
+msgid ""
+"You haven't created a creative work yet, go ahead and create a creative work~"
+msgstr "아직 창작물을 만들지 않으셨다면, 지금 바로 창작물을 만들어 보세요~"
+
+msgid ""
+"You haven't uploaded the print configuration yet, go uploaded the print "
+"configuration~"
+msgstr "아직 출력 설정을 업로드하지 않으셨나요? 출력 설정을 업로드하세요~"
+
+msgid "You haven't printed the model yet, go ahead and print it~"
+msgstr "아직 모델을 출력하지 않으셨나요? 어서 출력해 보세요~"
+
+msgid ""
+"You haven't uploaded the print file yet, go ahead and upload the print file~"
+msgstr "아직 출력 파일을 업로드하지 않으셨는데요, 지금 바로 업로드하세요~"
+
+msgid "You haven't download the model yet, go ahead and download it~"
+msgstr "아직 모델을 다운로드하지 않으셨다면 지금 바로 다운로드하세요~"
+
+msgid ""
+"You haven't download the print configuration yet, go download the print "
+"configuration~"
+msgstr "아직 출력 구성을 다운로드하지 않으셨나요? 인쇄 구성을 다운로드하세요~"
+
+msgid "Approving..."
+msgstr "승인 중..."
+
+msgid "Approved"
+msgstr "승인됨"
+
+msgid "Rejected"
+msgstr "거부됨"
+
+msgid "Removed"
+msgstr "제거됨"
+
+msgid "Purchased At"
+msgstr "구매처"
+
+msgid "off"
+msgstr "꺼짐"
+
+msgid ""
+"Start downloading. Please go to \"Personal Center-My Downloads\" to view."
+msgstr "다운로드를 시작합니다. 보려면 '개인 센터-내 다운로드'로 이동하세요."
+
+msgid "System Preset Parameters"
+msgstr "시스템 프리셋 매개변수"
+
+msgid "Current Version"
+msgstr "현재 버전"
+
+msgid "Latest Version"
+msgstr "최신 버전"
+
+msgid "Description"
+msgstr "설명"
+
+msgid "Update"
+msgstr "업데이트"
+
+msgid "Ender Series"
+msgstr "엔더 시리즈"
+
+msgid "CR Series"
+msgstr "CR 시리즈"
+
+msgid "Start updating, please wait a moment"
+msgstr "업데이트 시작, 잠시만 기다려주세요"
+
+msgid "Text"
+msgstr "텍스트"
+
+msgid "Shape"
+msgstr "모양"
+
+msgid "Emoji"
+msgstr "이모지"
+
+msgid "SVG"
+msgstr "SVG"
+
+msgid "Holes"
+msgstr "구멍"
+
+msgid "Thickness"
+msgstr "두께"
+
+msgid "3D View"
+msgstr "3D 보기"
+
+msgid "Base Plate & Border"
+msgstr "기본 플레이트 및 테두리"
+
+msgid "Uniform Scale"
+msgstr "균일한 스케일"
+
+msgid "Width"
+msgstr "너비"
+
+msgid "Height"
+msgstr "높이"
+
+msgid "Position"
+msgstr "위치"
+
+msgid "Rotation"
+msgstr "회전"
+
+msgid "Fill"
+msgstr "채우기"
+
+msgid "Content"
+msgstr "내용"
+
+msgid "FontFamily"
+msgstr "폰트 종류"
+
+msgid "FontSize"
+msgstr "폰트 크기"
+
+msgid "Size"
+msgstr "크기"
+
+msgid "Wiki Tutorial"
+msgstr "위키 튜토리얼"
+
+msgid "Slice parameter setting guide"
+msgstr "슬라이스 매개 변수 설정 가이드"
+
+msgid "Calibration Guide"
+msgstr "보정 가이드"
+
+msgid "Quick Start Guide"
+msgstr "빠른 시작 가이드"
+
+msgid "Multi color Printing Guide"
+msgstr "멀티 컬러 출력 가이드"
+
+msgid "6.0 Update Description"
+msgstr "6.0 업데이트 설명"
+
+msgid ""
+"Introduce the basic usage of Creality Print and guide users to complete the "
+"first printing task."
+msgstr ""
+"크리얼리티 프린트의 기본 사용법을 소개하고 사용자가 첫 번째 인쇄 작업을 완료"
+"하도록 안내합니다."
+
+msgid ""
+"After obtaining a multi-color printer, use Creality Print for the first "
+"color printing."
+msgstr ""
+"멀티 컬러 프린터를 구한 후 첫 번째 컬러 출력에는 크리얼리티 프린트를 사용합니"
+"다."
+
+msgid ""
+"Briefly introduce the parameter settings for Creality Print slicing, "
+"including the selection of preset parameters, parameter settings, and "
+"saving, to help you better complete 3D printing."
+msgstr ""
+"프리셋 파라미터 선택, 파라미터 설정, 저장 등 3D 프린팅을 더 잘 완성할 수 있도"
+"록 Creality Print 슬라이싱의 파라미터 설정에 대해 간략하게 소개합니다."
+
+msgid "By adjusting various parameters to achieve the best printing effect."
+msgstr "다양한 매개변수를 조정하여 최상의 출력 효과를 얻을 수 있습니다."
+
+msgid ""
+"Creality Print 6.0 has been upgraded to provide you with a better user "
+"experience."
+msgstr ""
+"Creality Print 6.0은 더 나은 사용자 경험을 제공하기 위해 업그레이드되었습니"
+"다."
+
+msgid ""
+"You can select one as the current device on the 'My Devices' or 'Multiple "
+"Devices' pages"
+msgstr ""
+"'내 장치' 또는 '여러 장치' 페이지에서 현재 장치로 하나를 선택할 수 있습니다"
+
+msgid "System"
+msgstr "시스템"
+
+msgid "User"
+msgstr "사용자"
+
+msgid "Diameter"
+msgstr "직경"
+
+msgid "Vender"
+msgstr "제조사"
+
+msgid "Model"
+msgstr "모델"
+
+msgid "Configuration Name"
+msgstr "구성 이름"
+
+msgid "Firmware Type"
+msgstr "펌웨어 유형"
+
+msgid "Search Results"
+msgstr "검색 결과"
+
+msgid "The model you want is not found. Please search again."
+msgstr "원하는 모델을 찾을 수 없습니다. 다시 검색해 주세요."
+
+msgid "System Filaments"
+msgstr "시스템 필라멘트"
+
+msgid "Custom Filaments"
+msgstr "맞춤형 필라멘트"
+
+msgid "Material Type"
+msgstr "재료 유형"
+
+msgid "Brand Supplier"
+msgstr "브랜드 공급업체"
+
+msgid "Error"
+msgstr "오류"
+
+msgid "At least one material must be selected."
+msgstr "하나 이상의 재료를 선택해야 합니다."
+
+msgid "Do you want to use the default material list?"
+msgstr "기본 재료 목록을 사용하시겠습니까?"
+
+msgid "Create New"
+msgstr "새로 만들기"
+
+msgid "AI Modeling"
+msgstr "AI 모델링"
+
+msgid "Vast"
+msgstr "방대한"
+
+msgid "Deemos"
+msgstr "Deemos"
+
+msgid "Record"
+msgstr "기록"
+
+msgid "Filament Type"
+msgstr "필라멘트 유형"
+
+msgid "At least one filament must be selected."
+msgstr "필라멘트를 하나 이상 선택해야 합니다."
+
+msgid "Do you want to use default filament?"
+msgstr "기본 필라멘트를 사용하시겠습니까?"
+
+msgid "Add New Filament"
+msgstr "새 필라멘트 추가"
+
+msgid "Please select at least one printer."
+msgstr "프린터를 하나 이상 선택해 주세요."
+
+msgid "The filament you want is not found"
+msgstr "원하는 필라멘트를 찾을 수 없습니다."
+
+#~ msgid "Please search for the printer you want..."
+#~ msgstr "원하는 프린터를 검색하세요..."
+
+#~ msgid "Update All"
+#~ msgstr "모두 업데이트"
+
+msgid ""
+"Creality Print requires the Microsoft WebView2 Runtime,But it has been found that the abnormal operation of Microsoft WebView2 may be related to the installation of Microsoft Edge. \n"
+"Click the Yes to reinstall Microsoft Edge"
+msgstr ""
+"Creality Print requires the Microsoft WebView2 Runtime,But it has been found that the abnormal operation of Microsoft WebView2 may be related to the installation of Microsoft Edge. \n"
+"Click the Yes to reinstall Microsoft Edge"
+
+msgid "Failed to reinstall the Microsoft WebView2 Runtime. Please reinstall it manually."
+msgstr "Failed to reinstall the Microsoft WebView2 Runtime. Please reinstall it manually."
+
+msgid "tutorial: %s"
+msgstr "tutorial: %s"
+
+msgid "The Microsoft WebView2 Runtime has been reinstalled successfully. The application will restart now."
+msgstr "The Microsoft WebView2 Runtime has been reinstalled successfully. The application will restart now."

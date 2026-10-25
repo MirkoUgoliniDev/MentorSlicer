@@ -1,0 +1,953 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2025-05-13 09:39+0900\n"
+"Last-Translator: crwusiz <crwusiz@gmail.com>\n"
+"Language-Team: Korean (https://app.transifex.com/jmtechn/teams/205284/ko/)\n"
+"Language: ko_KR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.6\n"
+
+msgid "All"
+msgstr "모두"
+
+msgid "Start Print"
+msgstr "출력 시작"
+
+msgid "Send Only"
+msgstr "전송만"
+
+msgid "Print Device"
+msgstr "출력 장치"
+
+msgid "My Device"
+msgstr "내 장치"
+
+msgid "Filament Device"
+msgstr "필라멘트 장치"
+
+msgid "Please Select"
+msgstr "선택해 주세요"
+
+msgid "CFS"
+msgstr "CFS"
+
+msgid "Spool Holder"
+msgstr "스풀 홀더"
+
+msgid "Print Calibration"
+msgstr "출력 보정"
+
+msgid "Sliced Plate"
+msgstr "플레이트 슬라이스"
+
+msgid "Upload Success"
+msgstr "업로드 성공"
+
+msgid "Upload Failed"
+msgstr "업로드 실패"
+
+msgid "Print Filter"
+msgstr "출력 필터"
+
+msgid "Single Plate"
+msgstr "싱글 플레이트"
+
+msgid "This plate is for printing after sending"
+msgstr "이 플레이트는 전송 후 출력용입니다"
+
+msgid "All Plates"
+msgstr "모든 플레이트"
+
+msgid "Model Color / Filament"
+msgstr "모델 색상 / 필라멘트"
+
+msgid "Box Color / Filament"
+msgstr "박스 색상 / 필라멘트"
+
+msgid "Local Network"
+msgstr "로컬 네트워크"
+
+msgid "Internet(Creality Cloud)"
+msgstr "인터넷(Creality Cloud)"
+
+msgid "Local Device"
+msgstr "로컬 장치"
+
+msgid "Creality Cloud Device"
+msgstr "Creality Cloud 장치"
+
+msgid "Uploading"
+msgstr "업로드 중"
+
+msgid "Offline"
+msgstr "오프라인"
+
+msgid "Other"
+msgstr "기타"
+
+msgid "File Name"
+msgstr "파일 이름"
+
+msgid "Please check"
+msgstr "확인해 주세요"
+
+msgid "Does the printer camera device work properly"
+msgstr "프린터 카메라 장치가 제대로 작동하나요?"
+
+msgid "This feature will be launched soon"
+msgstr "이 기능은 곧 출시될 예정입니다"
+
+msgid "Insufficient cloud storage space"
+msgstr "클라우드 저장 공간 부족"
+
+msgid "Executing print command"
+msgstr "출력 명령 실행 중..."
+
+msgid "Executing print command over"
+msgstr "출력 명령 실행 중..."
+
+msgid "Parsing GCode file"
+msgstr "GCode 파일 처리 중"
+
+msgid "Download GCode"
+msgstr "GCode 다운로드"
+
+msgid ""
+"Please make sure that there are no models on the printing platform, "
+"otherwise it will cause fatal damage to the device after startup"
+msgstr ""
+"출력 플랫폼에 모델이 없는지 확인하십시오. 그렇지 않으면 시작 후 장치에 치명적"
+"인 손상을 일으킬 것입니다"
+
+msgid "Idle"
+msgstr "유휴"
+
+msgid "Printing"
+msgstr "출력"
+
+msgid "Printing Complete"
+msgstr "출력 완료"
+
+msgid "Printing Failed"
+msgstr "출력 실패"
+
+msgid "Print Abort"
+msgstr "출력 중단"
+
+msgid "Printing Paused"
+msgstr "출력 일시 중지됨"
+
+msgid "Printing Pausing"
+msgstr "출력 일시 중지중"
+
+msgid "Printing Stopping"
+msgstr "출력 중단중"
+
+msgid "Printing Restoring"
+msgstr "출력 복구"
+
+msgid "Executing print termination command"
+msgstr "출력 종료 명령 실행"
+
+msgid "Executing pause command"
+msgstr "일시 중지 명령 실행"
+
+msgid "Executing the command to continue printing"
+msgstr "명령을 실행하여 출력 계속하기"
+
+msgid "Pause"
+msgstr "일시 중지"
+
+msgid "Stop"
+msgstr "중지"
+
+msgid "Continue"
+msgstr "계속하기"
+
+msgid "Printing Speed"
+msgstr "출력 속도"
+
+msgid "Warning"
+msgstr "경고"
+
+msgid "Ok"
+msgstr "확인"
+
+msgid "Cancel"
+msgstr "취소"
+
+msgid "Please select the CFS slot corresponding to the consumables"
+msgstr "필라멘트에 해당하는 CFS 슬롯을 선택하세요"
+
+msgid "There are consumables without mapping, only support sending"
+msgstr "매핑이 없는 필라멘트는 전송만 지원합니다"
+
+msgid "Model color/consumables"
+msgstr "모델 색상 / 필라멘트"
+
+msgid "Printing colors/consumables"
+msgstr "출력 색상 / 필라멘트"
+
+msgid "Printing will be done using rack colors"
+msgstr "출력은 스풀 홀더 색상을 사용하여 수행됩니다"
+
+msgid "The slot has no consumables and cannot be mapped"
+msgstr "이 슬롯에는 필라멘트가 없으며 매핑할 수 없습니다"
+
+msgid "Consumables exist, but have not been edited"
+msgstr "필라멘트가 존재하지만 편집되지 않았습니다"
+
+msgid "Current Device"
+msgstr "현재 장치"
+
+msgid "Enable CFS"
+msgstr "CFS 사용"
+
+msgid "Printing using consumables in CFS"
+msgstr "CFS에서 필라멘트 출력 사용"
+
+msgid "Enable material rack"
+msgstr "필라멘트 랙 활성화"
+
+msgid "Printing with consumables attached to the back of the machine"
+msgstr "장치 뒷면에 부착된 필라멘트을 사용하여 출력"
+
+msgid ""
+"The current printer does not match the preset settings of the selected "
+"printer"
+msgstr "현재 프린터가 선택한 프린터의 사전 설정과 일치하지 않습니다"
+
+msgid "Prepare to jump to details"
+msgstr "세부 정보로 이동할 준비"
+
+msgid "Under decompression"
+msgstr "압축 해제 중..."
+
+msgid "Cancel sending"
+msgstr "전송 취소"
+
+msgid "Cancel Successfully"
+msgstr "성공적으로 취소되었습니다"
+
+msgid "The file name is too long [cannot exceed 80 characters]"
+msgstr "파일 이름이 너무 깁니다[80자를 초과할 수 없음]."
+
+msgid "Unknow error"
+msgstr "알 수 없는 오류"
+
+msgid "Continue Print"
+msgstr "출력 재개"
+
+msgid "Cancel Print"
+msgstr "출력 취소"
+
+msgid "Retry"
+msgstr "다시 시도"
+
+msgid "OK"
+msgstr "확인"
+
+msgid ""
+"The current printer's material rack consumables do not exist. Do you want to "
+"continue printing"
+msgstr ""
+"현재 프린터의 필라멘트 랙 필라멘트가 존재하지 않습니다. 출력을 계속하시겠습니"
+"까?"
+
+msgid "Login information is invalid, please log in again"
+msgstr "로그인 정보가 유효하지 않습니다. 다시 로그인하세요"
+
+msgid "An unknown error was detected in printing"
+msgstr "출력중 알 수 없는 오류가 감지되었습니다"
+
+msgid "Motor drive abnormality"
+msgstr "모터 구동 이상"
+
+msgid "internal error"
+msgstr "내부 오류"
+
+msgid "Communication abnormality"
+msgstr "통신 이상"
+
+msgid "Not heating as expected"
+msgstr "예상대로 가열되지 않음"
+
+msgid "Unknown exception"
+msgstr "알 수 없는 예외"
+
+msgid "Extruder abnormality"
+msgstr "압출기 이상"
+
+msgid "Print file coordinates are abnormal"
+msgstr "출력 파일 좌표가 비정상입니다"
+
+msgid "Chatter optimization sensor abnormality"
+msgstr "채터 최적화 센서 이상"
+
+msgid "Fan abnormality"
+msgstr "팬 이상"
+
+msgid "A print quality issue has been detected and printing has been paused"
+msgstr "출력 품질 문제가 감지되어 출력이 일시 중지되었습니다"
+
+msgid "Unknown error"
+msgstr "알 수 없는 오류"
+
+msgid "Foreign object detected on the printing platform, printing paused"
+msgstr "출력 플랫폼에서 이물질이 감지되어 출력이 일시 중지됨"
+
+msgid "Motherboard Connection Failure"
+msgstr "마더보드 연결 실패"
+
+msgid "Nozzle connection abnormal"
+msgstr "노즐 연결 이상"
+
+msgid "Hotbed Connection Abnormal"
+msgstr "히트베드 연결 이상"
+
+msgid "Detected unfinished task, do you wish to continue printing"
+msgstr "완료되지 않은 작업이 감지되었습니다. 계속 출력하시겠습니까?"
+
+msgid "Filament runout, printing paused, please refill"
+msgstr "필라멘트 런아웃, 출력이 일시 중지되었습니다. 다시 채우십시오"
+
+msgid "A model warping issue has been detected，printing has been paused"
+msgstr "모델 뒤틀림 문제가 감지되어 출력이 일시 중지되었습니다"
+
+msgid "Detected waste chute is block. Please clean it up and try again."
+msgstr "쓰레기 배출구가 막혔습니다. 청소한 후 다시 시도하세요."
+
+msgid ""
+"Belt tension abnormal. Please rerun the Input Shaping before using the "
+"printer."
+msgstr ""
+"벨트 장력이 비정상입니다. 프린터를 사용하기 전에 인풋 쉐이핑을 다시 실행하십"
+"시오."
+
+msgid ""
+"FR2357: CFS filament in use. To print with spool holder, unload CFS filament "
+"and reload spool holder before printing."
+msgstr ""
+"FR2357: CFS 필라멘트 사용 중. 스풀 홀더로 인쇄하려면 출력하기 전에 CFS 필라멘"
+"트를 언로드하고 스풀 홀더를 다시 장착합니다."
+
+msgid ""
+"FR2358: Spool holder filament in use. To print with CFS, unload spool holder "
+"filament and reload CFS filament before printing."
+msgstr ""
+"FR2358: 스풀 홀더 필라멘트가 사용 중입니다. CFS로 출력하려면 출력하기 전에 스"
+"풀 홀더 필라멘트를 언로드하고 CFS 필라멘트를 다시 로드합니다."
+
+msgid "Abnormal temperature of the temperature chamber"
+msgstr "온도 챔버의 비정상적인 온도"
+
+msgid "network anomaly"
+msgstr "네트워크 이상"
+
+msgid "AI detected print quality issues"
+msgstr "AI가 감지한 인쇄 품질 문제"
+
+msgid "z-Touch abnormality"
+msgstr "z터치 이상"
+
+msgid "File anomaly"
+msgstr "파일 이상"
+
+msgid "Abnormal hot bed temperature"
+msgstr "비정상적인 베드 온도"
+
+msgid "Printing quality issues detected by AI"
+msgstr "AI가 감지한 출력 품질 문제"
+
+msgid "TF0501: Heat break fan speed detected to be too low."
+msgstr "TF0501: 열 차단 팬 속도가 너무 낮은 것으로 감지되었습니다."
+
+msgid "Mainboard fan exception"
+msgstr "메인보드 팬 예외"
+
+msgid "Detected a issue with the print quality of the first layer"
+msgstr "첫 번째 레이어의 출력 품질에 문제가 감지되었습니다"
+
+msgid "Current file does not support flow detection"
+msgstr "현재 파일이 흐름 감지를 지원하지 않습니다"
+
+msgid "AI LiDAR anomaly"
+msgstr "AI 라이다 이상 징후"
+
+msgid "AI LiDAR calibration failure"
+msgstr "AI 라이다 보정 실패"
+
+msgid "AI LiDAR alignment failure"
+msgstr "AI 라이다 정렬 실패"
+
+msgid "Current storage space usage has reached %s, please clean up in time"
+msgstr "현재 저장 공간 사용량이 %s에 도달했습니다. 저장소를 정리하세요"
+
+msgid "Chamber temp too high, camera off. It'll auto-on when temp normalizes"
+msgstr ""
+"챔버 온도가 너무 높아서 카메라가 꺼져 있습니다. 온도가 정상화되면 자동으로 켜"
+"집니다"
+
+msgid "Camera failed to start, try restarting"
+msgstr "카메라를 시작하지 못했습니다. 다시 시작해보세요"
+
+msgid ""
+"Current file does not support flow ratio calibration, printing with default "
+"values."
+msgstr "현재 파일은 유량 비율 보정을 지원하지 않으므로 기본값으로 출력합니다."
+
+msgid ""
+"Current filament does not support flow ratio calibration, printing with "
+"default values."
+msgstr ""
+"현재 필라멘트는 유량 비율 보정을 지원하지 않으므로 기본값으로 출력합니다."
+
+msgid "Auto PA calibration image anomaly, printing with default values."
+msgstr "자동 PA 보정 이미지 이상, 기본값으로 출력합니다."
+
+msgid "Auto PA calibration failed, printing with default values."
+msgstr "자동 PA 보정에 실패하여 기본값으로 출력합니다."
+
+msgid "A model warping issue has been detected."
+msgstr "모델 뒤틀림 문제가 감지되었습니다."
+
+msgid "TF0526: Model fan speed detected to be too low."
+msgstr "TF0526: 모델 팬 속도가 너무 낮은 것으로 감지되었습니다."
+
+msgid "FO0528: rinter seems to be printing without extruding."
+msgstr "FO0528: 프린터가 압출하지 않고 출력하는 것 같습니다."
+
+msgid "Axis movement error"
+msgstr "축 이동 오류"
+
+msgid "Machine preparation"
+msgstr "장치 준비"
+
+msgid "System error, try restarting"
+msgstr "시스템 오류, 재시작 시도"
+
+msgid "The nozzle temperature is below the minimum extrusion temperature"
+msgstr "노즐 온도가 최소 압출 온도보다 낮습니다"
+
+msgid "Unable to obtain nozzle temperature, the thermistor may be disconnected"
+msgstr "노즐 온도를 얻을 수 없으면 서미스터가 분리될 수 있습니다"
+
+msgid "Hotbed thermistor open circuit"
+msgstr "히트베드 서미스터 단선"
+
+msgid "The chamber thermistor may be open circuit"
+msgstr "챔버 서미스터가 단선일 수 있습니다"
+
+msgid "The motherboard temperature is abnormal"
+msgstr "메인보드 온도가 비정상입니다"
+
+msgid "Nozzle temperature exceeds limit, thermistor may be short-circuited"
+msgstr "노즐 온도가 한계를 초과하면 서미스터가 합선될 수 있습니다"
+
+msgid "Hotbed thermistor short circuit"
+msgstr "핫 베드 서미스터 합선"
+
+msgid "The chamber thermistor may be short circuit"
+msgstr "챔버 서미스터가 합선되었을 수 있습니다"
+
+msgid "Chamber heating issue, please ensure the printer is sealed"
+msgstr "챔버 가열 문제, 프린터가 밀폐되어 있는지 확인하십시오"
+
+msgid "The nozzle is not heating as expected"
+msgstr "노즐이 예상대로 가열되지 않습니다"
+
+msgid "The heat bed is not heating as expected"
+msgstr "히트베드가 예상대로 가열되지 않습니다"
+
+msgid "Print file is corrupted"
+msgstr "출력 파일이 손상되었습니다"
+
+msgid "X-axis homing abnormality"
+msgstr "X축 원점 복귀 이상"
+
+msgid "Y-axis homing abnormality"
+msgstr "Y축 원점 복귀 이상"
+
+msgid "Z-axis homing abnormality"
+msgstr "Z축 원점 복귀 이상"
+
+msgid "X-axis print coordinates out of range"
+msgstr "X축 인쇄 좌표가 범위를 벗어남"
+
+msgid "Y-axis print coordinates out of range"
+msgstr "Y축 인쇄 좌표가 범위를 벗어남"
+
+msgid "Z-axis print coordinates out of range"
+msgstr "Z축 인쇄 좌표가 범위를 벗어남"
+
+msgid "Z Offset Exceeds Limit"
+msgstr "Z 오프셋 한도 초과"
+
+msgid "Belt tension module abnormal."
+msgstr "벨트 장력 모듈에 이상이 있습니다."
+
+msgid "Auto belt tension failure"
+msgstr "자동 벨트 장력 조절 실패"
+
+msgid "The nozzle leveling sensor may have a hardware failure."
+msgstr "노즐 레벨링 센서에 하드웨어 오류가 있을 수 있습니다."
+
+msgid ""
+"The nozzle leveling sensor may be damaged or the wiping module may have "
+"fallen off. Please check or try restarting."
+msgstr ""
+"노즐 레벨링 센서가 손상되었거나 와이핑 모듈이 떨어졌을 수 있습니다. 확인하거"
+"나 다시 시작해 보세요."
+
+msgid "Z-axis homing issue,may have an external disturbance "
+msgstr "Z축 원점 복귀 문제, 외부 교란이 있을 수 있습니다 "
+
+msgid ""
+"[Printing] XY Motor: XY motor speed limit exceeded. The motor will be "
+"released. Please reduce the print speed or re-slice and print again.Z Motor: "
+"Z motor speed limit exceeded. The motor will be released. Please reduce the "
+"print speed or re-slice and print again.E Motor: Extruder speed limit "
+"exceeded. The motor will be released. Please reduce the print speed or re-"
+"slice and print again.[Not Printing] XY Motor: XY motor speed limit "
+"exceeded. The motor will be released. Please reduce the XY motor movement "
+"speed.Z Motor: Z motor speed limit exceeded. The motor will be released. "
+"Please reduce the Z motor movement speed.E Motor: Extruder speed limit "
+"exceeded. The motor will be released. Please reduce the extruder movement "
+"speed."
+msgstr ""
+"[출력] XY 모터: XY 모터 속도 제한을 초과했습니다. 모터가 해제됩니다. 출력 속"
+"도를 줄이거나 다시 슬라이스한 후 다시 출력하십시오.Z 모터: Z 모터 속도 제한"
+"을 초과했습니다. 모터가 해제됩니다. 출력 속도를 줄이거나 다시 슬라이스한 후 "
+"다시 출력하십시오.E 모터: 압출기 속도 제한을 초과했습니다. 모터가 해제됩니"
+"다. 출력 속도를 줄이거나 다시 슬라이스한 후 다시 출력하십시오. [출력 안 됨] "
+"XY 모터: XY 모터 속도 제한을 초과했습니다. 모터가 해제됩니다. XY 모터 이동 속"
+"도를 줄이십시오.Z 모터: Z 모터 속도 제한을 초과했습니다. 모터가 해제됩니다. "
+"Z 모터 이동 속도를 줄이십시오.E 모터: 압출기 속도 제한을 초과했습니다. 모터"
+"가 해제됩니다. 압출기 이동 속도를 줄여주세요."
+
+msgid ""
+"[X/Y/E/Z1/Z2] step-servo position issue, please try again after resolving"
+msgstr "[X/Y/E/Z1/Z2] 스텝 서보 위치 문제, 해결 후 다시 시도하십시오"
+
+msgid ""
+"[Printing] XY Motor: An obstacle was detected during the extruder's "
+"movement. This print has been canceled and the motor is released.Z Motor: An "
+"obstacle was detected during the heated bed's movement. This print has been "
+"canceled and the motor is released.E Motor: An extrusion anomaly was "
+"detected, possibly a clog, tangle, or jam. Printing has been paused.[Not "
+"Printing] XY Motorstep-servo: An obstacle was detected during the nozzle's "
+"movement. The motor will be released.Z Motor: An obstacle was detected "
+"during the heated bed's movement. The motor will be released.E Motor: An "
+"extrusion anomaly was detected, possibly a clog, tangle, or jam. The motor "
+"will be released."
+msgstr ""
+"[출력] XY 모터: 압출기가 이동하는 동안 장애물이 감지되었습니다. 이 출력이 취"
+"소되고 모터가 해제되었습니다.Z 모터: 가열 베드가 움직이는 동안 장애물이 감지"
+"되었습니다. 이 인쇄가 취소되고 모터가 해제되었습니다.E 모터: 압출 이상, 막"
+"힘, 엉킴 또는 걸림이 감지되었습니다. 출력이 일시 중지되었습니다.[출력 안 함] "
+"XY 모터 스텝 서보: 노즐이 이동하는 동안 장애물이 감지되었습니다. 모터가 해제"
+"됩니다.Z 모터: 온열침대가 움직이는 동안 장애물이 감지되었습니다. 모터가 해제"
+"됩니다.E 모터: 압출 이상, 막힘, 엉킴 또는 걸림이 감지되었습니다. 모터가 해제"
+"됩니다."
+
+msgid ""
+"X Motor: X motor identification error detected. The motor wire may be "
+"connected improperly or the motor may be damaged.Y Motor: Y motor "
+"identification error detected. The motor wire may be connected improperly or "
+"the motor may be damaged.Z1 Motor: Z1 motor identification error detected. "
+"The motor wire may be connected improperly or the motor may be damaged.Z2 "
+"Motor: Z2 motor identification error detected. The motor wire may be "
+"connected improperly or the motor may be damaged.E Motor: Extruder motor "
+"identification error detected. The motor wire may be connected improperly or "
+"the motor may be damaged."
+msgstr ""
+"X 모터: X 모터 식별 오류가 감지되었습니다. 모터 와이어가 부적절하게 연결되었"
+"거나 모터가 손상되었을 수 있습니다.Y 모터: Y 모터 식별 오류가 감지되었습니"
+"다. 모터 와이어가 부적절하게 연결되었거나 모터가 손상되었을 수 있습니다.Z1 모"
+"터: Z1 모터 식별 오류가 감지되었습니다. 모터 와이어가 부적절하게 연결되었거"
+"나 모터가 손상되었을 수 있습니다.Z2 모터: Z2 모터 식별 오류가 감지되었습니"
+"다. 모터 와이어가 부적절하게 연결되었거나 모터가 손상되었을 수 있습니다.E 모"
+"터: 압출기 모터 식별 오류가 감지되었습니다. 모터 와이어가 잘못 연결되었거나 "
+"모터가 손상되었을 수 있습니다."
+
+msgid ""
+"X/Y/Z/E axis step-servo motor initialization error, motor communication line "
+"may be connected incorrectly"
+msgstr ""
+"X/Y/Z/E 축 스텝 서보 모터 초기화 오류, 모터 통신선이 잘못 연결되었을 수 있습"
+"니다"
+
+msgid "communication issue, please try again after resolving."
+msgstr "통신 문제가 발생한 경우 해결 후 다시 시도하세요."
+
+msgid ""
+"Retract issue, check for filament or spool jams. Click &quot;Retry&quot; "
+"after resolving."
+msgstr ""
+"후퇴 문제, 필라멘트 또는 스풀 걸림을 확인합니다. 해결 후 <다시 시도>를 클릭합"
+"니다."
+
+msgid ""
+"Feed issue, check for filament or spool jams. Click &quot;Retry&quot; after "
+"resolving."
+msgstr ""
+"공급 문제, 필라멘트 또는 스풀 걸림을 확인합니다. 해결 후 <다시 시도>를 클릭합"
+"니다."
+
+msgid "System error."
+msgstr "시스템 오류입니다."
+
+msgid ""
+"Feed issue , filament may be stuck from loader to CFS hub. Please resolve "
+"the issue and click the &quot;Retry&quot; button."
+msgstr ""
+"공급 문제, 필라멘트가 로더에서 CFS 허브에 걸렸을 수 있습니다. 문제를 해결하"
+"고 <다시 시도> 버튼을 클릭하세요."
+
+msgid ""
+"Feed issue , filament may be blocked between the CFS hub and extruder "
+"filament detector. Please resolve the issue and click &quot;Retry&quot; "
+"button."
+msgstr ""
+"공급 문제, 필라멘트가 CFS 허브와 압출기 필라멘트 감지기 사이에 막혔을 수 있습"
+"니다. 문제를 해결하고 <다시 시도> 버튼을 클릭하세요."
+
+msgid ""
+"Feed issue , filament may be jammed between the extruder sensor and the "
+"extruder gear. Please resolve the issue and click the &quot;Retry&quot; "
+"button."
+msgstr ""
+"공급 문제, 필라멘트가 압출기 센서와 압출기 기어 사이에 걸렸을 수 있습니다. 문"
+"제를 해결하고 '다시 시도' 버튼을 클릭하세요."
+
+msgid ""
+"Feed issue , filament may be stuck between the CFS hub sensor and the gear. "
+"Please resolve the issue and click the &quot;Retry&quot; button."
+msgstr ""
+"공급 문제, 필라멘트가 CFS 허브 센서와 기어 사이에 끼어 있을 수 있습니다. 문제"
+"를 해결하고 '다시 시도' 버튼을 클릭하세요."
+
+msgid "filament runs out, please refill."
+msgstr "필라멘트가 다 떨어지면 다시 채워주세요."
+
+msgid "Command failed, current scenario does not support this command."
+msgstr "명령이 실패했습니다. 현재 시나리오는 이 명령을 지원하지 않습니다."
+
+msgid "Cutter issue, cutter might be jammed, please try again after resolving"
+msgstr "커터 문제, 커터가 걸렸을 수 있습니다. 해결 후 다시 시도하십시오"
+
+msgid "RFID cannot be read, please manually edit filament"
+msgstr "RFID를 읽을 수 없으므로 필라멘트를 수동으로 편집하세요"
+
+msgid ""
+"PTFE tube may have detached from the pneumatic fitting, Printing paused, "
+"please try again after resolving"
+msgstr ""
+"PTFE 튜브가 공압 피팅에서 분리되었을 수 있습니다. 출력이 일시 중지되었습니"
+"다. 해결 후 다시 시도하십시오"
+
+msgid "Extruder may be clogged. Click &quot;Retry&quot; after resolving."
+msgstr "압출기가 막혔을 수 있습니다. 해결 후 <다시 시도>를 클릭합니다."
+
+msgid ""
+"The filament buffer signal is abnormal,the buffer may be stuck or the "
+"filament may be tangle."
+msgstr ""
+"필라멘트 버퍼 신호가 비정상적이거나 버퍼가 고착되었거나 필라멘트가 엉켰을 수 "
+"있습니다."
+
+msgid "Filament may tangled, please try again after resolving"
+msgstr "필라멘트가 엉킬 수 있으니 해결 후 다시 시도하세요"
+
+msgid "filament may be broken in CFS."
+msgstr "필라멘트가 CFS에서 끊어질 수 있습니다."
+
+msgid ""
+"Retract issue, filament cannot be returned to CFS hub. Please resolve the "
+"issue and click the &quot;Retry&quot; button."
+msgstr ""
+"후퇴 문제, 필라멘트를 CFS 허브로 반환할 수 없습니다. 문제를 해결하고 <다시 시"
+"도> 버튼을 클릭하세요."
+
+msgid ""
+"Retract issue, filaments may be inserted into the CFS hub. Remove and click "
+"the &quot;Retry&quot; button."
+msgstr ""
+"후퇴 문제, 필라멘트가 CFS 허브에 삽입될 수 있습니다. 제거하고 '다시 시도' 버"
+"튼을 클릭합니다."
+
+msgid ""
+"Retract issue, Filament Buffer failure. Please resolve and click &quot;"
+"Retry&quot; button."
+msgstr ""
+"후퇴 문제, 필라멘트 버퍼 오류. 해결한 후 <다시 시도> 버튼을 클릭하세요."
+
+msgid ""
+"TR2852: Filament detector triggered abnormally, possibly due to an external "
+"material rack being used with CFS."
+msgstr ""
+"TR2852: 필라멘트 감지기가 비정상적으로 트리거됨, 외부 필라멘트 랙이 CFS와 함"
+"께 사용 중일 수 있음."
+
+msgid "CFS temperature and humidity sensor abnormal."
+msgstr "CFS 온도 및 습도 센서에 이상이 있습니다."
+
+msgid ""
+"TC2854: Filament detected in the extruder, affecting the cutter calibration. "
+"Please remove the filament and try again."
+msgstr ""
+"TC2854: 압출기에서 필라멘트가 감지되어 커터 보정에 영향을 미쳤습니다. 필라멘"
+"트를 제거하고 다시 시도하세요."
+
+msgid "TC2855: Cutter calibrat failed. Please try again after resolving."
+msgstr "TC2855: 커터 보정에 실패했습니다. 해결한 후 다시 시도하세요."
+
+msgid ""
+"TC2856: Cutter issue, the cutter may be jammed or missing. Click &quot;"
+"Retry&quot; after resolving."
+msgstr ""
+"TC2856: 커터 문제, 커터가 걸렸거나 누락되었을 수 있습니다. 해결 후 '다시 시"
+"도'를 클릭하세요."
+
+msgid ""
+"CFS feeding motor overload, maybe excessive load or unload resistance or the "
+"filament tangled or stuck."
+msgstr ""
+"CFS 공급 모터 과부하, 과도한 부하 또는 언로드 저항 또는 필라멘트가 엉키거나 "
+"걸린 것일 수 있습니다."
+
+msgid "FS2858: CFS EEPROM abnormal."
+msgstr "FS2858: CFS EEPROM 이상."
+
+msgid "FO2859: CFS filament odometry abnormal."
+msgstr "FO2859: CFS 필라멘트 이동 거리 측정 이상."
+
+msgid "FB2860: CFS filament buffer abnormal."
+msgstr "FB2860: CFS 필라멘트 버퍼 이상."
+
+msgid "FS2861: CFS left RFID board abnormal."
+msgstr "FS2861: CFS 왼쪽 RFID 보드 이상."
+
+msgid "FS2862: CFS right RFID board abnormal."
+msgstr "FS2862: CFS 오른쪽 RFID 보드 이상."
+
+msgid "The file where the last unexpected stop was detected"
+msgstr "마지막으로 예기치 않은 정지가 감지된 파일"
+
+msgid "No consumables detected, do you want to continue printing?"
+msgstr "소모품이 감지되지 않았는데 계속 출력하시겠습니까?"
+
+msgid "There is no consumables in the current rack"
+msgstr "현재 랙에 필라멘트가 없습니다"
+
+msgid "Axis movement exceeded limit"
+msgstr "축 이동 한도 초과"
+
+msgid "Cannot contain special characters"
+msgstr "특수 문자를 포함할 수 없습니다"
+
+msgid "Please add the device to the device list"
+msgstr "디바이스 목록에 디바이스를 추가하세요."
+
+msgid "Reconnecting"
+msgstr "다시 연결"
+
+msgid ""
+"Creality Print camera function does not currently support devices that are "
+"only bound to Creality Cloud"
+msgstr ""
+"Creality Print 카메라 기능은 현재 Creality Cloud 에 연결된 기기를 지원하지 않"
+"습니다"
+
+msgid ""
+"Feed issue, filament failed to exit extruder.Please resolve and click "
+"'Retry' button."
+msgstr ""
+"공급 문제, 필라멘트가 압출기를 종료하지 못했습니다. 문제를 해결하고 '다시 시"
+"도' 버튼을 클릭하세요."
+
+msgid "During device self-test, printing and sending files are not supported"
+msgstr "장치 자체 테스트 중에는 출력 및 파일 전송이 지원되지 않습니다"
+
+msgid "Self checking"
+msgstr "자체 점검"
+
+msgid ""
+"Hotbed failed to return to the maximum Z-axis position or tilt calibration "
+"at this position failed,please try again after resolving."
+msgstr ""
+"히트베드가 최대 Z축 위치로 돌아가지 못했거나 이 위치에서 기울기 보정에 실패했"
+"습니다. 해결 후 다시 시도하세요."
+
+msgid ""
+"Abnormal resistance in the Y-axis movement direction,  motor released. Fix "
+"issue and restart."
+msgstr ""
+"Y축 이동 방향에 비정상적인 저항이 발생하여 모터가 해제되었습니다. 문제를 해결"
+"하고 다시 시작하세요."
+
+msgid ""
+"Abnormal resistance under the hotbed, motor released. Fix issue and restart."
+msgstr ""
+"히트베드 아래에 비정상적인 저항이 발생하여 모터가 해제되었습니다. 문제를 해결"
+"하고 다시 시작하세요."
+
+msgid "Extruder extrusion anomaly, possible clog or blockage. motor released."
+msgstr "압출기 압출 이상, 막힘 또는 막힘 가능성. 모터 해제."
+
+msgid ""
+"Extruder speed limit exceeded. The motor will be released. Please reduce the "
+"extruder movement speed."
+msgstr ""
+"압출기 속도 제한을 초과했습니다. 모터가 해제됩니다. 압출기 이동 속도를 줄여주"
+"세요."
+
+msgid ""
+"Y motor identification error detected. The motor wire may be connected "
+"improperly or the motor may be damaged."
+msgstr ""
+"Y 모터 식별 오류가 감지되었습니다. 모터 와이어가 잘못 연결되었거나 모터가 손"
+"상되었을 수 있습니다."
+
+msgid ""
+"Z1 motor identification error detected. The motor wire may be connected "
+"improperly or the motor may be damaged."
+msgstr ""
+"Z1 모터 식별 오류가 감지되었습니다. 모터 와이어가 잘못 연결되었거나 모터가 손"
+"상되었을 수 있습니다."
+
+msgid ""
+"Z2 motor identification error detected. The motor wire may be connected "
+"improperly or the motor may be damaged."
+msgstr ""
+"Z2 모터 식별 오류가 감지되었습니다. 모터 와이어가 잘못 연결되었거나 모터가 손"
+"상되었을 수 있습니다."
+
+msgid ""
+"E motor identification error detected. The motor wire may be connected "
+"improperly or the motor may be damaged."
+msgstr ""
+"E 모터 식별 오류가 감지되었습니다. 모터 와이어가 잘못 연결되었거나 모터가 손"
+"상되었을 수 있습니다."
+
+msgid ""
+"[x or y or e] axis servo motor hardware abnormality/[z1 or z2] axis servo "
+"motor hardware abnormality, the platform plate will drop"
+msgstr ""
+"[X 또는 Y 또는 E] 축 서보 모터 하드웨어 이상/[Z1 또는 Z2] 축 서보 모터 하드웨"
+"어 이상, 플랫폼 플레이트가 떨어집니다"
+
+msgid "Chamber heater fan abnormal, chamber heating closed."
+msgstr "챔버 히터 팬 이상, 챔버 히터 닫힘."
+
+msgid ""
+"Belt tension module error, left side belt communication line may be "
+"connected improperly. "
+msgstr ""
+"벨트 장력 모듈 오류, 왼쪽 벨트 통신 라인이 잘못 연결되었을 수 있습니다. "
+
+msgid ""
+"Belt tension module error, right side belt tension module not calibrated, "
+"please recalibrate the module."
+msgstr ""
+"벨트 장력 모듈 오류, 오른쪽 벨트 장력 모듈이 보정되지 않았습니다. 모듈을 다"
+"시 보정하세요."
+
+msgid ""
+"Belt tension module error, left side belt tension module not calibrated, "
+"please recalibrate the module. "
+msgstr ""
+"벨트 장력 모듈 오류, 왼쪽 벨트 장력 모듈이 보정되지 않았습니다. 모듈을 다시 "
+"보정하세요. "
+
+msgid "Belt tension module error, please troubleshoot and try recalibrating. "
+msgstr "벨트 장력 모듈 오류, 문제를 해결하고 재보정해 보세요. "
+
+msgid "Belt tension timeout failure, please try retightening or restarting. "
+msgstr "벨트 장력 시간 초과 실패, 다시 조이거나 다시 시작하세요. "
+
+msgid ""
+"Abnormal belt tensioning module, right belt tensioning module calibration "
+"value abnormal, please recalibrate the module."
+msgstr ""
+"벨트 장력 모듈 이상, 오른쪽 벨트 장력 모듈 보정 값 이상, 모듈을 다시 보정하세"
+"요."
+
+msgid ""
+"Abnormal belt tensioning module, left belt tensioning module calibration "
+"value abnormal, please recalibrate the module."
+msgstr ""
+"벨트 장력 조절 모듈 이상, 왼쪽 벨트 장력 조절 모듈 보정 값 이상, 모듈을 다시 "
+"보정하세요."
+
+msgid ""
+"Hotbed failed to reach the maximum position. Check for sensor issues or bed "
+"tilt.Please check and retry."
+msgstr ""
+"히트베드가 최대 위치에 도달하지 못했습니다. 센서 문제 또는 베드 기울기를 확인"
+"하고 다시 시도하세요."
+
+msgid "Abnormal heat break fan"
+msgstr "비정상적인 열 차단 팬"
+
+msgid ""
+"MCU task scheduling failed, possibly due to high load or communication "
+"issues."
+msgstr "높은 부하 또는 통신 문제로 인해 MCU 작업 예약이 실패했습니다."
+
+msgid ""
+"Extruder MCU temperature is too high, possibly due to high chamber "
+"temperature or delayed cooling of the extruder motherboard."
+msgstr ""
+"압출기 MCU 온도가 너무 높습니다, 챔버 온도가 높거나 압출기 마더보드의 냉각 지"
+"연으로 인해 발생할 수 있습니다."
+
+msgid "Cutter not detected."
+msgstr "커터가 감지되지 않았습니다."
+
+msgid ""
+"Feed issue, filament buffer failure. Please resolve and click \"Retry\" "
+"button."
+msgstr ""
+"피드 문제, 필라멘트 버퍼 오류. 해결한 후 '다시 시도' 버튼을 클릭하세요."
+
+msgid "Detected printing plate is missing, printing paused"
+msgstr "출력판 누락 감지, 출력이 일시 중지됨"
+
+msgid ""
+"Detected printing plate is missing and foreign object on the printing plate, "
+"printing paused"
+msgstr "출력판 누락 및 출력판의 이물질 감지, 출력 일시 중지"
+
+msgid "Flow ratio calibration image anomaly, printing with default values."
+msgstr "유량 비율 보정 이미지 이상, 기본값으로 출력."
+
+msgid "Flow ratio calibration failed, printing with default values."
+msgstr "유량 비율 보정에 실패하여 기본값으로 출력합니다."
+
+msgid "Detected waste chute is block. "
+msgstr "폐기물 배출구가 차단됨을 감지했습니다. "
+
+msgid "Nozzle  camera failed to start, try restarting."
+msgstr "노즐 카메라를 시작하지 못했습니다. 다시 시작해보세요."
+
+msgid ""
+"Creality Print requires the Microsoft WebView2 Runtime,But it has been found that the abnormal operation of Microsoft WebView2 may be related to the installation of Microsoft Edge. \n"
+"Click the Yes to reinstall Microsoft Edge"
+msgstr ""
+"Creality Print requires the Microsoft WebView2 Runtime,But it has been found that the abnormal operation of Microsoft WebView2 may be related to the installation of Microsoft Edge. \n"
+"Click the Yes to reinstall Microsoft Edge"
+
+msgid "Failed to reinstall the Microsoft WebView2 Runtime. Please reinstall it manually."
+msgstr "Failed to reinstall the Microsoft WebView2 Runtime. Please reinstall it manually."
+
+msgid "tutorial: %s"
+msgstr "tutorial: %s"
+
+msgid "The Microsoft WebView2 Runtime has been reinstalled successfully. The application will restart now."
+msgstr "The Microsoft WebView2 Runtime has been reinstalled successfully. The application will restart now."

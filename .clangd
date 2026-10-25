@@ -1,0 +1,5 @@
+If:
+  PathMatch: [.*deps/.*, .*out/.*, .*build/.*]
+
+Index:
+  Background: Skip

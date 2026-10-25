@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 330" width="720" height="330" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <title>Multi-layer brim: side section</title>
+  <!-- Own background so the drawing reads the same in GitHub light and dark themes. -->
+  <rect width="720" height="330" rx="12" fill="#ffffff"/>
+  <text x="24" y="34" font-size="17" font-weight="600" fill="#1f2328">Side section of the part edge (not to scale)</text>
+
+  <!-- Build plate -->
+  <rect x="24" y="250" width="672" height="14" fill="#5b6470"/>
+  <text x="34" y="284" font-size="13" fill="#57606a">build plate</text>
+
+  <!-- Part -->
+  <rect x="440" y="70" width="230" height="180" fill="#8c9bab"/>
+  <text x="555" y="165" font-size="16" font-weight="600" fill="#ffffff" text-anchor="middle">part</text>
+
+  <!-- Brim layer 1: normal brim-object gap (here 0) -->
+  <rect x="110" y="226" width="330" height="24" fill="#2f9e5b"/>
+  <text x="275" y="243" font-size="13" fill="#ffffff" text-anchor="middle">layer 1: holds the part on the plate</text>
+
+  <!-- Brim layers 2 and 3: kept further away -->
+  <rect x="110" y="200" width="300" height="24" fill="#5cc488"/>
+  <rect x="110" y="174" width="300" height="24" fill="#5cc488"/>
+  <text x="260" y="217" font-size="13" fill="#0d3b22" text-anchor="middle">layer 2</text>
+  <text x="260" y="191" font-size="13" fill="#0d3b22" text-anchor="middle">layer 3</text>
+
+  <!-- Brim layers brace -->
+  <path d="M96 174 h-8 v76 h8" fill="none" stroke="#1f2328" stroke-width="1.5"/>
+  <text x="80" y="208" font-size="13" fill="#1f2328" text-anchor="end">brim_layers</text>
+  <text x="80" y="224" font-size="13" fill="#1f2328" text-anchor="end">= 3</text>
+
+  <!-- Upper gap dimension -->
+  <line x1="410" y1="120" x2="410" y2="172" stroke="#d1242f" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <line x1="440" y1="120" x2="440" y2="172" stroke="#d1242f" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <line x1="412" y1="132" x2="438" y2="132" stroke="#d1242f" stroke-width="1.5"/>
+  <path d="M412 132 l6 -4 v8 z M438 132 l-6 -4 v8 z" fill="#d1242f"/>
+  <text x="400" y="104" font-size="14" font-weight="600" fill="#d1242f" text-anchor="end">brim_layers_object_gap</text>
+  <text x="400" y="122" font-size="12" fill="#57606a" text-anchor="end">layers 2+: the brim does not fuse to the wall</text>
+
+  <!-- Layer 1 gap callout -->
+  <line x1="440" y1="238" x2="560" y2="300" stroke="#1f2328" stroke-width="1"/>
+  <text x="566" y="304" font-size="13" font-weight="600" fill="#1f2328">brim_object_gap</text>
+  <text x="566" y="320" font-size="12" fill="#57606a">layer 1 only (here 0)</text>
+</svg>

@@ -1,0 +1,2319 @@
+// Configuration store of Slic3r.
+//
+// The configuration store is either static or dynamic.
+// DynamicPrintConfig is used mainly at the user interface. while the StaticPrintConfig is used
+// during the slicing and the g-code generation.
+//
+// The classes derived from StaticPrintConfig form a following hierarchy.
+//
+// FullPrintConfig
+//    PrintObjectConfig
+//    PrintRegionConfig
+//    PrintConfig
+//        GCodeConfig
+//
+
+#ifndef slic3r_PrintConfig_hpp_
+#define slic3r_PrintConfig_hpp_
+
+#include "libslic3r.h"
+#include "Config.hpp"
+#include "Polygon.hpp"
+#include <boost/preprocessor/facilities/empty.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/seq/for_each.hpp>
+#include <boost/preprocessor/seq/for_each_i.hpp>
+#include <boost/preprocessor/stringize.hpp>
+#include <boost/preprocessor/tuple/elem.hpp>
+#include <boost/preprocessor/tuple/to_seq.hpp>
+
+#include <memory>
+
+namespace Slic3r {
+
+class GCodeConfig;
+class PrintConfig;
+
+struct SmallAreaInfillFlowCompensationModel
+{
+    std::vector<double>      extrusion_lengths;
+    std::vector<double>      flow_compensations;
+    std::vector<std::string> normalized_values;
+};
+
+bool parse_small_area_infill_flow_compensation_model(const std::vector<std::string>& values,
+                                                     SmallAreaInfillFlowCompensationModel& model,
+                                                     std::string* error = nullptr);
+
+enum GCodeFlavor : unsigned char {
+    gcfMarlinLegacy, gcfKlipper, gcfRepRapFirmware, gcfMarlinFirmware, gcfRepRapSprinter, gcfRepetier, gcfTeacup, gcfMakerWare, gcfSailfish, gcfMach3, gcfMachinekit,
+    gcfSmoothie, gcfNoExtrusion
+};
+
+enum GCodeFlavorText : unsigned char {
+    Left_Upper,
+    Middle_Upper,
+    Right_Upper,
+    Left_Center,
+    Middle_Center,
+    Right_Center,
+    Left_Below,
+    Middle_Below,
+    Right_Below
+};
+
+enum class FuzzySkinType {
+    None,
+    External,
+    All,
+    AllWalls,
+};
+
+enum class FuzzySkinMode {
+    Displacement,
+    Extrusion,
+    Combined,
+};
+
+enum class NoiseType {
+    Classic,
+    Perlin,
+    Billow,
+    RidgedMulti,
+    Voronoi,
+};
+
+enum PrintHostType {
+    htPrusaLink, htPrusaConnect, htOctoPrint, htDuet, htFlashAir, htAstroBox, htRepetier, htMKS, htESP3D, htObico, htFlashforge,
+    // htSimplyPrint keeps its slot: the device page and deviceInfo.json store host types as integers.
+    // SimplyPrint support itself was removed, so get_print_host() returns nullptr for it.
+    htSimplyPrint, htCrealityPrint
+};
+
+enum AuthorizationType {
+    atKeyPassword, atUserPassword
+};
+
+enum InfillPattern : int {
+    ipConcentric, 
+	ipRectilinear, 
+	ipGrid, 
+	ipLine, 
+	ipCubic, 
+	ipTriangles, 
+	ipStars, 
+	ipGyroid, 
+	ipHoneycomb, 
+	ipAdaptiveCubic, 
+	ipAlignedRectilinear, 
+	ip3DHoneycomb,
+    ipHilbertCurve, 
+	ipArchimedeanChords, 
+	ipOctagramSpiral, 
+	ipSupportCubic, 
+    ipLightning,
+    ipCrossHatch,
+    ipCross,
+    ipCross3d,
+    ipquarter_cubic,
+    iptetrahedral,
+    ipTpmsD,
+    ipGradualTpmsG,
+    ipGradualTpmsD,
+    ipGradualTpmsFK,
+    ipTpmsFK,
+    ipZigZag,
+    ipCrossZag,
+    ipLockedZag,
+    ipLateralHoneycomb, 
+    ipLateralLattice,
+    ipField,
+    //no use
+    ipMonotonic,
+    ipMonotonicLine,     
+	ipSupportBase,
+    ipConcentricInternal,
+    ipCount
+};
+
+enum GradualDirection : int {
+    GradualDir_X,
+    GradualDir_Y,
+    GradualDir_Z,
+    GradualDir_count
+};
+
+enum FieldCellType : int {
+    FieldCell_SchwarzD  = 0,
+    FieldCell_Gyroid    = 1,
+    FieldCell_FK        = 2,
+    FieldCell_count
+};
+
+enum class IroningType {
+    NoIroning,
+    TopSurfaces,
+    TopmostOnly,
+    AllSolid,
+    Count,
+};
+
+//BBS
+enum class WallInfillOrder {
+    InnerOuterInfill,
+    OuterInnerInfill,
+    InfillInnerOuter,
+    InfillOuterInner,
+    InnerOuterInnerInfill,
+    Count,
+};
+
+// BBS
+enum class WallSequence {
+    InnerOuter,
+    OuterInner,
+    InnerOuterInner,
+    AdaptiveOuterInner,
+    Count,
+};
+
+// Orca
+enum class WallDirection
+{
+    Auto,
+    CounterClockwise,
+    Clockwise,
+    Count,
+};
+
+//BBS
+enum class PrintSequence {
+    ByLayer,
+    ByObject,
+    ByDefault,
+    Count,
+};
+
+enum class PrintOrder
+{
+    Default,
+    AsObjectList,
+    Count,
+};
+
+enum class SlicingMode
+{
+    // Regular, applying ClipperLib::pftNonZero rule when creating ExPolygons.
+    Regular,
+    // Compatible with 3DLabPrint models, applying ClipperLib::pftEvenOdd rule when creating ExPolygons.
+    EvenOdd,
+    // Orienting all contours CCW, thus closing all holes.
+    CloseHoles,
+};
+
+enum SupportMaterialPattern {
+    smpDefault,
+    smpRectilinear, smpRectilinearGrid, smpHoneycomb,
+    smpNone,
+    smpLightning,
+    smpCross, smpGyroid, smpTriangles, smpZigzag,
+};
+
+enum SupportMaterialStyle {
+    smsDefault, smsGrid, smsSnug, smsTreeSlim, smsTreeStrong, smsTreeHybrid, smsTreeOrganic,
+};
+
+enum LongRectrationLevel
+{
+    Disabled=0,
+    EnableMachine,
+    EnableFilament
+};
+
+enum SupportMaterialInterfacePattern {
+    smipAuto, smipRectilinear, smipConcentric, smipRectilinearInterlaced, smipGrid, smipMonotonicLine
+};
+
+enum class PrimeTowerEnhanceType{
+    pteCone, pteChamfer, pteCornerRib
+};
+
+enum class PrimeTowerStartIroningType {
+    ptsiDisabled      = 0,
+    ptsiReciprocating = 1,
+    ptsiRotary        = 2 // Reserved for a future rotary ironing path.
+};
+
+// BBS
+enum SupportType {
+    stNormalAuto, stTreeAuto, stNormal, stTree
+};
+
+// from cura
+enum SupportDistPriority{
+    XY_OVERRIDES_Z,
+    Z_OVERRIDES_XY
+};
+
+inline bool is_tree(SupportType stype)
+{
+    return std::set<SupportType>{stTreeAuto, stTree}.count(stype) != 0;
+};
+inline bool is_tree_slim(SupportType type, SupportMaterialStyle style)
+{
+    return is_tree(type) && style==smsTreeSlim;
+};
+inline bool is_auto(SupportType stype)
+{
+    return std::set<SupportType>{stNormalAuto, stTreeAuto}.count(stype) != 0;
+};
+
+enum SeamPosition { spNearest, spAligned, spAlignedBack, spRear, spRandom, spAssemble_zgap };
+
+// Orca
+enum class SeamScarfType {
+    None,
+    External,
+    All,
+};
+
+// Orca
+enum EnsureVerticalShellThickness {
+    evstNone,
+    evstCriticalOnly,
+    evstModerate,
+    evstAll,
+};
+
+enum CoolingSlowdownLogicType {
+    UniformCooling,
+    ConsistentSurface,
+    NonSlowOuterWalls,
+    SmartCoolingZones,
+    Proportional,
+};
+
+//Orca
+enum InternalBridgeFilter {
+    ibfDisabled, ibfLimited, ibfNofilter
+};
+
+//Orca
+enum GapFillTarget {
+     gftEverywhere, gftTopBottom, gftNowhere
+ };
+
+
+enum LiftType {
+    NormalLift,
+    SpiralLift,
+    LazyLift
+};
+
+enum SLAMaterial {
+    slamTough,
+    slamFlex,
+    slamCasting,
+    slamDental,
+    slamHeatResistant,
+};
+
+enum SLADisplayOrientation {
+    sladoLandscape,
+    sladoPortrait
+};
+
+enum SLAPillarConnectionMode {
+    slapcmZigZag,
+    slapcmCross,
+    slapcmDynamic
+};
+
+enum BrimType {
+    btAutoBrim,  // BBS
+    btEar, // Orca
+    btPainted,  // BBS
+    btOuterOnly,
+    btInnerOnly,
+    btOuterAndInner,
+    btNoBrim
+};
+
+enum TimelapseType : int { 
+
+   tlTraditional,
+    tlSmooth,
+    tlClose
+};
+
+enum FilamentMapMode : int {
+    fmmAutoForSaving = 0,
+    fmmAutoForMatch,
+    fmmManual
+};
+
+enum ExtruderType {
+    etDirectDrive = 0,
+    etBowden,
+    etMaxExtruderType = etBowden
+};
+
+enum NozzleVolumeType {
+    nvtStandard = 0,
+    nvtHighFlow,
+    nvtHybrid,
+    nvtTPUHighFlow,
+    nvtMaxNozzleVolumeType = nvtTPUHighFlow
+};
+
+std::string get_extruder_variant_string(ExtruderType extruder_type, NozzleVolumeType nozzle_volume_type);
+
+struct FilamentMapAutoInput
+{
+    size_t filament_count { 0 };
+    size_t nozzle_count { 0 };
+    std::vector<unsigned int> used_filaments;
+    // Indexed by the 0-based physical nozzle ID. An empty vector keeps the
+    // legacy behavior in callers which do not apply a layer-height constraint.
+    std::vector<bool> nozzle_compatibility; // Hard layer-height limits.
+    std::vector<bool> nozzle_recommendation; // Preferred candidates, never a manual-map veto.
+    std::vector<std::string> filament_types;
+    std::vector<std::string> filament_colours;
+    std::vector<std::string> filament_presets;
+};
+
+bool nozzle_supports_layer_heights(double nozzle_diameter, double layer_height, double initial_layer_height);
+
+bool is_nozzle_compatible_with_layer_heights(double nozzle_diameter,
+                                             double min_layer_height,
+                                             double max_layer_height,
+                                             double layer_height,
+                                             double initial_layer_height);
+
+std::vector<int> normalize_filament_map(const std::vector<int>& raw_map,
+                                        size_t filament_count,
+                                        size_t nozzle_count,
+                                        int default_nozzle = 1);
+std::string validate_complete_filament_map(const std::vector<int>& filament_map,
+                                           size_t filament_count,
+                                           size_t nozzle_count);
+std::vector<int> build_legacy_filament_map(size_t filament_count, size_t nozzle_count);
+std::vector<int> build_filament_map_2(const std::vector<int>& filament_map);
+std::vector<int> resolve_effective_filament_map(FilamentMapMode mode,
+                                                const std::vector<int>& saved_manual_map,
+                                                const FilamentMapAutoInput& input,
+                                                std::string* error = nullptr);
+
+unsigned int get_physical_nozzle_index(const GCodeConfig& config, unsigned int filament_id);
+unsigned int get_physical_nozzle_index(const DynamicConfig& config, unsigned int filament_id);
+double get_physical_nozzle_diameter(const PrintConfig& config, unsigned int filament_id);
+
+inline FloatOrPercent nozzle_variant_value(const ConfigOptionFloatsOrPercentsNullable& option, size_t nozzle_index)
+{
+    if (option.values.empty())
+        return FloatOrPercent(0., false);
+    const size_t index = option.values.size() == 1 || nozzle_index >= option.values.size() ? 0 : nozzle_index;
+    if (!option.is_nil(index))
+        return option.values[index];
+    for (size_t fallback = 0; fallback < option.values.size(); ++fallback)
+        if (!option.is_nil(fallback))
+            return option.values[fallback];
+    return FloatOrPercent(0., false);
+}
+
+inline ConfigOptionFloatOrPercent nozzle_variant_option(
+    const ConfigOptionFloatsOrPercentsNullable& option, size_t nozzle_index)
+{
+    const FloatOrPercent value = nozzle_variant_value(option, nozzle_index);
+    return ConfigOptionFloatOrPercent(value.value, value.percent);
+}
+
+inline double nozzle_variant_abs_value(
+    const ConfigOptionFloatsOrPercentsNullable& option, size_t nozzle_index, double ratio_over)
+{
+    return nozzle_variant_value(option, nozzle_index).get_abs_value(ratio_over);
+}
+
+enum SkirtType { stCombined, stPerObject };
+
+enum DraftShield {
+    dsDisabled, dsLimited, dsEnabled
+};
+
+enum class PerimeterGeneratorType
+{
+    // Classic perimeter generator using Clipper offsets with constant extrusion width.
+    Classic,
+    // Perimeter generator with variable extrusion width based on the paper
+    // "A framework for adaptive width control of dense contour-parallel toolpaths in fused deposition modeling" ported from Cura.
+    Arachne
+};
+
+// BBS
+enum OverhangFanThreshold {
+    Overhang_threshold_none = 0,
+    Overhang_threshold_1_4,
+    Overhang_threshold_2_4,
+    Overhang_threshold_3_4,
+    Overhang_threshold_4_4,
+    Overhang_threshold_bridge
+};
+
+// BBS
+enum BedType {
+    btDefault = 0,
+    btPC,
+    btEP,
+    btPEI,
+    btPTE,
+    btDEF,
+    btER,
+    btCount
+};
+
+enum class BedTemperatureMode { UseMaxTemperature, UseFirstMaterial };
+
+// BBS
+enum LayerSeq {
+    flsAuto, 
+    flsCutomize
+};
+
+// BBS
+enum NozzleType {
+    ntUndefine = 0,
+    ntHardenedSteel,
+    ntStainlessSteel,
+    ntBrass,
+    ntCount
+};
+
+static std::unordered_map<NozzleType, std::string>NozzleTypeEumnToStr = {
+    {NozzleType::ntUndefine,        "undefine"},
+    {NozzleType::ntHardenedSteel,   "hardened_steel"},
+    {NozzleType::ntStainlessSteel,  "stainless_steel"},
+    {NozzleType::ntBrass,           "brass"}
+};
+
+// BBS
+enum PrinterStructure {
+    psUndefine=0,
+    psCoreXY,
+    psI3,
+    psHbot,
+    psDelta
+};
+
+// BBS
+enum ZHopType {
+    zhtAuto = 0,
+    zhtNormal,
+    zhtSlope,
+    zhtSpiral,
+    zhtCount
+};
+
+enum RetractLiftEnforceType {
+    rletAllSurfaces = 0,
+    rletTopOnly,
+    rletBottomOnly,
+    rletTopAndBottom
+};
+
+enum class GCodeThumbnailsFormat {
+    PNG, JPG, QOI, BTT_TFT, ColPic, CR_PNG
+};
+
+enum CounterboreHoleBridgingOption {
+    chbNone, chbBridges, chbFilled
+};
+
+static std::string bed_type_to_gcode_string(const BedType type)
+{
+    std::string type_str;
+
+    switch (type) {
+    case btPC:
+        type_str = "cool_plate";
+        break;
+    case btEP:
+        type_str = "eng_plate";
+        break;
+    case btPEI:
+        type_str = "hot_plate";
+        break;
+    case btPTE:
+        type_str = "textured_plate";
+        break;
+    case btER: 
+        type_str = "epoxy_resin_plate"; 
+        break;
+    default:
+        type_str = "unknown";
+        break;
+    }
+
+    return type_str;
+}
+
+static std::string get_bed_temp_key(const BedType type)
+{
+    if (type == btPC)
+        return "cool_plate_temp";
+
+    if (type == btEP)
+        return "eng_plate_temp";
+
+    if (type == btPEI)
+        return "hot_plate_temp";
+
+    if (type == btPTE)
+        return "textured_plate_temp";
+
+    if (type == btER)
+        return "epoxy_resin_plate_temp";
+
+    if (type == btDEF)
+        return "customized_plate_temp";
+
+    return "";
+}
+
+static std::string get_bed_temp_1st_layer_key(const BedType type)
+{
+    if (type == btPC)
+        return "cool_plate_temp_initial_layer";
+
+    if (type == btEP)
+        return "eng_plate_temp_initial_layer";
+
+    if (type == btPEI)
+        return "hot_plate_temp_initial_layer";
+
+    if (type == btPTE)
+        return "textured_plate_temp_initial_layer";
+
+    if (type == btER)
+        return "epoxy_resin_plate_temp_initial_layer";
+
+    if (type == btDEF)
+        return "customized_plate_temp_initial_layer";
+
+    return "";
+}
+
+#define CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(NAME) \
+    template<> const t_config_enum_names& ConfigOptionEnum<NAME>::get_enum_names(); \
+    template<> const t_config_enum_values& ConfigOptionEnum<NAME>::get_enum_values();
+
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(PrinterTechnology)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(GCodeFlavor)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(FuzzySkinType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(FuzzySkinMode)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(NoiseType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(InfillPattern)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(IroningType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SlicingMode)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SupportMaterialPattern)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SupportMaterialStyle)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SupportMaterialInterfacePattern)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(PrimeTowerEnhanceType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(PrimeTowerStartIroningType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(LayerSeq)
+// BBS
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SupportType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SeamPosition)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SeamScarfType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SLADisplayOrientation)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SLAPillarConnectionMode)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(BrimType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(TimelapseType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(FilamentMapMode)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(ExtruderType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(NozzleVolumeType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(BedType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(BedTemperatureMode)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SkirtType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(DraftShield)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(ForwardCompatibilitySubstitutionRule)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(GCodeThumbnailsFormat)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(CounterboreHoleBridgingOption)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(PrintHostType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(AuthorizationType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(PerimeterGeneratorType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(CoolingSlowdownLogicType)
+#undef CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS
+
+class DynamicPrintConfig;
+
+// Defines each and every confiuration option of Slic3r, including the properties of the GUI dialogs.
+// Does not store the actual values, but defines default values.
+class PrintConfigDef : public ConfigDef
+{
+public:
+    PrintConfigDef();
+
+    static void handle_legacy(t_config_option_key &opt_key, std::string &value);
+    static void handle_legacy_composite(DynamicPrintConfig &config);
+
+    // Array options growing with the number of extruders
+    const std::vector<std::string>& extruder_option_keys() const { return m_extruder_option_keys; }
+    // Options defining the extruder retract properties. These keys are sorted lexicographically.
+    // The extruder retract keys could be overidden by the same values defined at the Filament level
+    // (then the key is further prefixed with the "filament_" prefix).
+    const std::vector<std::string>& extruder_retract_keys() const { return m_extruder_retract_keys; }
+
+    // BBS
+    const std::vector<std::string>& filament_option_keys() const { return m_filament_option_keys; }
+    const std::vector<std::string>& filament_retract_keys() const { return m_filament_retract_keys; }
+private:
+	void resetParamsProirity();
+    void getPriorityByKey(const std::string key, std::string& priority, std::string& isEdited);
+    void init_common_params();
+    void init_fff_params();
+    void init_extruder_option_keys();
+    void init_sla_params();
+
+    std::vector<std::string>    m_extruder_option_keys;
+    std::vector<std::string>    m_extruder_retract_keys;
+
+    // BBS
+    void init_filament_option_keys();
+
+    std::vector<std::string>    m_filament_option_keys;
+    std::vector<std::string>    m_filament_retract_keys;
+};
+
+// The one and only global definition of SLic3r configuration options.
+// This definition is constant.
+extern const PrintConfigDef print_config_def;
+
+class StaticPrintConfig;
+
+// Minimum object distance for arrangement, based on printer technology.
+double min_object_distance(const ConfigBase &cfg);
+
+// Slic3r dynamic configuration, used to override the configuration
+// per object, per modification volume or per printing material.
+// The dynamic configuration is also used to store user modifications of the print global parameters,
+// so the modified configuration values may be diffed against the active configuration
+// to invalidate the proper slicing resp. g-code generation processing steps.
+// This object is mapped to Perl as Slic3r::Config.
+class DynamicPrintConfig : public DynamicConfig
+{
+public:
+    DynamicPrintConfig() {}
+    DynamicPrintConfig(const DynamicPrintConfig &rhs) : DynamicConfig(rhs) {}
+    DynamicPrintConfig(DynamicPrintConfig &&rhs) noexcept : DynamicConfig(std::move(rhs)) {}
+    explicit DynamicPrintConfig(const StaticPrintConfig &rhs);
+    explicit DynamicPrintConfig(const ConfigBase &rhs) : DynamicConfig(rhs) {}
+
+    DynamicPrintConfig& operator=(const DynamicPrintConfig &rhs) { DynamicConfig::operator=(rhs); return *this; }
+    DynamicPrintConfig& operator=(DynamicPrintConfig &&rhs) noexcept { DynamicConfig::operator=(std::move(rhs)); return *this; }
+
+    static DynamicPrintConfig  full_print_config();
+    static DynamicPrintConfig* new_from_defaults_keys(const std::vector<std::string> &keys);
+
+    // Overrides ConfigBase::def(). Static configuration definition. Any value stored into this ConfigBase shall have its definition here.
+    const ConfigDef*    def() const override { return &print_config_def; }
+
+    void                normalize_fdm(int used_filaments = 0);
+    void                normalize_fdm_1();
+    //return the changed param set
+    t_config_option_keys normalize_fdm_2(int num_objects, int used_filaments = 0);
+
+    size_t              get_parameter_size(const std::string &param_name, size_t extruder_nums) const;
+    bool                printer_motion_options_per_nozzle() const;
+    size_t              printer_motion_option_stride() const;
+    void                set_num_extruders(unsigned int num_extruders);
+
+    bool                support_different_extruders(int &extruder_count) const;
+    int                 get_index_for_extruder(int extruder_or_filament_id, const std::string &id_name,
+                                               ExtruderType extruder_type, NozzleVolumeType nozzle_volume_type,
+                                               const std::string &variant_name, unsigned int stride = 1) const;
+    int                 get_index_for_extruder(int extruder_or_filament_id, const std::string &id_name,
+                                               ExtruderType extruder_type, NozzleVolumeType nozzle_volume_type,
+                                               const std::string &variant_name, unsigned int stride,
+                                               int nozzle_variant_index,
+                                               const std::string &nozzle_variant_name) const;
+    std::vector<int>    select_extruder_variant_values(const DynamicPrintConfig &printer_config,
+                                                       const std::vector<NozzleVolumeType> &nozzle_volume_types,
+                                                       const std::set<std::string> &keys, const std::string &id_name,
+                                                       const std::string &variant_name, unsigned int stride = 1,
+                                                       int only_extruder_id = 0,
+                                                       const std::vector<int> &nozzle_variant_indices = {},
+                                                       const std::string &nozzle_variant_name = std::string());
+
+    // BBS
+    void                set_num_filaments(unsigned int num_filaments);
+
+    //BBS
+    // Validate the PrintConfig. Returns an empty string on success, otherwise an error message is returned.
+    std::map<std::string, std::string>         validate(bool under_cli = false);
+
+    // Verify whether the opt_key has not been obsoleted or renamed.
+    // Both opt_key and value may be modified by handle_legacy().
+    // If the opt_key is no more valid in this version of Slic3r, opt_key is cleared by handle_legacy().
+    // handle_legacy() is called internally by set_deserialize().
+    void                handle_legacy(t_config_option_key &opt_key, std::string &value) const override
+        { PrintConfigDef::handle_legacy(opt_key, value); }
+
+    // Called after a config is loaded as a whole.
+    // Perform composite conversions, for example merging multiple keys into one key.
+    // For conversion of single options, the handle_legacy() method above is called.
+    void                handle_legacy_composite() override
+        { PrintConfigDef::handle_legacy_composite(*this); }
+
+    //BBS special case Support G/ Support W
+    std::string get_filament_type(std::string &displayed_filament_type, int id = 0);
+
+    bool is_custom_defined();
+};
+
+extern std::set<std::string> printer_extruder_options;
+extern std::set<std::string> print_options_with_variant;
+extern std::set<std::string> filament_options_with_variant;
+extern std::set<std::string> printer_options_with_variant_1;
+extern std::set<std::string> printer_options_with_variant_2;
+
+struct PresetVariantOptionDiff
+{
+    int         extruder_id {0};
+    std::string extruder_variant;
+    int         nozzle_variant {-1};
+    size_t      reference_index {0};
+    size_t      edited_index {0};
+};
+
+// These options describe the identity of each preset-variant row. They are
+// structural metadata, not independently editable preset parameters.
+bool is_process_variant_selector(const std::string &option_key);
+bool is_filament_variant_selector(const std::string &option_key);
+
+// Compare a process option by variant identity instead of raw vector shape.
+// Returns false when the option cannot be interpreted safely. An empty
+// differences vector means the effective values are equal.
+bool compare_process_variant_option_by_identity(
+    const DynamicPrintConfig &reference_config,
+    const DynamicPrintConfig &edited_config,
+    const std::string &option_key,
+    std::vector<PresetVariantOptionDiff> &differences);
+
+// Filament variants use (extruder variant, nozzle variant) as their stable
+// identity. A single vector value is the common default for all identities.
+bool compare_filament_variant_option_by_identity(
+    const DynamicPrintConfig &reference_config,
+    const DynamicPrintConfig &edited_config,
+    const std::string &option_key,
+    std::vector<PresetVariantOptionDiff> &differences);
+
+void handle_legacy_sla(DynamicPrintConfig &config);
+
+class StaticPrintConfig : public StaticConfig
+{
+public:
+    StaticPrintConfig() {}
+
+    // Overrides ConfigBase::def(). Static configuration definition. Any value stored into this ConfigBase shall have its definition here.
+    const ConfigDef*    def() const override { return &print_config_def; }
+    // Reference to the cached list of keys.
+    virtual const t_config_option_keys& keys_ref() const = 0;
+
+protected:
+    // Verify whether the opt_key has not been obsoleted or renamed.
+    // Both opt_key and value may be modified by handle_legacy().
+    // If the opt_key is no more valid in this version of Slic3r, opt_key is cleared by handle_legacy().
+    // handle_legacy() is called internally by set_deserialize().
+    void                handle_legacy(t_config_option_key &opt_key, std::string &value) const override
+        { PrintConfigDef::handle_legacy(opt_key, value); }
+
+    // Internal class for keeping a dynamic map to static options.
+    class StaticCacheBase
+    {
+    public:
+        // To be called during the StaticCache setup.
+        // Add one ConfigOption into m_map_name_to_offset.
+        template<typename T>
+        void                opt_add(const std::string &name, const char *base_ptr, const T &opt)
+        {
+            assert(m_map_name_to_offset.find(name) == m_map_name_to_offset.end());
+            m_map_name_to_offset[name] = (const char*)&opt - base_ptr;
+        }
+
+    protected:
+        std::map<std::string, ptrdiff_t>    m_map_name_to_offset;
+    };
+
+    // Parametrized by the type of the topmost class owning the options.
+    template<typename T>
+    class StaticCache : public StaticCacheBase
+    {
+    public:
+        // Calling the constructor of m_defaults with 0 forces m_defaults to not run the initialization.
+        StaticCache() : m_defaults(nullptr) {}
+        ~StaticCache() { delete m_defaults; m_defaults = nullptr; }
+
+        bool                initialized() const { return ! m_keys.empty(); }
+
+        ConfigOption*       optptr(const std::string &name, T *owner) const
+        {
+            const auto it = m_map_name_to_offset.find(name);
+            return (it == m_map_name_to_offset.end()) ? nullptr : reinterpret_cast<ConfigOption*>((char*)owner + it->second);
+        }
+
+        const ConfigOption* optptr(const std::string &name, const T *owner) const
+        {
+            const auto it = m_map_name_to_offset.find(name);
+            return (it == m_map_name_to_offset.end()) ? nullptr : reinterpret_cast<const ConfigOption*>((const char*)owner + it->second);
+        }
+
+        const std::vector<std::string>& keys()      const { return m_keys; }
+        const T&                        defaults()  const { return *m_defaults; }
+
+        // To be called during the StaticCache setup.
+        // Collect option keys from m_map_name_to_offset,
+        // assign default values to m_defaults.
+        void                finalize(T *defaults, const ConfigDef *defs)
+        {
+            assert(defs != nullptr);
+            m_defaults = defaults;
+            m_keys.clear();
+            m_keys.reserve(m_map_name_to_offset.size());
+            for (const auto &kvp : defs->options) {
+                // Find the option given the option name kvp.first by an offset from (char*)m_defaults.
+                ConfigOption *opt = this->optptr(kvp.first, m_defaults);
+                if (opt == nullptr)
+                    // This option is not defined by the ConfigBase of type T.
+                    continue;
+                m_keys.emplace_back(kvp.first);
+                const ConfigOptionDef *def = defs->get(kvp.first);
+                assert(def != nullptr);
+                if (def->default_value) {
+                    // Orca compatibility: ConfigOptionDef is the enum metadata owner.
+                    // Its factory attaches keys_map before StaticPrintConfig copies the value.
+                    std::unique_ptr<ConfigOption> default_option(def->create_default_option());
+                    opt->set(default_option.get());
+                }
+            }
+        }
+
+    private:
+        T                                  *m_defaults;
+        std::vector<std::string>            m_keys;
+    };
+};
+
+#define STATIC_PRINT_CONFIG_CACHE_BASE(CLASS_NAME) \
+public: \
+    /* Overrides ConfigBase::optptr(). Find ando/or create a ConfigOption instance for a given name. */ \
+    const ConfigOption*      optptr(const t_config_option_key &opt_key) const override \
+        { return s_cache_##CLASS_NAME.optptr(opt_key, this); } \
+    /* Overrides ConfigBase::optptr(). Find ando/or create a ConfigOption instance for a given name. */ \
+    ConfigOption*            optptr(const t_config_option_key &opt_key, bool create = false) override \
+        { return s_cache_##CLASS_NAME.optptr(opt_key, this); } \
+    /* Overrides ConfigBase::keys(). Collect names of all configuration values maintained by this configuration store. */ \
+    t_config_option_keys     keys() const override { return s_cache_##CLASS_NAME.keys(); } \
+    const t_config_option_keys& keys_ref() const override { return s_cache_##CLASS_NAME.keys(); } \
+    static const CLASS_NAME& defaults() { assert(s_cache_##CLASS_NAME.initialized()); return s_cache_##CLASS_NAME.defaults(); } \
+private: \
+    friend int print_config_static_initializer(); \
+    static void initialize_cache() \
+    { \
+        assert(! s_cache_##CLASS_NAME.initialized()); \
+        if (! s_cache_##CLASS_NAME.initialized()) { \
+            CLASS_NAME *inst = new CLASS_NAME(1); \
+            inst->initialize(s_cache_##CLASS_NAME, (const char*)inst); \
+            s_cache_##CLASS_NAME.finalize(inst, inst->def()); \
+        } \
+    } \
+    /* Cache object holding a key/option map, a list of option keys and a copy of this static config initialized with the defaults. */ \
+    static StaticPrintConfig::StaticCache<CLASS_NAME> s_cache_##CLASS_NAME;
+
+#define STATIC_PRINT_CONFIG_CACHE(CLASS_NAME) \
+    STATIC_PRINT_CONFIG_CACHE_BASE(CLASS_NAME) \
+public: \
+    /* Public default constructor will initialize the key/option cache and the default object copy if needed. */ \
+    CLASS_NAME() { assert(s_cache_##CLASS_NAME.initialized()); *this = s_cache_##CLASS_NAME.defaults(); } \
+protected: \
+    /* Protected constructor to be called when compounded. */ \
+    CLASS_NAME(int) {}
+
+#define STATIC_PRINT_CONFIG_CACHE_DERIVED(CLASS_NAME) \
+    STATIC_PRINT_CONFIG_CACHE_BASE(CLASS_NAME) \
+public: \
+    /* Overrides ConfigBase::def(). Static configuration definition. Any value stored into this ConfigBase shall have its definition here. */ \
+    const ConfigDef*    def() const override { return &print_config_def; } \
+    /* Handle legacy and obsoleted config keys */ \
+    void                handle_legacy(t_config_option_key &opt_key, std::string &value) const override \
+        { PrintConfigDef::handle_legacy(opt_key, value); }
+
+#define PRINT_CONFIG_CLASS_ELEMENT_DEFINITION(r, data, elem) BOOST_PP_TUPLE_ELEM(0, elem) BOOST_PP_TUPLE_ELEM(1, elem);
+#define PRINT_CONFIG_CLASS_ELEMENT_INITIALIZATION2(KEY) cache.opt_add(BOOST_PP_STRINGIZE(KEY), base_ptr, this->KEY);
+#define PRINT_CONFIG_CLASS_ELEMENT_INITIALIZATION(r, data, elem) PRINT_CONFIG_CLASS_ELEMENT_INITIALIZATION2(BOOST_PP_TUPLE_ELEM(1, elem))
+#define PRINT_CONFIG_CLASS_ELEMENT_HASH(r, data, elem) boost::hash_combine(seed, BOOST_PP_TUPLE_ELEM(1, elem).hash());
+#define PRINT_CONFIG_CLASS_ELEMENT_EQUAL(r, data, elem) if (! (BOOST_PP_TUPLE_ELEM(1, elem) == rhs.BOOST_PP_TUPLE_ELEM(1, elem))) return false;
+#define PRINT_CONFIG_CLASS_ELEMENT_LOWER(r, data, elem) \
+        if (BOOST_PP_TUPLE_ELEM(1, elem) < rhs.BOOST_PP_TUPLE_ELEM(1, elem)) return true; \
+        if (! (BOOST_PP_TUPLE_ELEM(1, elem) == rhs.BOOST_PP_TUPLE_ELEM(1, elem))) return false;
+
+#define PRINT_CONFIG_CLASS_DEFINE(CLASS_NAME, PARAMETER_DEFINITION_SEQ) \
+class CLASS_NAME : public StaticPrintConfig { \
+    STATIC_PRINT_CONFIG_CACHE(CLASS_NAME) \
+public: \
+    BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_ELEMENT_DEFINITION, _, PARAMETER_DEFINITION_SEQ) \
+    size_t hash() const throw() \
+    { \
+        size_t seed = 0; \
+        BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_ELEMENT_HASH, _, PARAMETER_DEFINITION_SEQ) \
+        return seed; \
+    } \
+    bool operator==(const CLASS_NAME &rhs) const throw() \
+    { \
+        BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_ELEMENT_EQUAL, _, PARAMETER_DEFINITION_SEQ) \
+        return true; \
+    } \
+    bool operator!=(const CLASS_NAME &rhs) const throw() { return ! (*this == rhs); } \
+    bool operator<(const CLASS_NAME &rhs) const throw() \
+    { \
+        BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_ELEMENT_LOWER, _, PARAMETER_DEFINITION_SEQ) \
+        return false; \
+    } \
+protected: \
+    void initialize(StaticCacheBase &cache, const char *base_ptr) \
+    { \
+        BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_ELEMENT_INITIALIZATION, _, PARAMETER_DEFINITION_SEQ) \
+    } \
+};
+
+#define PRINT_CONFIG_CLASS_DERIVED_CLASS_LIST_ITEM(r, data, i, elem) BOOST_PP_COMMA_IF(i) public elem
+#define PRINT_CONFIG_CLASS_DERIVED_CLASS_LIST(CLASSES_PARENTS_TUPLE) BOOST_PP_SEQ_FOR_EACH_I(PRINT_CONFIG_CLASS_DERIVED_CLASS_LIST_ITEM, _, BOOST_PP_TUPLE_TO_SEQ(CLASSES_PARENTS_TUPLE))
+#define PRINT_CONFIG_CLASS_DERIVED_INITIALIZER_ITEM(r, VALUE, i, elem) BOOST_PP_COMMA_IF(i) elem(VALUE)
+#define PRINT_CONFIG_CLASS_DERIVED_INITIALIZER(CLASSES_PARENTS_TUPLE, VALUE) BOOST_PP_SEQ_FOR_EACH_I(PRINT_CONFIG_CLASS_DERIVED_INITIALIZER_ITEM, VALUE, BOOST_PP_TUPLE_TO_SEQ(CLASSES_PARENTS_TUPLE))
+#define PRINT_CONFIG_CLASS_DERIVED_INITCACHE_ITEM(r, data, elem) this->elem::initialize(cache, base_ptr);
+#define PRINT_CONFIG_CLASS_DERIVED_INITCACHE(CLASSES_PARENTS_TUPLE) BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_DERIVED_INITCACHE_ITEM, _, BOOST_PP_TUPLE_TO_SEQ(CLASSES_PARENTS_TUPLE))
+#define PRINT_CONFIG_CLASS_DERIVED_HASH(r, data, elem) boost::hash_combine(seed, static_cast<const elem*>(this)->hash());
+#define PRINT_CONFIG_CLASS_DERIVED_EQUAL(r, data, elem) \
+    if (! (*static_cast<const elem*>(this) == static_cast<const elem&>(rhs))) return false;
+
+// Generic version, with or without new parameters. Don't use this directly.
+#define PRINT_CONFIG_CLASS_DERIVED_DEFINE1(CLASS_NAME, CLASSES_PARENTS_TUPLE, PARAMETER_DEFINITION, PARAMETER_REGISTRATION, PARAMETER_HASHES, PARAMETER_EQUALS) \
+class CLASS_NAME : PRINT_CONFIG_CLASS_DERIVED_CLASS_LIST(CLASSES_PARENTS_TUPLE) { \
+    STATIC_PRINT_CONFIG_CACHE_DERIVED(CLASS_NAME) \
+    CLASS_NAME() : PRINT_CONFIG_CLASS_DERIVED_INITIALIZER(CLASSES_PARENTS_TUPLE, 0) { assert(s_cache_##CLASS_NAME.initialized()); *this = s_cache_##CLASS_NAME.defaults(); } \
+public: \
+    PARAMETER_DEFINITION \
+    size_t hash() const throw() \
+    { \
+        size_t seed = 0; \
+        BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_DERIVED_HASH, _, BOOST_PP_TUPLE_TO_SEQ(CLASSES_PARENTS_TUPLE)) \
+        PARAMETER_HASHES \
+        return seed; \
+    } \
+    bool operator==(const CLASS_NAME &rhs) const throw() \
+    { \
+        BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_DERIVED_EQUAL, _, BOOST_PP_TUPLE_TO_SEQ(CLASSES_PARENTS_TUPLE)) \
+        PARAMETER_EQUALS \
+        return true; \
+    } \
+    bool operator!=(const CLASS_NAME &rhs) const throw() { return ! (*this == rhs); } \
+protected: \
+    CLASS_NAME(int) : PRINT_CONFIG_CLASS_DERIVED_INITIALIZER(CLASSES_PARENTS_TUPLE, 1) {} \
+    void initialize(StaticCacheBase &cache, const char* base_ptr) { \
+        PRINT_CONFIG_CLASS_DERIVED_INITCACHE(CLASSES_PARENTS_TUPLE) \
+        PARAMETER_REGISTRATION \
+    } \
+};
+// Variant without adding new parameters.
+#define PRINT_CONFIG_CLASS_DERIVED_DEFINE0(CLASS_NAME, CLASSES_PARENTS_TUPLE) \
+    PRINT_CONFIG_CLASS_DERIVED_DEFINE1(CLASS_NAME, CLASSES_PARENTS_TUPLE, BOOST_PP_EMPTY(), BOOST_PP_EMPTY(), BOOST_PP_EMPTY(), BOOST_PP_EMPTY())
+// Variant with adding new parameters.
+#define PRINT_CONFIG_CLASS_DERIVED_DEFINE(CLASS_NAME, CLASSES_PARENTS_TUPLE, PARAMETER_DEFINITION_SEQ) \
+    PRINT_CONFIG_CLASS_DERIVED_DEFINE1(CLASS_NAME, CLASSES_PARENTS_TUPLE, \
+        BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_ELEMENT_DEFINITION, _, PARAMETER_DEFINITION_SEQ), \
+        BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_ELEMENT_INITIALIZATION, _, PARAMETER_DEFINITION_SEQ), \
+        BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_ELEMENT_HASH, _, PARAMETER_DEFINITION_SEQ), \
+        BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_ELEMENT_EQUAL, _, PARAMETER_DEFINITION_SEQ))
+
+// This object is mapped to Perl as Slic3r::Config::PrintObject.
+PRINT_CONFIG_CLASS_DEFINE(
+    PrintObjectConfig,
+
+    ((ConfigOptionFloat,               brim_object_gap))
+    ((ConfigOptionEnum<BrimType>,      brim_type))
+    ((ConfigOptionFloat,               brim_width))
+    ((ConfigOptionInt,                 brim_layers)) // PRINT-ADVISOR brim-layers
+    ((ConfigOptionFloat,               brim_layers_object_gap)) // PRINT-ADVISOR brim-layers
+    ((ConfigOptionFloat,               brim_ears_detection_length))
+    ((ConfigOptionFloat,               brim_ears_max_angle))
+    ((ConfigOptionBool,                bridge_no_support))
+    ((ConfigOptionFloat,               elefant_foot_compensation))
+    ((ConfigOptionInt,                 elefant_foot_compensation_layers))
+    ((ConfigOptionFloat,               max_bridge_length))
+    ((ConfigOptionFloatsOrPercentsNullable, line_width))
+    // Force the generation of solid shells between adjacent materials/volumes.
+    ((ConfigOptionBool,                interface_shells))
+    ((ConfigOptionFloat,               layer_height))
+    ((ConfigOptionBool,                zaa_enabled))
+    ((ConfigOptionFloat,               zaa_wall_lowering_min_slope))
+    ((ConfigOptionFloat,               zaa_slice_plane_offset))
+    ((ConfigOptionBool,                zaa_lock_top_surface_fill_direction))
+    // MS: AppearanceUnderExtrusion accel recovery smoothing (per-object overrideable).
+    ((ConfigOptionBool,                msao_recovery_enable))
+    ((ConfigOptionFloat,               msao_safe_accel))
+    ((ConfigOptionFloat,               msao_safe_velocity))
+    ((ConfigOptionFloat,               mmu_segmented_region_max_width))
+    ((ConfigOptionFloat,               mmu_segmented_region_interlocking_depth))
+    ((ConfigOptionFloat,               raft_contact_distance))
+    ((ConfigOptionFloat,               raft_expansion))
+    ((ConfigOptionPercent,             raft_first_layer_density))
+    ((ConfigOptionFloat,               raft_first_layer_expansion))
+    ((ConfigOptionInt,                 raft_layers))
+    ((ConfigOptionEnum<SeamPosition>,  seam_position))
+    ((ConfigOptionBool,                staggered_inner_seams))
+    ((ConfigOptionFloat,               slice_closing_radius))
+    ((ConfigOptionEnum<SlicingMode>,   slicing_mode))
+    ((ConfigOptionBool,                enable_support))
+    // Automatic supports (generated based on support_threshold_angle).
+    ((ConfigOptionEnum<SupportType>,   support_type))
+    // Direction of the support pattern (in XY plane).`
+    ((ConfigOptionFloat,               support_angle))
+    ((ConfigOptionBool,                support_on_build_plate_only))
+    ((ConfigOptionBool,                support_critical_regions_only))
+    ((ConfigOptionBool,                support_remove_small_overhang))
+    ((ConfigOptionFloat,               support_top_z_distance))
+    ((ConfigOptionFloat,               minimum_support_area))
+    ((ConfigOptionEnum<SupportDistPriority>, support_xy_overrides_z))
+    ((ConfigOptionFloat,               support_bottom_z_distance))
+    ((ConfigOptionInt,                 enforce_support_layers))
+    ((ConfigOptionInt,                 support_filament))
+    ((ConfigOptionFloatsOrPercentsNullable, support_line_width))
+    ((ConfigOptionBool,                support_interface_not_for_body))
+    ((ConfigOptionBool,                support_interface_loop_pattern))
+    ((ConfigOptionInt,                 support_interface_filament))
+    ((ConfigOptionInt,                 support_interface_top_layers))
+    ((ConfigOptionInt,                 support_interface_bottom_layers))
+    ((ConfigOptionFloat,               support_interface_min_area))
+    // Spacing between interface lines (the hatching distance). Set zero to get a solid interface.
+    ((ConfigOptionFloat,               support_interface_spacing))
+    ((ConfigOptionFloatsNullable,      support_interface_speed))
+    ((ConfigOptionEnum<SupportMaterialPattern>, support_base_pattern))
+    ((ConfigOptionEnum<SupportMaterialPattern>, support_base_pattern_tree))
+    ((ConfigOptionEnum<SupportMaterialInterfacePattern>, support_interface_pattern))
+    // Spacing between support material lines (the hatching distance).
+    ((ConfigOptionFloat,               support_base_pattern_spacing))
+    ((ConfigOptionFloat,               support_expansion))
+    ((ConfigOptionFloatsNullable,      support_speed))
+    ((ConfigOptionEnum<SupportMaterialStyle>, support_style))
+    // BBS
+    //((ConfigOptionBool,                independent_support_layer_height))
+    ((ConfigOptionBool, ironing_support_layer))
+    ((ConfigOptionFloat, tree_hybrid_cross_height))
+    // Orca internal thick bridge
+    ((ConfigOptionBool,                thick_bridges))
+    ((ConfigOptionBool,                thick_internal_bridges))
+    ((ConfigOptionEnum<InternalBridgeFilter>,  dont_filter_internal_bridges))
+    // Overhang angle threshold.
+    ((ConfigOptionInt,                 support_threshold_angle))
+    ((ConfigOptionFloat,               support_object_xy_distance))
+    ((ConfigOptionFloat,               support_object_first_layer_gap))
+    ((ConfigOptionBool,                support_ironing))
+    ((ConfigOptionEnum<InfillPattern>, support_ironing_pattern))
+    ((ConfigOptionPercent,             support_ironing_flow))
+    ((ConfigOptionFloat,               support_ironing_spacing))
+    ((ConfigOptionFloat,               xy_hole_compensation))
+    ((ConfigOptionFloat,               xy_contour_compensation))
+    ((ConfigOptionBool,                flush_into_objects))
+    // BBS
+    ((ConfigOptionBool,                flush_into_infill))
+    ((ConfigOptionBool,                flush_into_support))
+    ((ConfigOptionBool,                flush_into_skeleton))
+    // BBS
+    ((ConfigOptionFloat,              tree_support_branch_distance))
+    ((ConfigOptionFloat,              tree_support_tip_diameter))
+    ((ConfigOptionFloat,              tree_support_branch_diameter))
+    ((ConfigOptionFloat,              tree_support_branch_diameter_angle))
+    ((ConfigOptionFloat,              tree_support_branch_diameter_double_wall))
+    ((ConfigOptionFloat,              tree_support_branch_angle))
+    ((ConfigOptionFloat,              tree_support_angle_slow))
+    ((ConfigOptionInt,                tree_support_wall_count))
+    ((ConfigOptionInt,                tree_support_wall_count_tree))
+    ((ConfigOptionBool,               tree_support_adaptive_layer_height))
+    ((ConfigOptionBool,               tree_support_auto_brim))
+    ((ConfigOptionFloat,              tree_support_brim_width))
+    ((ConfigOptionBool,               detect_narrow_internal_solid_infill))
+    // ((ConfigOptionBool,               adaptive_layer_height))
+    ((ConfigOptionFloat,              support_bottom_interface_spacing))
+    ((ConfigOptionEnum<PerimeterGeneratorType>, wall_generator))
+    ((ConfigOptionPercent,            wall_transition_length))
+    ((ConfigOptionPercent,            wall_transition_filter_deviation))
+    ((ConfigOptionFloat,              wall_transition_angle))
+    ((ConfigOptionInt,                wall_distribution_count))
+    ((ConfigOptionPercent,            min_feature_size))
+    ((ConfigOptionPercent,            initial_layer_min_bead_width))
+    ((ConfigOptionPercent,            min_bead_width))
+
+    // Orca
+    ((ConfigOptionFloat,              make_overhang_printable_angle))
+    ((ConfigOptionFloat,              make_overhang_printable_hole_size))
+    ((ConfigOptionFloat,              tree_support_branch_distance_organic))
+    ((ConfigOptionPercent,            tree_support_top_rate))
+    ((ConfigOptionFloat,              tree_support_branch_diameter_organic))
+    ((ConfigOptionFloat,              tree_support_branch_angle_organic))
+    ((ConfigOptionBool,               tree_support_organic_validate_repair))
+    ((ConfigOptionEnum<GapFillTarget>,gap_fill_target))
+    ((ConfigOptionFloat,              min_length_factor))
+
+    // Move all acceleration and jerk settings to object
+    ((ConfigOptionFloatsNullable,     default_acceleration))
+    ((ConfigOptionFloatsNullable,     outer_wall_acceleration))
+    ((ConfigOptionFloatsNullable,     inner_wall_acceleration))
+    ((ConfigOptionFloatsNullable,     top_surface_acceleration))
+    ((ConfigOptionFloatsNullable,     initial_layer_acceleration))
+    ((ConfigOptionFloatOrPercent,     bridge_acceleration))
+    ((ConfigOptionFloatsNullable,     travel_acceleration))
+    ((ConfigOptionFloatsOrPercentsNullable, sparse_infill_acceleration))
+    ((ConfigOptionFloatOrPercent,     internal_solid_infill_acceleration))
+    ((ConfigOptionFloatsNullable,     travel_short_distance_acceleration))
+    ((ConfigOptionFloat,              travel_short_distance_threshold))
+    //yy
+    ((ConfigOptionBool, overhang_optimization))
+    //((ConfigOptionFloatOrPercent, outer_wall_line_width))
+    ((ConfigOptionFloat,              default_jerk))
+    ((ConfigOptionFloat,              outer_wall_jerk))
+    ((ConfigOptionFloat,              inner_wall_jerk))
+    ((ConfigOptionFloat,              infill_jerk))
+    ((ConfigOptionFloat,              top_surface_jerk))
+    ((ConfigOptionFloat,              initial_layer_jerk))
+    ((ConfigOptionFloat,              travel_jerk))
+    ((ConfigOptionBool,               precise_z_height))
+        
+    ((ConfigOptionBool, interlocking_beam))
+    ((ConfigOptionFloat,interlocking_beam_width))
+    ((ConfigOptionFloat,interlocking_orientation))
+    ((ConfigOptionInt,  interlocking_beam_layer_count))
+    ((ConfigOptionInt,  interlocking_depth))
+    ((ConfigOptionInt,  interlocking_boundary_avoidance))
+
+)
+
+// This object is mapped to Perl as Slic3r::Config::PrintRegion.
+PRINT_CONFIG_CLASS_DEFINE(
+    PrintRegionConfig,
+
+    
+    ((ConfigOptionInt,                  bottom_shell_layers))
+    ((ConfigOptionFloat,                bottom_shell_thickness))
+    ((ConfigOptionFloat,                bridge_angle))
+    ((ConfigOptionFloat,                bridge_flow))
+    ((ConfigOptionFloat,                internal_bridge_flow))
+    ((ConfigOptionFloatsNullable,       bridge_speed))
+    ((ConfigOptionFloatsOrPercentsNullable, internal_bridge_speed))
+    ((ConfigOptionEnum<EnsureVerticalShellThickness>,   ensure_vertical_shell_thickness))
+    ((ConfigOptionEnum<InfillPattern>,  top_surface_pattern))
+    ((ConfigOptionEnum<InfillPattern>,  bottom_surface_pattern))
+    ((ConfigOptionEnum<InfillPattern>, internal_solid_infill_pattern))
+    ((ConfigOptionFloatsOrPercentsNullable, outer_wall_line_width))
+    ((ConfigOptionFloatsNullable,       outer_wall_speed))
+    ((ConfigOptionFloat,                infill_direction))
+    ((ConfigOptionFloat,                solid_infill_direction))
+    ((ConfigOptionBool,                 rotate_solid_infill_direction)) 
+    ((ConfigOptionBool,                 ai_infill))
+    ((ConfigOptionPercent,              sparse_infill_density)) 
+    ((ConfigOptionPercent,              tpms_start_infill_density)) 
+    ((ConfigOptionPercent,              tpms_end_infill_density)) 
+    ((ConfigOptionEnum<GradualDirection>, tpms_gradual_direction))
+    ((ConfigOptionPercent,              interior_coefficient))
+    ((ConfigOptionPercent,              surface_coefficient))
+    ((ConfigOptionEnum<FieldCellType>,  cell_type))
+    ((ConfigOptionBool,                 symmetric_infill_y_axis))
+    ((ConfigOptionFloat,                infill_shift_step))
+    ((ConfigOptionFloat,                infill_rotate_step))
+    ((ConfigOptionEnum<InfillPattern>,  sparse_infill_pattern)) 
+    ((ConfigOptionEnum<InfillPattern>,  locked_skin_infill_pattern)) 
+    ((ConfigOptionEnum<InfillPattern>,  locked_skeleton_infill_pattern))
+    ((ConfigOptionFloat,                lateral_lattice_angle_1))
+    ((ConfigOptionFloat,                lateral_lattice_angle_2))
+    ((ConfigOptionFloat,                infill_overhang_angle))
+    ((ConfigOptionBool,                 align_infill_direction_to_model))
+    ((ConfigOptionEnum<FuzzySkinType>,  fuzzy_skin))
+    ((ConfigOptionFloat,                fuzzy_skin_thickness))
+    ((ConfigOptionFloat,                fuzzy_skin_point_distance))
+    ((ConfigOptionBool,                 fuzzy_skin_first_layer))
+    ((ConfigOptionEnum<NoiseType>,      fuzzy_skin_noise_type))
+    ((ConfigOptionEnum<FuzzySkinMode>,  fuzzy_skin_mode))
+    ((ConfigOptionFloat,                fuzzy_skin_scale))
+    ((ConfigOptionInt,                  fuzzy_skin_octaves))
+    ((ConfigOptionFloat,                fuzzy_skin_persistence))
+    ((ConfigOptionFloatsNullable,       gap_infill_speed))
+    ((ConfigOptionInt,                  sparse_infill_filament))
+    ((ConfigOptionFloatsOrPercentsNullable, sparse_infill_line_width))
+    ((ConfigOptionPercent,              infill_wall_overlap))
+    ((ConfigOptionPercent,              top_bottom_infill_wall_overlap))
+    ((ConfigOptionFloatsNullable,       sparse_infill_speed))
+    ((ConfigOptionPercent, skeleton_infill_density))
+    ((ConfigOptionPercent, skin_infill_density))
+    ((ConfigOptionFloat, infill_lock_depth))
+    ((ConfigOptionFloat, skin_infill_depth))
+    ((ConfigOptionFloatsOrPercentsNullable, skin_infill_line_width))
+    ((ConfigOptionFloatsOrPercentsNullable, skeleton_infill_line_width))
+    ((ConfigOptionFloatOrPercent, skeleton_wipe_line_width))
+    ((ConfigOptionFloatOrPercent,       external_infill_margin))
+    ((ConfigOptionBool, infill_combination))
+    // Orca:
+    ((ConfigOptionFloatOrPercent,                infill_combination_max_layer_height))
+    ((ConfigOptionInt,                  fill_multiline))
+    // Ironing options
+    ((ConfigOptionEnum<IroningType>, ironing_type))
+    ((ConfigOptionEnum<InfillPattern>, ironing_pattern))
+    ((ConfigOptionPercent, ironing_flow))
+    ((ConfigOptionFloat, ironing_spacing))
+    ((ConfigOptionFloat, ironing_direction))
+    ((ConfigOptionFloat, ironing_speed))
+    ((ConfigOptionFloat, ironing_angle))
+    // Detect bridging perimeters
+    ((ConfigOptionBool, detect_overhang_wall))
+    ((ConfigOptionBool, smooth_speed_discontinuity_area))
+    ((ConfigOptionFloat, smooth_coefficient))
+    ////yy
+    //((ConfigOptionBool, overhang_optimization))
+    //((ConfigOptionBool, overhang_optimization))
+    ((ConfigOptionInt, wall_filament))
+    ((ConfigOptionFloatsOrPercentsNullable, inner_wall_line_width))
+    ((ConfigOptionFloatsNullable, inner_wall_speed))
+    // Total number of perimeters.
+    ((ConfigOptionInt, wall_loops))
+    ((ConfigOptionBool, alternate_extra_wall))
+    ((ConfigOptionFloat, minimum_sparse_infill_area))
+    ((ConfigOptionInt, solid_infill_filament))
+    ((ConfigOptionFloatsOrPercentsNullable, internal_solid_infill_line_width))
+    ((ConfigOptionFloatsNullable, internal_solid_infill_speed))
+    // Detect thin walls.
+    ((ConfigOptionBool, detect_thin_wall))
+    ((ConfigOptionFloatsOrPercentsNullable, top_surface_line_width))
+    ((ConfigOptionInt, top_shell_layers))
+    ((ConfigOptionFloat, top_shell_thickness))
+    ((ConfigOptionFloatsNullable, top_surface_speed))
+    ((ConfigOptionBool,               automatic_extrusion_widths))
+    //BBS
+    ((ConfigOptionBoolsNullable,        enable_overhang_speed))
+    ((ConfigOptionFloatsOrPercentsNullable, overhang_1_4_speed))
+    ((ConfigOptionFloatsOrPercentsNullable, overhang_2_4_speed))
+    ((ConfigOptionFloatsOrPercentsNullable, overhang_3_4_speed))
+    ((ConfigOptionFloatsOrPercentsNullable, overhang_4_4_speed))
+    ((ConfigOptionFloatsOrPercentsNullable, overhang_totally_speed))
+    ((ConfigOptionBool,                 only_one_wall_top))
+
+    //SoftFever
+    ((ConfigOptionFloatOrPercent,       min_width_top_surface))
+    ((ConfigOptionBool,                 only_one_wall_first_layer))
+    ((ConfigOptionFloat,                print_flow_ratio))
+    ((ConfigOptionFloatOrPercent,       seam_gap))
+    ((ConfigOptionBool,                 role_based_wipe_speed))
+    ((ConfigOptionFloatOrPercent,       wipe_speed))
+    ((ConfigOptionBool,                 wipe_on_loops))
+    ((ConfigOptionBool,                 wipe_before_external_loop))
+    ((ConfigOptionEnum<WallInfillOrder>, wall_infill_order))
+    ((ConfigOptionBool,                 precise_outer_wall))
+    ((ConfigOptionBool,                 overhang_speed_classic))
+    ((ConfigOptionPercent,              bridge_density))
+    ((ConfigOptionFloat,                 filter_out_gap_fill))
+    ((ConfigOptionFloatsOrPercentsNullable, small_perimeter_speed))
+    ((ConfigOptionFloatsNullable,      small_perimeter_threshold))
+    ((ConfigOptionFloatsNullable,      top_solid_infill_flow_ratio))
+    ((ConfigOptionFloat,                bottom_solid_infill_flow_ratio))
+    ((ConfigOptionFloatOrPercent,       infill_anchor))
+    ((ConfigOptionFloatOrPercent,       infill_anchor_max))
+
+    // Orca
+    ((ConfigOptionBool,                 make_overhang_printable))
+    ((ConfigOptionBool,                 extra_perimeters_on_overhangs))
+    ((ConfigOptionBool,                 slowdown_for_curled_perimeters))
+    ((ConfigOptionBool,                 hole_to_polyhole))
+    ((ConfigOptionFloatOrPercent,       hole_to_polyhole_threshold))
+    ((ConfigOptionBool,                 hole_to_polyhole_twisted))
+    ((ConfigOptionBool,                 overhang_reverse))
+    ((ConfigOptionBool,                 overhang_reverse_internal_only))
+    ((ConfigOptionFloatOrPercent,       overhang_reverse_threshold))
+    ((ConfigOptionEnum<CounterboreHoleBridgingOption>, counterbore_hole_bridging))
+    ((ConfigOptionEnum<WallSequence>,  wall_sequence))
+    ((ConfigOptionBool,                is_infill_first))
+    ((ConfigOptionBool,                small_area_infill_flow_compensation))
+    ((ConfigOptionEnum<WallDirection>,  wall_direction))
+
+    // Orca: seam slopes
+    ((ConfigOptionEnum<SeamScarfType>,  seam_slope_type))
+    ((ConfigOptionBool,                 seam_slope_conditional))
+    ((ConfigOptionInt,                  scarf_angle_threshold))
+    ((ConfigOptionFloatOrPercent,       seam_slope_start_height))
+    ((ConfigOptionBool,                 seam_slope_entire_loop))
+    ((ConfigOptionFloat,                seam_slope_min_length))
+    ((ConfigOptionInt,                  seam_slope_steps))
+    ((ConfigOptionBool,                 seam_slope_inner_walls))
+    ((ConfigOptionBool,                 embedding_wall_into_infill))
+    ((ConfigOptionFloatOrPercent,       scarf_joint_speed))
+    ((ConfigOptionFloat,                scarf_joint_flow_ratio))
+    ((ConfigOptionPercent,              scarf_overhang_threshold))
+    ((ConfigOptionInt,                  arc_tolerance))
+
+)
+
+PRINT_CONFIG_CLASS_DEFINE(
+    MachineEnvelopeConfig,
+
+    // Orca: whether emit machine limits into the beginning of the G-code.
+    ((ConfigOptionBool,                 emit_machine_limits_to_gcode))
+    // Runtime marker: materialized machine-limit vectors are ordered by physical nozzle.
+    ((ConfigOptionBool,                 machine_limits_per_nozzle))
+    // M201 X... Y... Z... E... [mm/sec^2]
+    ((ConfigOptionFloats,               machine_max_acceleration_x))
+    ((ConfigOptionFloats,               machine_max_acceleration_y))
+    ((ConfigOptionFloats,               machine_max_acceleration_z))
+    ((ConfigOptionFloats,               machine_max_acceleration_e))
+    // M203 X... Y... Z... E... [mm/sec]
+    ((ConfigOptionFloats,               machine_max_speed_x))
+    ((ConfigOptionFloats,               machine_max_speed_y))
+    ((ConfigOptionFloats,               machine_max_speed_z))
+    ((ConfigOptionFloats,               machine_max_speed_e))
+
+    // M204 P... R... T...[mm/sec^2]
+    ((ConfigOptionFloats,               machine_max_acceleration_extruding))
+    ((ConfigOptionFloats,               machine_max_acceleration_retracting))
+    ((ConfigOptionFloats,               machine_max_acceleration_travel))
+
+    // M205 X... Y... Z... E... [mm/sec]
+    ((ConfigOptionFloats,               machine_max_jerk_x))
+    ((ConfigOptionFloats,               machine_max_jerk_y))
+    ((ConfigOptionFloats,               machine_max_jerk_z))
+    ((ConfigOptionFloats,               machine_max_jerk_e))
+    // M205 T... [mm/sec]
+    ((ConfigOptionFloats,               machine_min_travel_rate))
+    // M205 S... [mm/sec]
+    ((ConfigOptionFloats,               machine_min_extruding_rate))
+)
+
+// This object is mapped to Perl as Slic3r::Config::GCode.
+PRINT_CONFIG_CLASS_DEFINE(
+    GCodeConfig,
+
+    ((ConfigOptionString,              before_layer_change_gcode)) 
+    ((ConfigOptionString,              printing_by_object_gcode)) 
+    ((ConfigOptionFloats,              deretraction_speed))
+    //BBS
+    ((ConfigOptionBool,                enable_arc_fitting))
+    ((ConfigOptionString,              machine_end_gcode))
+    ((ConfigOptionStrings,             filament_end_gcode))
+    ((ConfigOptionFloats,              filament_flow_ratio))
+    ((ConfigOptionBools,               enable_pressure_advance))
+    ((ConfigOptionFloats,              pressure_advance))
+    ((ConfigOptionFloat,               fan_kickstart))
+    ((ConfigOptionBool,                fan_speedup_overhangs))
+    ((ConfigOptionFloat,               fan_speedup_time))
+    ((ConfigOptionFloats,              filament_diameter))
+    ((ConfigOptionInts,                filament_adhesiveness_category))
+    ((ConfigOptionFloats,              filament_density))
+    ((ConfigOptionStrings,             filament_type))
+    ((ConfigOptionBools,               filament_soluble))
+    ((ConfigOptionBools,               filament_is_support))
+    ((ConfigOptionFloats,              filament_cost))
+    ((ConfigOptionStrings,             default_filament_colour))
+    ((ConfigOptionInts,                temperature_vitrification))  //BBS
+    ((ConfigOptionFloats,              filament_max_volumetric_speed))
+    ((ConfigOptionInts,                required_nozzle_HRC))
+    ((ConfigOptionEnum<FilamentMapMode>, filament_map_mode))
+    ((ConfigOptionInts,                filament_map))
+    ((ConfigOptionInts,                filament_volume_map))
+    ((ConfigOptionInts,                filament_map_2))
+    ((ConfigOptionStrings,             filament_extruder_variant))
+    ((ConfigOptionInts,                filament_self_index))
+    ((ConfigOptionInts,                print_extruder_id))
+    ((ConfigOptionStrings,             print_extruder_variant))
+    ((ConfigOptionEnumsGeneric,        extruder_type))
+    ((ConfigOptionEnumsGeneric,        nozzle_volume_type))
+    ((ConfigOptionEnumsGeneric,        default_nozzle_volume_type))
+    ((ConfigOptionStrings,             extruder_variant_list))
+    ((ConfigOptionStrings,             extruder_ams_count))
+    ((ConfigOptionStrings,             extruder_nozzle_stats))
+    ((ConfigOptionIntsNullable,        extruder_max_nozzle_count))
+    ((ConfigOptionInts,                printer_extruder_id))
+    ((ConfigOptionStrings,             printer_extruder_variant))
+    ((ConfigOptionInt,                 master_extruder_id))
+    ((ConfigOptionBool,                enable_filament_dynamic_map))
+    ((ConfigOptionBool,                has_filament_switcher))
+    ((ConfigOptionStrings,             extruder_printable_area))
+    ((ConfigOptionFloats,              extruder_printable_height))
+    ((ConfigOptionFloatsNullable,      hotend_cooling_rate))
+    ((ConfigOptionFloatsNullable,      hotend_heating_rate))
+    ((ConfigOptionIntsNullable,        nozzle_flush_dataset))
+    // BBS
+    ((ConfigOptionBool,                scan_first_layer))
+    ((ConfigOptionPoints,              thumbnail_size))
+    // ((ConfigOptionBool,                spaghetti_detector))
+    ((ConfigOptionBool,                gcode_add_line_number))
+    ((ConfigOptionBool,                bbl_bed_temperature_gcode))
+    ((ConfigOptionEnum<GCodeFlavor>,   gcode_flavor)) 
+    ((ConfigOptionEnum<GCodeFlavorText>, prime_tower_position_type))
+
+    ((ConfigOptionFloat, time_cost)) 
+    ((ConfigOptionBool, machine_is_belt))
+    ((ConfigOptionFloat, belt_Z_offset))
+    ((ConfigOptionEnum<BedTemperatureMode>, bed_temperature_mode))
+    ((ConfigOptionString,              layer_change_gcode))
+    ((ConfigOptionString,              time_lapse_gcode))
+
+    ((ConfigOptionFloat,               max_volumetric_extrusion_rate_slope))
+    ((ConfigOptionFloat,               max_volumetric_extrusion_rate_slope_segment_length))
+    
+    ((ConfigOptionPercents,            retract_before_wipe))
+    ((ConfigOptionFloats,              retraction_length))
+    ((ConfigOptionFloats,              retract_length_toolchange))
+    ((ConfigOptionInt,                 enable_long_retraction_when_cut))
+    ((ConfigOptionFloats,              retraction_distances_when_cut))
+    ((ConfigOptionBools,               long_retractions_when_cut))
+    ((ConfigOptionFloats,              z_hop))
+    // BBS
+    ((ConfigOptionEnumsGeneric,        z_hop_types))
+    ((ConfigOptionFloats,              travel_slope))
+    ((ConfigOptionFloats,              retract_lift_above))
+    ((ConfigOptionFloats,              retract_lift_below))
+    ((ConfigOptionEnumsGeneric,        retract_lift_enforce))
+    ((ConfigOptionFloats,              retract_restart_extra))
+    ((ConfigOptionFloats,              retract_restart_extra_toolchange))
+    ((ConfigOptionFloats,              retraction_speed))
+    ((ConfigOptionString,              machine_start_gcode))
+    ((ConfigOptionStrings,             filament_start_gcode))
+    ((ConfigOptionBool,                single_extruder_multi_material))
+    ((ConfigOptionBool,                manual_filament_change))
+    ((ConfigOptionBool,                single_extruder_multi_material_priming))
+    ((ConfigOptionBool,                wipe_tower_no_sparse_layers))
+    ((ConfigOptionString,              change_filament_gcode))
+    ((ConfigOptionString,              change_extrusion_role_gcode))
+    ((ConfigOptionFloatsNullable,      travel_speed))
+    ((ConfigOptionFloatsNullable,      travel_speed_z))
+    ((ConfigOptionBool,                silent_mode))
+    ((ConfigOptionString,              machine_pause_gcode))
+    ((ConfigOptionString,              template_custom_gcode))
+    //BBS
+    ((ConfigOptionEnumsGenericNullable,nozzle_type))
+    ((ConfigOptionInt,                 nozzle_hrc))
+    ((ConfigOptionBool,                auxiliary_fan))
+    ((ConfigOptionBool,                support_air_filtration))
+    ((ConfigOptionEnum<PrinterStructure>,printer_structure))
+    ((ConfigOptionBool,                support_chamber_temp_control))
+
+
+    // SoftFever
+    ((ConfigOptionBool,                machine_LED_light_exist))
+    ((ConfigOptionBool,                machine_platform_motion_enable))
+    ((ConfigOptionBool,                machine_ptc_exist))
+    ((ConfigOptionBool,                use_firmware_retraction))
+    ((ConfigOptionBool,                use_relative_e_distances))
+    ((ConfigOptionBool,                accel_to_decel_enable))
+    ((ConfigOptionPercent,             accel_to_decel_factor))
+    ((ConfigOptionFloatOrPercent,      initial_layer_travel_speed))
+    ((ConfigOptionBool,                bbl_calib_mark_logo))
+    ((ConfigOptionBool,                disable_m73))
+
+    // Orca: mmu
+    ((ConfigOptionFloat,               cooling_tube_retraction))
+    ((ConfigOptionFloat,               cooling_tube_length))
+    ((ConfigOptionBool,                high_current_on_filament_swap))
+    ((ConfigOptionFloat,               parking_pos_retraction))
+    ((ConfigOptionFloat,               extra_loading_move))
+    ((ConfigOptionFloat,               machine_load_filament_time))
+    ((ConfigOptionFloat,               machine_tool_change_time))
+    ((ConfigOptionFloat,               machine_unload_filament_time))
+    ((ConfigOptionFloats,              filament_loading_speed))
+    ((ConfigOptionFloats,              filament_loading_speed_start))
+    ((ConfigOptionFloats,              filament_load_time))
+    ((ConfigOptionFloats,              filament_unloading_speed))
+    ((ConfigOptionFloats,              filament_unloading_speed_start))
+    ((ConfigOptionFloats,              filament_toolchange_delay))
+    // Orca todo: consolidate with machine_load_filament_time
+    ((ConfigOptionFloats,              filament_unload_time))
+    ((ConfigOptionInts,                filament_cooling_moves))
+    ((ConfigOptionFloats,              filament_cooling_initial_speed))
+    ((ConfigOptionFloats,              filament_minimal_purge_on_wipe_tower))
+    ((ConfigOptionFloats,              filament_cooling_final_speed))
+    ((ConfigOptionStrings,             filament_ramming_parameters))
+    ((ConfigOptionBools,               filament_multitool_ramming))
+    ((ConfigOptionFloats,              filament_multitool_ramming_volume))
+    ((ConfigOptionFloats,              filament_multitool_ramming_flow))
+    ((ConfigOptionFloats,              filament_stamping_loading_speed))
+    ((ConfigOptionFloats,              filament_stamping_distance))
+    ((ConfigOptionBool,                purge_in_prime_tower))
+    ((ConfigOptionBool,                enable_filament_ramming))
+    ((ConfigOptionBool,                support_multi_bed_types))
+
+    // Small Area Infill Flow Compensation
+    ((ConfigOptionStrings,              small_area_infill_flow_compensation_model))
+
+    ((ConfigOptionBool,                has_scarf_joint_seam))
+
+    ((ConfigOptionFloat, creality_flush_time))
+    //cura
+    ((ConfigOptionBool, acceleration_limit_mess_enable))
+    ((ConfigOptionBool, speed_limit_to_height_enable))
+    ((ConfigOptionString, acceleration_limit_mess))
+    ((ConfigOptionString, speed_limit_to_height))
+    ((ConfigOptionBools, material_flow_dependent_temperature))
+    ((ConfigOptionString, material_flow_temp_graph))
+
+    // Pathological (dense short-segment) acceleration protection for Klipper
+    ((ConfigOptionBool,  pathological_segment_protection_enable))
+    ((ConfigOptionFloat, xy_step_dist))
+    ((ConfigOptionFloat, e_step_dist))
+    ((ConfigOptionInt,   mcu_pool_total))
+    ((ConfigOptionInt,   nozzle_pool_total))
+)
+
+// This object is mapped to Perl as Slic3r::Config::Print.
+PRINT_CONFIG_CLASS_DERIVED_DEFINE(
+    PrintConfig,
+    (MachineEnvelopeConfig, GCodeConfig),
+
+    //BBS
+    ((ConfigOptionInts,               cool_special_cds_fan_speed))
+    ((ConfigOptionBools,              enable_special_area_additional_cooling_fan))
+    ((ConfigOptionFloats,             cool_cds_fan_start_at_height))
+    ((ConfigOptionInts,               additional_cooling_fan_speed))
+    ((ConfigOptionBool,               reduce_crossing_wall))
+    ((ConfigOptionBool,               z_direction_outwall_speed_continuous))
+    ((ConfigOptionFloatOrPercent,     max_travel_detour_distance))
+    ((ConfigOptionEnum<PrinterTechnology>, printer_technology))
+    ((ConfigOptionPoints,             printable_area))
+    //BBS: add bed_exclude_area
+    ((ConfigOptionPoints,             bed_exclude_area))
+    ((ConfigOptionPoints,             head_wrap_detect_zone))
+    //Creality: add color_bed_exclude_area
+    ((ConfigOptionString,             color_bed_exclude_area))
+    // BBS
+    ((ConfigOptionString,             bed_custom_texture))
+    ((ConfigOptionString,             bed_custom_model))
+    ((ConfigOptionEnum<BedType>,      curr_bed_type))
+    ((ConfigOptionInts,               cool_plate_temp))
+    ((ConfigOptionInts,               eng_plate_temp))
+    ((ConfigOptionInts,               hot_plate_temp)) // hot is short for high temperature
+    ((ConfigOptionInts,               textured_plate_temp))
+    ((ConfigOptionInts,               epoxy_resin_plate_temp))
+    ((ConfigOptionInts,               customized_plate_temp))
+    ((ConfigOptionInts,               cool_plate_temp_initial_layer))
+    ((ConfigOptionInts,               eng_plate_temp_initial_layer))
+    ((ConfigOptionInts,               hot_plate_temp_initial_layer)) // hot is short for high temperature
+    ((ConfigOptionInts,               textured_plate_temp_initial_layer))
+    ((ConfigOptionInts,               epoxy_resin_plate_temp_initial_layer))
+    ((ConfigOptionInts, customized_plate_temp_initial_layer))
+    ((ConfigOptionBools,              enable_overhang_bridge_fan))
+    ((ConfigOptionInts,               overhang_fan_speed))
+    ((ConfigOptionEnumsGeneric,       overhang_fan_threshold))
+    ((ConfigOptionEnum<PrintSequence>,print_sequence))
+    ((ConfigOptionEnum<PrintOrder>,   print_order))
+    ((ConfigOptionInts,               first_layer_print_sequence))
+    ((ConfigOptionInts,               other_layers_print_sequence))
+    ((ConfigOptionInt,                other_layers_print_sequence_nums))
+    ((ConfigOptionBools,              slow_down_for_layer_cooling))
+    ((ConfigOptionFloatsNullable,     initial_layer_travel_acceleration))
+    ((ConfigOptionInts,               close_fan_the_first_x_layers))
+    ((ConfigOptionInts,               heat_soak_time))     // PRINT-ADVISOR heat-soak
+    ((ConfigOptionInts,               heat_soak_bed_temp)) // PRINT-ADVISOR heat-soak
+    ((ConfigOptionEnum<DraftShield>,  draft_shield))
+    ((ConfigOptionFloat,              extruder_clearance_height_to_rod))//BBs
+    ((ConfigOptionFloat,              extruder_clearance_height_to_lid))//BBS
+    ((ConfigOptionFloat,              extruder_clearance_radius))
+    ((ConfigOptionFloat,              nozzle_height))
+    ((ConfigOptionStrings,            extruder_colour))
+    ((ConfigOptionPoints,             extruder_offset))
+    ((ConfigOptionBools,              reduce_fan_stop_start_freq))
+    ((ConfigOptionBools,              dont_slow_down_outer_wall))
+    ((ConfigOptionBools,              smart_cooling_zones))
+    ((ConfigOptionEnumsGeneric,       cooling_slowdown_logic)) //Prusa
+    ((ConfigOptionFloats,             cooling_perimeter_transition_distance))//Prusa
+    ((ConfigOptionFloats,             fan_cooling_layer_time))
+    ((ConfigOptionStrings,            filament_colour))
+    ((ConfigOptionBools,              activate_air_filtration))
+    ((ConfigOptionInts,               during_print_exhaust_fan_speed))
+    ((ConfigOptionInts,               complete_print_exhaust_fan_speed))
+    ((ConfigOptionFloatsOrPercentsNullable, initial_layer_line_width))
+    ((ConfigOptionFloat,              initial_layer_print_height))
+    ((ConfigOptionFloatsNullable,     initial_layer_speed))
+
+    //BBS
+    ((ConfigOptionFloatsNullable,     initial_layer_infill_speed))
+    ((ConfigOptionInts,               nozzle_temperature_initial_layer))
+    ((ConfigOptionInts,               full_fan_speed_layer))
+    ((ConfigOptionFloats,               fan_max_speed))
+    ((ConfigOptionFloats,             max_layer_height))
+    ((ConfigOptionFloats,               fan_min_speed))
+    ((ConfigOptionFloats,             min_layer_height))
+    ((ConfigOptionFloat,              printable_height))
+    ((ConfigOptionPoint,              best_object_pos))
+    ((ConfigOptionFloats,             slow_down_min_speed))
+    ((ConfigOptionFloats,             nozzle_diameter))
+    ((ConfigOptionBool,               reduce_infill_retraction))
+    ((ConfigOptionBool,               ooze_prevention))
+    ((ConfigOptionString,             filename_format))
+    ((ConfigOptionStrings,            post_process))
+    ((ConfigOptionString,             printer_model))
+    ((ConfigOptionBool,               support_filament_nozzle_mapping))
+    ((ConfigOptionFloat,              resolution))
+    ((ConfigOptionFloats,             retraction_minimum_travel))
+    ((ConfigOptionBools,              retract_when_changing_layer))
+    ((ConfigOptionFloat,              skirt_distance))
+    ((ConfigOptionInt,                skirt_height))
+    ((ConfigOptionInt,                skirt_loops))
+    ((ConfigOptionEnum<SkirtType>,    skirt_type))
+    ((ConfigOptionFloat,              skirt_speed))
+    ((ConfigOptionFloat,              min_skirt_length))
+    ((ConfigOptionFloats,             slow_down_layer_time))
+    ((ConfigOptionBool,               ignore_inner_color))
+    ((ConfigOptionBool,               spiral_mode))
+    ((ConfigOptionBool,               spiral_mode_smooth))
+    ((ConfigOptionFloatOrPercent,     spiral_mode_max_xy_smoothing))
+    ((ConfigOptionInt,                standby_temperature_delta))
+    ((ConfigOptionInt,                preheat_temperature_delta))
+    ((ConfigOptionFloat,                preheat_time))
+    ((ConfigOptionInt,                preheat_steps))
+    ((ConfigOptionInts,               nozzle_temperature))
+    ((ConfigOptionBools,              wipe))
+    // BBS
+    ((ConfigOptionInts,               nozzle_temperature_range_low))
+    ((ConfigOptionInts,               nozzle_temperature_range_high))
+    ((ConfigOptionFloats,             wipe_distance))
+    ((ConfigOptionBool,               enable_prime_tower))
+    // BBS: change wipe_tower_x and wipe_tower_y data type to floats to add partplate logic
+    // Note: placeholder parser now binds scalar wipe_tower_x / wipe_tower_y to the current plate index
+    //       in GCode::do_export (rebind_plate_placeholders), to make {wipe_tower_x + prime_tower_width*0.5} usable in custom G-code.
+    ((ConfigOptionFloats,             wipe_tower_x))
+    ((ConfigOptionFloats,             wipe_tower_y))
+    ((ConfigOptionFloat,              prime_tower_width))
+    ((ConfigOptionFloat,              wipe_tower_per_color_wipe))
+    ((ConfigOptionFloat,              wipe_tower_rotation_angle))
+    ((ConfigOptionFloat,              prime_tower_brim_width))
+    ((ConfigOptionFloat,              wipe_tower_bridging))
+    ((ConfigOptionPercent,            wipe_tower_extra_flow))
+    ((ConfigOptionFloats,             transmittance_matrix))
+    ((ConfigOptionFloats,             flush_volumes_matrix))
+    
+    ((ConfigOptionBool,               flush_volumes_changed))
+    ((ConfigOptionFloats,             flush_volumes_vector))
+    ((ConfigOptionEnum<PrimeTowerEnhanceType>,             prime_tower_enhance_type))
+    //square wipe tower
+    ((ConfigOptionBool,               prime_tower_rib_wall))
+    ((ConfigOptionBool,               prime_tower_enable_framework))
+    ((ConfigOptionBool,               prime_tower_skip_points))
+
+    // Orca: mmu support
+    ((ConfigOptionFloat,              wipe_tower_cone_angle))
+    ((ConfigOptionPercent,            wipe_tower_extra_spacing))
+    ((ConfigOptionEnum<PrimeTowerStartIroningType>, prime_tower_start_ironing))
+    ((ConfigOptionFloat,              prime_tower_start_offset))
+    ((ConfigOptionFloat,              prime_tower_corner_rib_length))
+    ((ConfigOptionFloat,              wipe_tower_max_purge_speed))
+    ((ConfigOptionInt,                wipe_tower_filament))
+    ((ConfigOptionFloats,             wiping_volumes_extruders))
+    ((ConfigOptionInts,               idle_temperature))
+
+    // BBS: wipe tower is only used for priming
+    ((ConfigOptionFloat,              prime_volume))
+    ((ConfigOptionInt,                bottom_fill_flush_layers))
+    ((ConfigOptionInt,                top_fill_flush_layers))
+    ((ConfigOptionFloatOrPercent, skeleton_flush_slowdown_speed))
+    ((ConfigOptionBool,               flush_into_solid_skeleton))
+    ((ConfigOptionFloat,              flush_multiplier))
+    ((ConfigOptionFloat,              z_offset))
+    // BBS: project filaments
+    ((ConfigOptionFloats,             filament_colour_new))
+    // BBS: not in any preset, calculated before slicing
+    ((ConfigOptionFloatsNullable,     nozzle_volume))
+    ((ConfigOptionPoints,             start_end_points))
+    ((ConfigOptionEnum<TimelapseType>,    timelapse_type))
+    ((ConfigOptionString,             thumbnails))
+    // BBS: move from PrintObjectConfig
+    ((ConfigOptionBool, independent_support_layer_height))
+    // SoftFever
+    ((ConfigOptionPercents,            filament_shrink)) 
+    ((ConfigOptionPercents, filament_shrinkage_compensation_z))
+    ((ConfigOptionBool,                gcode_label_objects))
+    ((ConfigOptionBool,                exclude_object))
+    ((ConfigOptionBool,                gcode_comments))
+    ((ConfigOptionInt,                 slow_down_layers))
+    ((ConfigOptionInts,                support_material_interface_fan_speed))
+    // Orca: notes for profiles from PrusaSlicer
+    ((ConfigOptionStrings,             filament_notes))
+    ((ConfigOptionString,              notes))
+    ((ConfigOptionString,              printer_notes))
+
+    ((ConfigOptionBools,               activate_chamber_temp_control))
+    ((ConfigOptionInts,                 activate_chamber_layer))
+    ((ConfigOptionInts ,               chamber_temperature))
+    
+    // Orca: support adaptive bed mesh
+    ((ConfigOptionFloat,               preferred_orientation))
+    ((ConfigOptionPoint,               bed_mesh_min))
+    ((ConfigOptionPoint,               bed_mesh_max))
+    ((ConfigOptionPoint,               bed_mesh_probe_distance))
+    ((ConfigOptionFloat,               adaptive_bed_mesh_margin))
+    ((ConfigOptionBool,                filament_can_change))
+    ((ConfigOptionFloat,              default_flush_multiplier))
+    ((ConfigOptionInt,                flush_box_first_clean_length))
+    ((ConfigOptionInt,                flush_box_need_clean_length))
+    ((ConfigOptionInt,                flush_box_need_clean_length_max))
+    ((ConfigOptionBool,               multicolor_method))
+
+    // Mixed Filament Configuration
+    ((ConfigOptionFloat,              mixed_color_layer_height_a))
+    ((ConfigOptionFloat,              mixed_color_layer_height_b))
+    ((ConfigOptionBool,               mixed_filament_gradient_mode))
+    ((ConfigOptionFloat,              mixed_filament_height_lower_bound))
+    ((ConfigOptionFloat,              mixed_filament_height_upper_bound))
+    ((ConfigOptionBool,               mixed_filament_advanced_dithering))
+    ((ConfigOptionFloat,              mixed_filament_pointillism_pixel_size))
+    ((ConfigOptionFloat,              mixed_filament_pointillism_line_gap))
+    ((ConfigOptionFloat,              mixed_filament_surface_indentation))
+    ((ConfigOptionString,             mixed_filament_definitions))
+    ((ConfigOptionFloat,              dithering_z_step_size))
+    ((ConfigOptionBool,               dithering_local_z_mode))
+    ((ConfigOptionBool,               dithering_step_painted_zones_only))
+
+)
+
+// This object is mapped to Perl as Slic3r::Config::Full.
+PRINT_CONFIG_CLASS_DERIVED_DEFINE0(
+    FullPrintConfig,
+    (PrintObjectConfig, PrintRegionConfig, PrintConfig)
+)
+
+// Validate the FullPrintConfig. Returns an empty string on success, otherwise an error message is returned.
+std::map<std::string, std::string> validate(const FullPrintConfig &config, bool under_cli = false);
+
+PRINT_CONFIG_CLASS_DEFINE(
+    SLAPrintConfig,
+    ((ConfigOptionString,     filename_format))
+)
+
+PRINT_CONFIG_CLASS_DEFINE(
+    SLAPrintObjectConfig,
+
+    ((ConfigOptionFloat, layer_height))
+
+    //Number of the layers needed for the exposure time fade [3;20]
+    ((ConfigOptionInt,  faded_layers))/*= 10*/
+
+    ((ConfigOptionFloat, slice_closing_radius))
+
+    // Enabling or disabling support creation
+    ((ConfigOptionBool,  supports_enable))
+
+    // Diameter in mm of the pointing side of the head.
+    ((ConfigOptionFloat, support_head_front_diameter))/*= 0.2*/
+
+    // How much the pinhead has to penetrate the model surface
+    ((ConfigOptionFloat, support_head_penetration))/*= 0.2*/
+
+    // Width in mm from the back sphere center to the front sphere center.
+    ((ConfigOptionFloat, support_head_width))/*= 1.0*/
+
+    // Radius in mm of the support pillars.
+    ((ConfigOptionFloat, support_pillar_diameter))/*= 0.8*/
+
+    // The percentage of smaller pillars compared to the normal pillar diameter
+    // which are used in problematic areas where a normal pilla cannot fit.
+    ((ConfigOptionPercent, support_small_pillar_diameter_percent))
+
+    // How much bridge (supporting another pinhead) can be placed on a pillar.
+    ((ConfigOptionInt,   support_max_bridges_on_pillar))
+
+    // How the pillars are bridged together
+    ((ConfigOptionEnum<SLAPillarConnectionMode>, support_pillar_connection_mode))
+
+    // Generate only ground facing supports
+    ((ConfigOptionBool, support_buildplate_only))
+
+    // TODO: unimplemented at the moment. This coefficient will have an impact
+    // when bridges and pillars are merged. The resulting pillar should be a bit
+    // thicker than the ones merging into it. How much thicker? I don't know
+    // but it will be derived from this value.
+    ((ConfigOptionFloat, support_pillar_widening_factor))
+
+    // Radius in mm of the pillar base.
+    ((ConfigOptionFloat, support_base_diameter))/*= 2.0*/
+
+    // The height of the pillar base cone in mm.
+    ((ConfigOptionFloat, support_base_height))/*= 1.0*/
+
+    // The minimum distance of the pillar base from the model in mm.
+    ((ConfigOptionFloat, support_base_safety_distance)) /*= 1.0*/
+
+    // The default angle for connecting support sticks and junctions.
+    ((ConfigOptionFloat, support_critical_angle))/*= 45*/
+
+    // The max length of a bridge in mm
+    ((ConfigOptionFloat, support_max_bridge_length))/*= 15.0*/
+
+    // The max distance of two pillars to get cross linked.
+    ((ConfigOptionFloat, support_max_pillar_link_distance))
+
+    // The elevation in Z direction upwards. This is the space between the pad
+    // and the model object's bounding box bottom. Units in mm.
+    ((ConfigOptionFloat, support_object_elevation))/*= 5.0*/
+
+    /////// Following options influence automatic support points placement:
+    ((ConfigOptionInt, support_points_density_relative))
+    ((ConfigOptionFloat, support_points_minimal_distance))
+
+    // Now for the base pool (pad) /////////////////////////////////////////////
+
+    // Enabling or disabling support creation
+    ((ConfigOptionBool,  pad_enable))
+
+    // The thickness of the pad walls
+    ((ConfigOptionFloat, pad_wall_thickness))/*= 2*/
+
+    // The height of the pad from the bottom to the top not considering the pit
+    ((ConfigOptionFloat, pad_wall_height))/*= 5*/
+
+    // How far should the pad extend around the contained geometry
+    ((ConfigOptionFloat, pad_brim_size))
+
+    // The greatest distance where two individual pads are merged into one. The
+    // distance is measured roughly from the centroids of the pads.
+    ((ConfigOptionFloat, pad_max_merge_distance))/*= 50*/
+
+    // The smoothing radius of the pad edges
+    // ((ConfigOptionFloat, pad_edge_radius))/*= 1*/;
+
+    // The slope of the pad wall...
+    ((ConfigOptionFloat, pad_wall_slope))
+
+    // /////////////////////////////////////////////////////////////////////////
+    // Zero elevation mode parameters:
+    //    - The object pad will be derived from the model geometry.
+    //    - There will be a gap between the object pad and the generated pad
+    //      according to the support_base_safety_distance parameter.
+    //    - The two pads will be connected with tiny connector sticks
+    // /////////////////////////////////////////////////////////////////////////
+
+    // Disable the elevation (ignore its value) and use the zero elevation mode
+    ((ConfigOptionBool, pad_around_object))
+
+    ((ConfigOptionBool, pad_around_object_everywhere))
+
+    // This is the gap between the object bottom and the generated pad
+    ((ConfigOptionFloat, pad_object_gap))
+
+    // How far to place the connector sticks on the object pad perimeter
+    ((ConfigOptionFloat, pad_object_connector_stride))
+
+    // The width of the connectors sticks
+    ((ConfigOptionFloat, pad_object_connector_width))
+
+    // How much should the tiny connectors penetrate into the model body
+    ((ConfigOptionFloat, pad_object_connector_penetration))
+
+    // /////////////////////////////////////////////////////////////////////////
+    // Model hollowing parameters:
+    //   - Models can be hollowed out as part of the SLA print process
+    //   - Thickness of the hollowed model walls can be adjusted
+    //   -
+    //   - Additional holes will be drilled into the hollow model to allow for
+    //   - resin removal.
+    // /////////////////////////////////////////////////////////////////////////
+
+    ((ConfigOptionBool, hollowing_enable))
+
+    // The minimum thickness of the model walls to maintain. Note that the
+    // resulting walls may be thicker due to smoothing out fine cavities where
+    // resin could stuck.
+    ((ConfigOptionFloat, hollowing_min_thickness))
+
+    // Indirectly controls the voxel size (resolution) used by openvdb
+    ((ConfigOptionFloat, hollowing_quality))
+
+    // Indirectly controls the minimum size of created cavities.
+    ((ConfigOptionFloat, hollowing_closing_distance))
+)
+
+enum SLAMaterialSpeed { slamsSlow, slamsFast };
+
+PRINT_CONFIG_CLASS_DEFINE(
+    SLAMaterialConfig,
+
+    ((ConfigOptionFloat,                       initial_layer_height))
+    ((ConfigOptionFloat,                       bottle_cost))
+    ((ConfigOptionFloat,                       bottle_volume))
+    ((ConfigOptionFloat,                       bottle_weight))
+    ((ConfigOptionFloat,                       material_density))
+    ((ConfigOptionFloat,                       exposure_time))
+    ((ConfigOptionFloat,                       initial_exposure_time))
+    ((ConfigOptionFloats,                      material_correction))
+    ((ConfigOptionFloat,                       material_correction_x))
+    ((ConfigOptionFloat,                       material_correction_y))
+    ((ConfigOptionFloat,                       material_correction_z))
+    ((ConfigOptionEnum<SLAMaterialSpeed>,      material_print_speed))
+)
+
+PRINT_CONFIG_CLASS_DEFINE(
+    SLAPrinterConfig,
+
+    ((ConfigOptionEnum<PrinterTechnology>,    printer_technology))
+    ((ConfigOptionPoints,                     printable_area))
+    ((ConfigOptionFloat,                      printable_height))
+    ((ConfigOptionFloat,                      display_width))
+    ((ConfigOptionFloat,                      display_height))
+    ((ConfigOptionInt,                        display_pixels_x))
+    ((ConfigOptionInt,                        display_pixels_y))
+    ((ConfigOptionEnum<SLADisplayOrientation>,display_orientation))
+    ((ConfigOptionBool,                       display_mirror_x))
+    ((ConfigOptionBool,                       display_mirror_y))
+    ((ConfigOptionFloats,                     relative_correction))
+    ((ConfigOptionFloat,                      relative_correction_x))
+    ((ConfigOptionFloat,                      relative_correction_y))
+    ((ConfigOptionFloat,                      relative_correction_z))
+    ((ConfigOptionFloat,                      absolute_correction))
+    ((ConfigOptionFloat,                      elefant_foot_compensation))
+    ((ConfigOptionFloat,                      elefant_foot_min_width))
+    ((ConfigOptionFloat,                      gamma_correction))
+    ((ConfigOptionFloat,                      fast_tilt_time))
+    ((ConfigOptionFloat,                      slow_tilt_time))
+    ((ConfigOptionFloat,                      area_fill))
+    ((ConfigOptionFloat,                      min_exposure_time))
+    ((ConfigOptionFloat,                      max_exposure_time))
+    ((ConfigOptionFloat,                      min_initial_exposure_time))
+    ((ConfigOptionFloat,                      max_initial_exposure_time))
+)
+
+PRINT_CONFIG_CLASS_DERIVED_DEFINE0(
+    SLAFullPrintConfig,
+    (SLAPrinterConfig, SLAPrintConfig, SLAPrintObjectConfig, SLAMaterialConfig)
+)
+
+#undef STATIC_PRINT_CONFIG_CACHE
+#undef STATIC_PRINT_CONFIG_CACHE_BASE
+#undef STATIC_PRINT_CONFIG_CACHE_DERIVED
+#undef PRINT_CONFIG_CLASS_ELEMENT_DEFINITION
+#undef PRINT_CONFIG_CLASS_ELEMENT_EQUAL
+#undef PRINT_CONFIG_CLASS_ELEMENT_LOWER
+#undef PRINT_CONFIG_CLASS_ELEMENT_HASH
+#undef PRINT_CONFIG_CLASS_ELEMENT_INITIALIZATION
+#undef PRINT_CONFIG_CLASS_ELEMENT_INITIALIZATION2
+#undef PRINT_CONFIG_CLASS_DEFINE
+#undef PRINT_CONFIG_CLASS_DERIVED_CLASS_LIST
+#undef PRINT_CONFIG_CLASS_DERIVED_CLASS_LIST_ITEM
+#undef PRINT_CONFIG_CLASS_DERIVED_DEFINE
+#undef PRINT_CONFIG_CLASS_DERIVED_DEFINE0
+#undef PRINT_CONFIG_CLASS_DERIVED_DEFINE1
+#undef PRINT_CONFIG_CLASS_DERIVED_HASH
+#undef PRINT_CONFIG_CLASS_DERIVED_EQUAL
+#undef PRINT_CONFIG_CLASS_DERIVED_INITCACHE_ITEM
+#undef PRINT_CONFIG_CLASS_DERIVED_INITCACHE
+#undef PRINT_CONFIG_CLASS_DERIVED_INITIALIZER
+#undef PRINT_CONFIG_CLASS_DERIVED_INITIALIZER_ITEM
+
+class CLIActionsConfigDef : public ConfigDef
+{
+public:
+    CLIActionsConfigDef();
+};
+
+class CLIMiscConfigDef : public ConfigDef
+{
+public:
+    CLIMiscConfigDef();
+};
+
+typedef std::string t_custom_gcode_key;
+// This map containes list of specific placeholders for each custom G-code, if any exist
+const std::map<t_custom_gcode_key, t_config_option_keys>& custom_gcode_specific_placeholders();
+
+// Next classes define placeholders used by GUI::EditGCodeDialog.
+
+class ReadOnlySlicingStatesConfigDef : public ConfigDef
+{
+public:
+    ReadOnlySlicingStatesConfigDef();
+};
+
+class ReadWriteSlicingStatesConfigDef : public ConfigDef
+{
+public:
+    ReadWriteSlicingStatesConfigDef();
+};
+
+class OtherSlicingStatesConfigDef : public ConfigDef
+{
+public:
+    OtherSlicingStatesConfigDef();
+};
+
+class PrintStatisticsConfigDef : public ConfigDef
+{
+public:
+    PrintStatisticsConfigDef();
+};
+
+class ObjectsInfoConfigDef : public ConfigDef
+{
+public:
+    ObjectsInfoConfigDef();
+};
+
+class DimensionsConfigDef : public ConfigDef
+{
+public:
+    DimensionsConfigDef();
+};
+
+class TemperaturesConfigDef : public ConfigDef
+{
+public:
+    TemperaturesConfigDef();
+};
+
+class TimestampsConfigDef : public ConfigDef
+{
+public:
+    TimestampsConfigDef();
+};
+
+class OtherPresetsConfigDef : public ConfigDef
+{
+public:
+    OtherPresetsConfigDef();
+};
+
+// This classes defines all custom G-code specific placeholders.
+class CustomGcodeSpecificConfigDef : public ConfigDef
+{
+public:
+    CustomGcodeSpecificConfigDef();
+};
+extern const CustomGcodeSpecificConfigDef    custom_gcode_specific_config_def;
+
+// This class defines the command line options representing actions.
+extern const CLIActionsConfigDef    cli_actions_config_def;
+
+// This class defines all command line options that are not actions.
+extern const CLIMiscConfigDef       cli_misc_config_def;
+
+class DynamicPrintAndCommandLineConfig : public DynamicPrintConfig
+{
+public:
+    DynamicPrintAndCommandLineConfig() {}
+    DynamicPrintAndCommandLineConfig(const DynamicPrintAndCommandLineConfig &other) : DynamicPrintConfig(other) {}
+
+    // Overrides ConfigBase::def(). Static configuration definition. Any value stored into this ConfigBase shall have its definition here.
+    const ConfigDef*        def() const override { return &s_def; }
+
+    // Verify whether the opt_key has not been obsoleted or renamed.
+    // Both opt_key and value may be modified by handle_legacy().
+    // If the opt_key is no more valid in this version of Slic3r, opt_key is cleared by handle_legacy().
+    // handle_legacy() is called internally by set_deserialize().
+    void                    handle_legacy(t_config_option_key &opt_key, std::string &value) const override;
+
+private:
+    class PrintAndCommandLineConfigDef : public ConfigDef
+    {
+    public:
+        PrintAndCommandLineConfigDef() {
+            this->options.insert(print_config_def.options.begin(), print_config_def.options.end());
+            this->options.insert(cli_actions_config_def.options.begin(), cli_actions_config_def.options.end());
+            this->options.insert(cli_misc_config_def.options.begin(), cli_misc_config_def.options.end());
+            for (const auto &kvp : this->options)
+                this->by_serialization_key_ordinal[kvp.second.serialization_key_ordinal] = &kvp.second;
+        }
+        // Do not release the default values; the source config definitions own them.
+        ~PrintAndCommandLineConfigDef() { this->options.clear(); }
+    };
+    static PrintAndCommandLineConfigDef s_def;
+};
+
+bool is_XL_printer(const DynamicPrintConfig &cfg);
+bool is_XL_printer(const PrintConfig &cfg);
+
+Points get_bed_shape(const DynamicPrintConfig &cfg);
+Points get_bed_shape(const PrintConfig &cfg);
+Points get_bed_shape(const SLAPrinterConfig &cfg);
+Slic3r::Polygon get_bed_shape_with_excluded_area(const PrintConfig& cfg);
+bool has_skirt(const DynamicPrintConfig& cfg);
+float get_real_skirt_dist(const DynamicPrintConfig& cfg);
+
+// ModelConfig is a wrapper around DynamicPrintConfig with an addition of a timestamp.
+// Each change of ModelConfig is tracked by assigning a new timestamp from a global counter.
+// The counter is used for faster synchronization of the background slicing thread
+// with the front end by skipping synchronization of equal config dictionaries.
+// The global counter is also used for avoiding unnecessary serialization of config
+// dictionaries when taking an Undo snapshot.
+//
+// The global counter is NOT thread safe, therefore it is recommended to use ModelConfig from
+// the main thread only.
+//
+// As there is a global counter and it is being increased with each change to any ModelConfig,
+// if two ModelConfig dictionaries differ, they should differ with their timestamp as well.
+// Therefore copying the ModelConfig including its timestamp is safe as there is no harm
+// in having multiple ModelConfig with equal timestamps as long as their dictionaries are equal.
+//
+// The timestamp is used by the Undo/Redo stack. As zero timestamp means invalid timestamp
+// to the Undo/Redo stack (zero timestamp means the Undo/Redo stack needs to serialize and
+// compare serialized data for differences), zero timestamp shall never be used.
+// Timestamp==1 shall only be used for empty dictionaries.
+class ModelConfig
+{
+public:
+    // Following method clears the config and increases its timestamp, so the deleted
+    // state is considered changed from perspective of the undo/redo stack.
+    void         reset() { m_data.clear(); touch(); }
+
+    void         assign_config(const ModelConfig &rhs) {
+        if (m_timestamp != rhs.m_timestamp) {
+            m_data      = rhs.m_data;
+            m_timestamp = rhs.m_timestamp;
+        }
+    }
+    void         assign_config(ModelConfig &&rhs) {
+        if (m_timestamp != rhs.m_timestamp) {
+            m_data      = std::move(rhs.m_data);
+            m_timestamp = rhs.m_timestamp;
+            rhs.reset();
+        }
+    }
+
+    // Modification of the ModelConfig is not thread safe due to the global timestamp counter!
+    // Don't call modification methods from the back-end!
+    // Assign methods don't assign if src==dst to not having to bump the timestamp in case they are equal.
+    void         assign_config(const DynamicPrintConfig &rhs)  { if (m_data != rhs) { m_data = rhs; this->touch(); } }
+    void         assign_config(DynamicPrintConfig &&rhs)       { if (m_data != rhs) { m_data = std::move(rhs); this->touch(); } }
+    void         apply(const ModelConfig &other, bool ignore_nonexistent = false) { this->apply(other.get(), ignore_nonexistent); }
+    void         apply(const ConfigBase &other, bool ignore_nonexistent = false) { m_data.apply_only(other, other.keys(), ignore_nonexistent); this->touch(); }
+    void         apply_only(const ModelConfig &other, const t_config_option_keys &keys, bool ignore_nonexistent = false) { this->apply_only(other.get(), keys, ignore_nonexistent); }
+    void         apply_only(const ConfigBase &other, const t_config_option_keys &keys, bool ignore_nonexistent = false) { m_data.apply_only(other, keys, ignore_nonexistent); this->touch(); }
+    bool         set_key_value(const std::string &opt_key, ConfigOption *opt) { bool out = m_data.set_key_value(opt_key, opt); this->touch(); return out; }
+    template<typename T>
+    void         set(const std::string &opt_key, T value) { m_data.set(opt_key, value, true); this->touch(); }
+    void         set_deserialize(const t_config_option_key &opt_key, const std::string &str, ConfigSubstitutionContext &substitution_context, bool append = false)
+        { m_data.set_deserialize(opt_key, str, substitution_context, append); this->touch(); }
+    bool         erase(const t_config_option_key &opt_key) { bool out = m_data.erase(opt_key); if (out) this->touch(); return out; }
+
+    // Getters are thread safe.
+    // The following implicit conversion breaks the Cereal serialization.
+//    operator const DynamicPrintConfig&() const throw() { return this->get(); }
+    const DynamicPrintConfig&   get() const throw() { return m_data; }
+    bool                        empty() const throw() { return m_data.empty(); }
+    size_t                      size() const throw() { return m_data.size(); }
+    auto                        cbegin() const { return m_data.cbegin(); }
+    auto                        cend() const { return m_data.cend(); }
+    t_config_option_keys        keys() const { return m_data.keys(); }
+    bool                        has(const t_config_option_key &opt_key) const { return m_data.has(opt_key); }
+    const ConfigOption*         option(const t_config_option_key &opt_key) const { return m_data.option(opt_key); }
+    int                         opt_int(const t_config_option_key &opt_key) const { return m_data.opt_int(opt_key); }
+    int                         extruder() const { return opt_int("extruder"); }
+    double opt_float(const t_config_option_key &opt_key) const {
+      return m_data.opt_float(opt_key);
+    }
+    double get_abs_value(const t_config_option_key &opt_key) const {
+      return m_data.get_abs_value(opt_key);
+    }
+    std::string                 opt_serialize(const t_config_option_key &opt_key) const { return m_data.opt_serialize(opt_key); }
+
+    // Return an optional timestamp of this object.
+    // If the timestamp returned is non-zero, then the serialization framework will
+    // only save this object on the Undo/Redo stack if the timestamp is different
+    // from the timestmap of the object at the top of the Undo / Redo stack.
+    virtual uint64_t    timestamp() const throw() { return m_timestamp; }
+    bool                timestamp_matches(const ModelConfig &rhs) const throw() { return m_timestamp == rhs.m_timestamp; }
+    // Not thread safe! Should not be called from other than the main thread!
+    void                touch() { m_timestamp = ++ s_last_timestamp; }
+
+private:
+    friend class cereal::access;
+    template<class Archive> void serialize(Archive& ar) { ar(m_timestamp); ar(m_data); }
+
+    uint64_t                    m_timestamp { 1 };
+    DynamicPrintConfig          m_data;
+
+    static uint64_t             s_last_timestamp;
+};
+
+// const std::vector<double> &fv_matrix:  origin matrix from json
+// size_t extruder_id: -1 means single-nozzle for old file, 0 means the 1st extruder, 1 means the 2nd extruder
+template<class T>
+static std::vector<T> get_flush_volumes_matrix(const std::vector<T>& fv_matrix, size_t extruder_id = -1, size_t nozzle_nums = 1)
+{
+    if (extruder_id != -1 && nozzle_nums != 1) 
+    {
+        return std::vector<T>(fv_matrix.begin() + size_t(fv_matrix.size() / nozzle_nums * extruder_id + EPSILON),
+            fv_matrix.begin() + size_t(fv_matrix.size() / nozzle_nums * (extruder_id + 1) + EPSILON));
+    }
+    return fv_matrix;
+}
+
+// Extract one physical nozzle's F x F block without inferring F from the
+// flattened matrix length. A single F x F block is accepted as legacy data.
+template<class T>
+static std::vector<T> get_flush_volumes_matrix(const std::vector<T>& fv_matrix, size_t extruder_id,
+                                                size_t nozzle_nums, size_t filament_nums)
+{
+    const size_t block_size = filament_nums * filament_nums;
+    if (block_size == 0)
+        return {};
+    if (fv_matrix.size() == block_size)
+        return fv_matrix;
+    if (nozzle_nums == 0 || extruder_id >= nozzle_nums || fv_matrix.size() != block_size * nozzle_nums)
+        return {};
+
+    const auto block_begin = fv_matrix.begin() + extruder_id * block_size;
+    return std::vector<T>(block_begin, block_begin + block_size);
+}
+
+// std::vector<double> &out_matrix:
+// const std::vector<double> &fv_matrix: the matrix of one nozzle
+// size_t extruder_id: -1 means single-nozzle for old file, 0 means the 1st extruder, 1 means the 2nd extruder
+template<class T>
+static void set_flush_volumes_matrix(std::vector<T>& out_matrix, const std::vector<T>& fv_matrix, size_t extruder_id = -1, size_t nozzle_nums = 1)
+{
+    bool is_multi_extruder = false;
+    if (extruder_id != -1 && nozzle_nums != 1) 
+    {
+        std::copy(fv_matrix.begin(), fv_matrix.end(), out_matrix.begin() + size_t(out_matrix.size() / nozzle_nums * extruder_id + EPSILON));
+    }
+    else
+    {
+        out_matrix = std::vector<T>(fv_matrix.begin(), fv_matrix.end());
+    }
+}
+
+} // namespace Slic3r
+
+// Serialization through the Cereal library
+namespace cereal {
+    // Let cereal know that there are load / save non-member functions declared for DynamicPrintConfig, ignore serialize / load / save from parent class DynamicConfig.
+    template <class Archive> struct specialize<Archive, Slic3r::DynamicPrintConfig, cereal::specialization::non_member_load_save> {};
+
+    template<class Archive> void load(Archive& archive, Slic3r::DynamicPrintConfig &config)
+    {
+        size_t cnt;
+        archive(cnt);
+        config.clear();
+        for (size_t i = 0; i < cnt; ++ i) {
+            size_t serialization_key_ordinal;
+            archive(serialization_key_ordinal);
+            assert(serialization_key_ordinal > 0);
+            auto it = Slic3r::print_config_def.by_serialization_key_ordinal.find(serialization_key_ordinal);
+            assert(it != Slic3r::print_config_def.by_serialization_key_ordinal.end());
+            config.set_key_value(it->second->opt_key, it->second->load_option_from_archive(archive));
+        }
+    }
+
+    template<class Archive> void save(Archive& archive, const Slic3r::DynamicPrintConfig &config)
+    {
+        size_t cnt = config.size();
+        archive(cnt);
+        for (auto it = config.cbegin(); it != config.cend(); ++it) {
+            const Slic3r::ConfigOptionDef* optdef = Slic3r::print_config_def.get(it->first);
+            assert(optdef != nullptr);
+            assert(optdef->serialization_key_ordinal > 0);
+            archive(optdef->serialization_key_ordinal);
+            optdef->save_option_to_archive(archive, it->second.get());
+        }
+    }
+}
+
+#endif

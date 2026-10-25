@@ -1,0 +1,14 @@
+# Dependabot version updates. Only the Print Advisor MCP sidecar has a package manifest that
+# GitHub can follow; the C++ dependencies (deps/) are pinned by hand and reviewed in
+# Help -> Third-party libraries. Security updates come from the repository settings
+# (tools/github-setup.ps1).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /tools/print-advisor-mcp
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    groups:
+      mcp-sidecar:
+        patterns: ["*"]

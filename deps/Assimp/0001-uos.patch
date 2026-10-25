@@ -1,0 +1,24 @@
+From 21139104a4e41c4abcf6a6ab57f02f32a8ed5008 Mon Sep 17 00:00:00 2001
+From: lisugui <lisugui@creatily.com>
+Date: Tue, 4 Nov 2025 14:43:31 +0800
+Subject: [PATCH] uos patch
+
+---
+ contrib/stb/stb_image.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/contrib/stb/stb_image.h b/contrib/stb/stb_image.h
+index a632d54..5594e60 100644
+--- a/contrib/stb/stb_image.h
++++ b/contrib/stb/stb_image.h
+@@ -827,6 +827,7 @@ static void stbi__start_mem(stbi__context *s, stbi_uc const *buffer, int len)
+    s->io.read = NULL;
+    s->read_from_callbacks = 0;
+    s->callback_already_read = 0;
++   s->buflen = sizeof(s->buffer_start);
+    s->img_buffer = s->img_buffer_original = (stbi_uc *) buffer;
+    s->img_buffer_end = s->img_buffer_original_end = (stbi_uc *) buffer+len;
+ }
+-- 
+2.20.1
+

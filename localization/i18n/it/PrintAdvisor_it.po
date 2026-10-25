@@ -1,0 +1,688 @@
+# Italian translations of the Print Advisor strings (branch feature/mcp-advisor).
+#
+# Kept apart from CrealityPrint_it.po, which is Creality's file and changes at
+# every release. build_exe_only.bat merges the two catalogues with
+# tools/web-patches/merge-po.mjs (entries of this file win) before msgfmt.
+# Add here every new msgid of the Print Advisor code; leave CrealityPrint_it.po
+# as upstream ships it.
+msgid ""
+msgstr ""
+"Project-Id-Version: MentorSlicer - Print Advisor\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+msgid "Brim-object gap on upper brim layers"
+msgstr "Distanza brim-oggetto sui layer superiori del brim"
+
+msgid "Gap between the brim and the object on the brim layers above the first one. Layer 1 keeps the normal brim-object gap; a small gap here (0.1-0.3 mm) stops the repeated brim from fusing to the part wall, so it comes off cleanly. The larger of the two gaps is used; 0 keeps the normal gap on every layer."
+msgstr "Distanza tra brim e oggetto sui layer del brim successivi al primo. Il layer 1 mantiene la normale distanza brim-oggetto; una piccola distanza qui (0,1-0,3 mm) evita che il brim ripetuto si fonda con la parete del pezzo, così si stacca in modo pulito. Vale la maggiore delle due distanze; 0 mantiene la distanza normale su tutti i layer."
+
+msgid "Brim layers"
+msgstr "Layer del brim"
+
+msgid "Number of layers the brim is printed on. More layers make a stiffer brim that holds the corners of materials prone to warping (ASA, ABS, PC)."
+msgstr "Numero di layer su cui viene stampato il brim. Più layer rendono il brim più rigido e trattengono gli angoli dei materiali che tendono a deformarsi (ASA, ABS, PC)."
+
+msgid "Heat soak"
+msgstr "Heat soak (riscaldamento camera)"
+
+msgid "Heat soak time"
+msgstr "Durata heat soak"
+
+msgid "Before the start G-code, heat the bed and wait this many minutes with the nozzle cold and the exhaust fan off, to warm the chamber of an enclosed printer. 0 disables the heat soak."
+msgstr "Prima del G-code iniziale, scalda il piatto e attende questi minuti con l'ugello freddo e la ventola di estrazione spenta, per riscaldare la camera di una stampante chiusa. 0 disattiva l'heat soak."
+
+msgid "Heat soak bed temperature"
+msgstr "Temperatura piatto heat soak"
+
+msgid "Bed temperature during the heat soak. 0 uses the initial layer bed temperature of the selected plate type."
+msgstr "Temperatura del piatto durante l'heat soak. 0 usa la temperatura del piatto del primo layer per il tipo di piatto selezionato."
+
+msgid "New version of Creality Print"
+msgstr "Nuova versione di Creality Print"
+
+msgid "Notice from the Print Advisor fork: nothing is downloaded or installed"
+msgstr "Avviso del fork Print Advisor: non viene scaricato né installato nulla"
+
+msgid "Creality has released Creality Print %s. This copy is the Print Advisor fork, based on Creality Print %s. Do not install the official version over it: it would remove the Print Advisor. The fork is updated from its repository after it has been aligned to the new release."
+msgstr "Creality ha pubblicato Creality Print %s. Questa copia è il fork Print Advisor, basato su Creality Print %s. Non installare la versione ufficiale sopra di essa: rimuoverebbe il Print Advisor. Il fork viene aggiornato dal suo repository dopo l'allineamento alla nuova versione."
+
+msgid "Release notes"
+msgstr "Note di rilascio"
+
+msgid "Skip this version"
+msgstr "Salta questa versione"
+
+msgid "Open the fork repository"
+msgstr "Apri il repository del fork"
+
+msgid "Open Creality release page"
+msgstr "Apri la pagina della versione Creality"
+
+msgid "Later"
+msgstr "Più tardi"
+
+# End-of-print verdict dialog and archive (PrintAdvisorVerdict.cpp)
+msgid "Print verdict"
+msgstr "Esito della stampa"
+
+msgid "How did the print turn out?"
+msgstr "Com'è venuta la stampa?"
+
+msgid "How did the print of %s turn out?"
+msgstr "Com'è venuta la stampa di %s?"
+
+msgid "(unknown file)"
+msgstr "(file sconosciuto)"
+
+msgid "Printer: %s"
+msgstr "Stampante: %s"
+
+msgid "Profiles: %s / %s"
+msgstr "Profili: %s / %s"
+
+msgid "A good print is archived with the open project, the G-code of the current plate, the print log and a camera photo. The verdict is written to the print log in every case."
+msgstr "Una stampa riuscita viene archiviata con il progetto aperto, il G-code del piatto corrente, il diario della stampa e una foto dalla telecamera. L'esito viene scritto nel diario della stampa in ogni caso."
+
+msgid "Defects or failed"
+msgstr "Difetti o fallita"
+
+msgid "Good, archive"
+msgstr "Bene, archivia"
+
+msgid "What went wrong?"
+msgstr "Cosa è andato storto?"
+
+msgid "Detached from the plate"
+msgstr "Staccata dal piatto"
+
+msgid "Warping"
+msgstr "Warping"
+
+msgid "Stringing"
+msgstr "Stringing"
+
+msgid "Under-extrusion"
+msgstr "Sottoestrusione"
+
+msgid "Other"
+msgstr "Altro"
+
+msgid "Reason"
+msgstr "Motivo"
+
+msgid "Notes (optional)"
+msgstr "Note (facoltative)"
+
+msgid "Record"
+msgstr "Registra"
+
+msgid "Print archived"
+msgstr "Stampa archiviata"
+
+msgid "Archive failed"
+msgstr "Archiviazione fallita"
+
+msgid "Print finished"
+msgstr "Stampa terminata"
+
+msgid "Open archived project"
+msgstr "Apri progetto archiviato"
+
+msgid "Open the archived project \"%s\" (print of %s) in MentorSlicer? The current project is closed (you will be asked to save it) and no print is started. The printer, filament and process profiles saved in the archived project are loaded and become the active selection."
+msgstr "Aprire il progetto archiviato \"%s\" (stampa di %s) in MentorSlicer? Il progetto corrente viene chiuso (ti verrà chiesto di salvarlo) e nessuna stampa viene avviata. I profili stampante, filamento e processo salvati nel progetto archiviato vengono caricati e diventano la selezione attiva."
+
+
+msgid "Print verdict not recorded"
+msgstr "Esito della stampa non registrato"
+
+msgid "Print verdict already recorded"
+msgstr "Esito della stampa già registrato"
+
+msgid "The assistant had already recorded a verdict for this print: your answer was not saved and nothing was archived."
+msgstr "L'assistente aveva già registrato un esito per questa stampa: la tua risposta non è stata salvata e non è stato archiviato nulla."
+
+msgid "The print log no longer exists."
+msgstr "Il diario della stampa non esiste più."
+
+msgid "Your 3D printing mentor: profiles, diagnostics and printer control, with every change confirmed by you."
+msgstr "Il tuo mentore di stampa 3D: profili, diagnosi e controllo della stampante, con ogni modifica confermata da te."
+
+# PRINT-ADVISOR F8: Creality strings that name the app, renamed to MentorSlicer in the code.
+# The msgids are new, so Creality's Italian text is carried over here (fixed where it was wrong).
+
+msgid "MentorSlicer has encountered an error while taking a configuration snapshot."
+msgstr "MentorSlicer ha riscontrato un errore durante l'acquisizione di un'istantanea di configurazione."
+
+msgid "MentorSlicer error"
+msgstr "Errore di MentorSlicer"
+
+msgid "MentorSlicer is licensed under "
+msgstr "MentorSlicer è distribuito con licenza "
+
+msgid "MentorSlicer "
+msgstr "MentorSlicer "
+
+msgid "The configuration may be generated by a newer version of MentorSlicer."
+msgstr "La configurazione potrebbe essere generata da una versione più recente di MentorSlicer."
+
+msgid "MentorSlicer requires the Microsoft WebView2 Runtime to operate certain features.\nInstall it from https://developer.microsoft.com/microsoft-edge/webview2/ and restart MentorSlicer."
+msgstr "MentorSlicer richiede Microsoft WebView2 Runtime per utilizzare alcune funzionalità.\nInstallalo da https://developer.microsoft.com/microsoft-edge/webview2/ e riavvia MentorSlicer."
+
+msgid "MentorSlicer requires the Microsoft WebView2 Runtime,But it has been found that the abnormal operation of Microsoft WebView2 may be related to the installation of Microsoft Edge. \nClick the Yes to reinstall Microsoft Edge"
+msgstr "MentorSlicer richiede il runtime di Microsoft WebView2, ma il funzionamento anomalo di Microsoft WebView2 potrebbe dipendere dall'installazione di Microsoft Edge.\nFai clic su Sì per reinstallare Microsoft Edge"
+
+msgid "Detected corruption in the MentorSlicer configuration file, attempted to rebuild, \nplease manually restart the software."
+msgstr "Il file di configurazione di MentorSlicer è danneggiato: è stato ricostruito.\nRiavvia il programma manualmente."
+
+msgid "The MentorSlicer configuration file may be corrupted and cannot be parsed.\nMentorSlicer has attempted to recreate the configuration file.\nPlease note, application settings will be lost, but printer profiles will not be affected."
+msgstr "Il file di configurazione di MentorSlicer potrebbe essere danneggiato e non può essere analizzato.\nMentorSlicer ha tentato di ricreare il file di configurazione.\nSi noti che le impostazioni dell'applicazione andranno perse, ma i profili della stampante non saranno interessati."
+
+msgid "The version of MentorSlicer is too low and needs to be updated to the latest version before it can be used normally"
+msgstr "La versione di MentorSlicer è obsoleta: va aggiornata all'ultima versione prima di poterla usare normalmente"
+
+msgid "MentorSlicer GUI initialization failed"
+msgstr "Inizializzazione dell'interfaccia di MentorSlicer non riuscita"
+
+msgid "The 3mf is not supported by MentorSlicer, load geometry data only."
+msgstr "Il 3mf non è supportato da MentorSlicer: vengono caricati solo i dati geometrici."
+
+msgid "Importing to MentorSlicer failed. Please download the file and manually import it."
+msgstr "L'importazione in MentorSlicer non è riuscita. Scarica il file e importalo a mano."
+
+msgid "To keep the feature you just enabled, MentorSlicer will make the following changes:"
+msgstr "Per mantenere la funzione appena attivata, MentorSlicer apporterà le seguenti modifiche:"
+
+msgid "with MentorSlicer so that MentorSlicer can open models from"
+msgstr "con MentorSlicer, così MentorSlicer può aprire i modelli da"
+
+msgid "Blacklisted libraries loaded into MentorSlicer process:"
+msgstr "Librerie in lista nera caricate nel processo MentorSlicer:"
+
+msgid "MentorSlicer uses this matrix only when flushing into objects skeleton is enabled."
+msgstr "MentorSlicer utilizza questa matrice solo quando lo spurgo nello scheletro degli oggetti è abilitato."
+
+msgid "MentorSlicer would re-calculate your flushing volumes everytime the filaments color changed."
+msgstr "MentorSlicer ricalcolerà i volumi di spurgo ogni volta che cambia il colore dei filamenti."
+
+msgid "The jerk setting exceeds the printer's maximum jerk (machine_max_jerk_x/machine_max_jerk_y).\nMentorSlicer will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the maximum jerk setting in your printer's configuration to get higher speeds."
+msgstr "L'impostazione del jerk supera quella massima prevista dalla stampante.  (machine_max_jerk_x/machine_max_jerk_y).\nMentorSlicer limiterà automaticamente la velocità del jerk per garantire che  non superi le capacità della stampante.\nÈ possibile regolare l'impostazione di jerk massimo nella configurazione della stampante per ottenere velocità più elevate."
+
+msgid "The acceleration setting exceeds the printer's maximum acceleration (machine_max_acceleration_extruding).\nMentorSlicer will automatically cap the acceleration speed to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the machine_max_acceleration_extruding value in your printer's configuration to get higher speeds."
+msgstr "L'impostazione di accelerazione supera quella massima prevista dalla stampante. (machine_max_acceleration_extruding).\nMentorSlicer limiterà automaticamente la velocità di accelerazione per garantire che non superi le capacità della stampante.\nÈ possibile regolare il valore machine_max_acceleration_extruding nella configurazione della stampante per ottenere velocità più elevate."
+
+msgid "The travel acceleration setting exceeds the printer's maximum travel acceleration (machine_max_acceleration_travel).\nMentorSlicer will automatically cap the travel acceleration speed to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the machine_max_acceleration_travel value in your printer's configuration to get higher speeds."
+msgstr "L'accelerazione di spostamento supera quella massima della stampante (machine_max_acceleration_travel).\nMentorSlicer limiterà automaticamente l'accelerazione di spostamento per non superare le capacità della stampante.\nPer velocità più elevate puoi modificare machine_max_acceleration_travel nella configurazione della stampante."
+
+msgid "This option sets the min point for the allowed bed mesh area. Due to the probe's XY offset, most printers are unable to probe the entire bed. To ensure the probe point does not go outside the bed area, the minimum and maximum points of the bed mesh should be set appropriately. MentorSlicer ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max points. This information can usually be obtained from your printer manufacturer. The default setting is (-99999, -99999), which means there are no limits, thus allowing probing across the entire bed."
+msgstr "Questa opzione imposta il punto minimo per l'area mesh del letto consentita. A causa dell'offset XY della sonda, la maggior parte delle stampanti non è in grado di sondare l'intero piano. Per garantire che il punto della sonda non esca dall'area del letto, i punti minimo e massimo della rete del letto devono essere impostati in modo appropriato. MentorSlicer garantisce che i valori adaptive_bed_mesh_min/adaptive_bed_mesh_max non superino questi punti min/max. Di solito queste informazioni possono essere ottenute dal produttore della stampante. L'impostazione predefinita è (-99999, -99999), il che significa che non ci sono limiti, consentendo così la tastatura dell'intero letto."
+
+msgid "This option sets the max point for the allowed bed mesh area. Due to the probe's XY offset, most printers are unable to probe the entire bed. To ensure the probe point does not go outside the bed area, the minimum and maximum points of the bed mesh should be set appropriately. MentorSlicer ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max points. This information can usually be obtained from your printer manufacturer. The default setting is (99999, 99999), which means there are no limits, thus allowing probing across the entire bed."
+msgstr "Questa opzione imposta il punto massimo per l'area mesh del letto consentita. A causa dell'offset XY della sonda, la maggior parte delle stampanti non è in grado di sondare l'intero piano. Per garantire che il punto della sonda non esca dall'area del letto, i punti minimo e massimo della rete del letto devono essere impostati in modo appropriato. MentorSlicer garantisce che i valori adaptive_bed_mesh_min/adaptive_bed_mesh_max non superino questi punti min/max. Di solito queste informazioni possono essere ottenute dal produttore della stampante. L'impostazione predefinita è (99999, 99999), il che significa che non ci sono limiti, consentendo così la tastatura dell'intero letto."
+
+msgid "After a tool change, the exact position of the newly loaded filament inside the nozzle may not be known, and the filament pressure is likely not yet stable. Before purging the print head into an infill or a sacrificial object, MentorSlicer will always prime this amount of material into the wipe tower to produce successive infill or sacrificial object extrusions reliably."
+msgstr "Dopo un cambio di strumento, l'esatta posizione del filamento appena caricato dentro l'ugello potrebbe essere sconosciuta, e la pressione del filamento probabilmente non è ancora stabile. Prima di spurgare la testina di stampa nel riempimento o in un oggetto sacrificale, MentorSlicer posizionerà questo filamento in una torre di pulitura al fine di ottenere una successiva estrusione affidabile su oggetto sacrificale o riempimento."
+
+msgid "Connect an infill line to an internal perimeter with a short segment of an additional perimeter. If expressed as percentage (example: 15%) it is calculated over infill extrusion width. MentorSlicer tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment shorter than infill_anchor_max is found, the infill line is connected to a perimeter segment at just one side and the length of the perimeter segment taken is limited to this parameter, but no longer than anchor_length_max. \nSet this parameter to zero to disable anchoring perimeters connected to a single infill line."
+msgstr "Collegare una linea di riempimento a un perimetro interno con un breve segmento di un perimetro aggiuntivo. Se espresso in percentuale (esempio: 15%) viene calcolato sulla larghezza di estrusione del riempimento. MentorSlicer tenta di collegare due linee di riempimento ravvicinate a un breve segmento perimetrale. Se non viene trovato alcun segmento perimetrale più corto di infill_anchor_max, la linea di riempimento viene collegata a un segmento perimetrale su un solo lato e la lunghezza del segmento perimetrale preso è limitata a questo parametro, ma non più lunga di anchor_length_max. \nImpostare questo parametro su zero per disabilitare i perimetri di ancoraggio collegati a una singola linea di riempimento."
+
+msgid "Connect an infill line to an internal perimeter with a short segment of an additional perimeter. If expressed as percentage (example: 15%) it is calculated over infill extrusion width. MentorSlicer tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment shorter than this parameter is found, the infill line is connected to a perimeter segment at just one side and the length of the perimeter segment taken is limited to infill_anchor, but no longer than this parameter. \nIf set to 0, the old algorithm for infill connection will be used, it should create the same result as with 1000 & 0."
+msgstr "Collegare una linea di riempimento a un perimetro interno con un breve segmento di un perimetro aggiuntivo. Se espresso in percentuale (esempio: 15%) viene calcolato sulla larghezza di estrusione del riempimento. MentorSlicer tenta di collegare due linee di riempimento ravvicinate a un breve segmento perimetrale. Se non viene trovato alcun segmento perimetrale più corto di questo parametro, la linea di riempimento viene collegata a un segmento perimetrale su un solo lato e la lunghezza del segmento perimetrale preso è limitata a infill_anchor, ma non più lunga di questo parametro. \nSe impostato a 0, verrà utilizzato il vecchio algoritmo per la connessione di riempimento, che dovrebbe creare lo stesso risultato di 1000 e 0."
+
+msgid "If you want to process the output G-code through custom scripts, just list their absolute paths here. Separate multiple scripts with a semicolon. Scripts will be passed the absolute path to the G-code file as the first argument, and they can access the MentorSlicer config settings by reading environment variables."
+msgstr "Se vuoi processare il G-code in uscita con script personalizzati, basta elencare qui il loro percorso assoluto. Separa i diversi script con un punto e virgola.  Gli script passeranno il percorso assoluto nel G-code come primo argomento, e potranno accedere alle impostazioni di configurazione di MentorSlicer leggendo le variabili di ambiente."
+
+msgid "based on Creality Print %s"
+msgstr "basato su Creality Print %s"
+
+# 2026-10-24: the Preferences label "Login Region" became "Region" (there is no login).
+msgid "Region"
+msgstr "Regione"
+
+# 2026-10-24: About dialog with the derivation chain, Help menu.
+msgid "About %s"
+msgstr "Informazioni su %s"
+
+msgid "Third-party libraries"
+msgstr "Librerie di terze parti"
+
+msgid "MentorSlicer is based on Creality Print %s by Creality."
+msgstr "MentorSlicer è basato su Creality Print %s di Creality."
+
+msgid "Creality Print is based on OrcaSlicer and on Ultimaker's CuraEngine."
+msgstr "Creality Print è basato su OrcaSlicer e su CuraEngine di Ultimaker."
+
+msgid "OrcaSlicer is based on BambuStudio, PrusaSlicer and SuperSlicer."
+msgstr "OrcaSlicer è basato su BambuStudio, PrusaSlicer e SuperSlicer."
+
+msgid "BambuStudio is based on PrusaSlicer by Prusa Research and SuperSlicer by Merill."
+msgstr "BambuStudio è basato su PrusaSlicer di Prusa Research e su SuperSlicer di Merill."
+
+msgid "PrusaSlicer was originally based on Slic3r by Alessandro Ranellucci and the RepRap community."
+msgstr "PrusaSlicer è nato da Slic3r di Alessandro Ranellucci e della comunità RepRap."
+
+msgid "Author:"
+msgstr "Autore:"
+
+# 2026-10-24: app-name mentions of Creality Print in UI texts now say MentorSlicer.
+msgid "MentorSlicer can upload G-code files to a printer host. This field should contain the hostname, IP address or URL of the printer host instance. Print host behind HAProxy with basic auth enabled can be accessed by putting the user name and password into the URL in the following format: https://username:password@your-octopi-address/"
+msgstr "MentorSlicer può caricare file G-code su un host di stampa. Questo campo deve contenere il nome host, l'indirizzo IP o l'URL dell'istanza dell'host di stampa. Un host dietro HAProxy con autenticazione di base si raggiunge inserendo nome utente e password nell'URL in questo formato: https://utente:password@indirizzo-della-stampante/"
+
+msgid "MentorSlicer can upload G-code files to a printer host. This field should contain the API Key or the password required for authentication."
+msgstr "MentorSlicer può caricare file G-code su un host di stampa. Questo campo deve contenere la chiave API o la password richiesta per l'autenticazione."
+
+msgid "MentorSlicer can upload G-code files to a printer host. This field must contain the kind of the host."
+msgstr "MentorSlicer può caricare file G-code su un host di stampa. Questo campo deve contenere il tipo di host."
+
+msgid "To reduce the waiting time after tool change, MentorSlicer can preheat the next tool while the current tool is still in use. This setting specifies the time in seconds to preheat the next tool. MentorSlicer will insert a M104 command to preheat the tool in advance."
+msgstr "Per ridurre l'attesa dopo il cambio utensile, MentorSlicer può preriscaldare l'utensile successivo mentre quello attuale è ancora in uso. Questa impostazione indica il tempo in secondi del preriscaldo. MentorSlicer inserirà un comando M104 per preriscaldare l'utensile in anticipo."
+
+msgid "MentorSlicer will terminate because of running out of memory.It may be a bug. It will be appreciated if you report the issue to our team."
+msgstr "MentorSlicer verrà chiuso perché la memoria è esaurita. Potrebbe essere un errore del programma: segnalalo, per favore."
+
+msgid "MentorSlicer will terminate because of a localization error. It will be appreciated if you report the specific scenario this issue happened."
+msgstr "MentorSlicer verrà chiuso per un errore di traduzione. Segnala, per favore, in quale situazione si è verificato."
+
+msgid "MentorSlicer got an unhandled exception: %1%"
+msgstr "MentorSlicer ha riscontrato un'eccezione non gestita: %1%"
+
+msgid "This project file was not created with MentorSlicer or Creality Print. Please select the printer preset you want to use for slicing."
+msgstr "Questo file di progetto non è stato creato con MentorSlicer o Creality Print. Seleziona il preset della stampante da usare per lo slicing."
+
+msgid "Generic filament preset detected. Print quality may vary between brands. We recommend fine-tuning the settings for your actual filament."
+msgstr "Rilevato un preset di filamento generico. La qualità di stampa può variare tra le marche: conviene regolare le impostazioni sul filamento che usi davvero."
+
+# 2026-10-24: separate menu for the Print Advisor MCP.
+msgid "AI Integration"
+msgstr "Integrazione AI"
+
+# 2026-10-24: Print Advisor MCP dialog (AI Integration menu, AdvisorInfoDialog).
+msgid "What the Print Advisor MCP is, how to install it, and its on/off switch."
+msgstr "Cos'è il Print Advisor MCP, come installarlo e il pulsante per attivarlo o disattivarlo."
+
+msgid "Connect an AI assistant to MentorSlicer"
+msgstr "Collega un assistente AI a MentorSlicer"
+
+msgid "What it is"
+msgstr "Che cos'è"
+
+msgid "A print assistant that connects an AI client (Claude Code or Codex) to MentorSlicer through MCP (Model Context Protocol). The AI runs in the client: MentorSlicer only offers a local service on 127.0.0.1, protected by a session token and active only while it is enabled here."
+msgstr "Un assistente di stampa che collega un client AI (Claude Code o Codex) a MentorSlicer tramite MCP (Model Context Protocol). L'AI funziona nel client: MentorSlicer offre solo un servizio locale su 127.0.0.1, protetto da un token di sessione e attivo solo finché è abilitato qui."
+
+msgid "What it allows"
+msgstr "Cosa permette"
+
+msgid "Read the printer, filament and process profiles and their settings."
+msgstr "Leggere i profili di stampante, filamento e processo e le loro impostazioni."
+
+msgid "Diagnose print defects and suggest changes, saved only as new copies of the profiles after your confirmation."
+msgstr "Diagnosticare i difetti di stampa e proporre modifiche, salvate solo come nuove copie dei profili dopo la tua conferma."
+
+msgid "Slice the current plate and measure print time and filament."
+msgstr "Eseguire lo slicing del piatto corrente e misurare tempo di stampa e filamento."
+
+msgid "Run checks before printing."
+msgstr "Eseguire i controlli prima della stampa."
+
+msgid "With the Device tab open: printer status, camera snapshot, fans, temperatures, speed and light, pause/resume/stop, chamber preheat and slow cooldown."
+msgstr "Con la scheda Dispositivo aperta: stato della stampante, foto dalla telecamera, ventole, temperature, velocità e luce, pausa/ripresa/stop, preriscaldo della camera e raffreddamento lento."
+
+msgid "Generate calibration tests and turn their result into profile values."
+msgstr "Generare i test di calibrazione e convertirne il risultato in valori del profilo."
+
+msgid "Keep a diary of the prints and an archive of the successful ones."
+msgstr "Tenere un diario delle stampe e un archivio di quelle riuscite."
+
+msgid "Every change asks for your confirmation in MentorSlicer. The Print Advisor never starts a print."
+msgstr "Ogni modifica chiede la tua conferma in MentorSlicer. Il Print Advisor non avvia mai una stampa."
+
+msgid "<MentorSlicer source>"
+msgstr "<sorgenti di MentorSlicer>"
+
+msgid "How to install"
+msgstr "Come installarlo"
+
+msgid "Install Node.js 20 or later."
+msgstr "Installa Node.js 20 o successivo."
+
+msgid "Open a terminal in %s and run npm install."
+msgstr "Apri un terminale in %s ed esegui npm install."
+
+msgid "Register it in Claude Code with this command (once: it is valid in every folder). Then restart Claude Code or use /mcp."
+msgstr "Registralo in Claude Code con questo comando (una volta sola: vale in tutte le cartelle). Poi riavvia Claude Code o usa /mcp."
+
+msgid "mentorslicer-mcp.exe was not found next to MentorSlicer.exe: this build runs the sidecar from its sources with Node.js."
+msgstr "mentorslicer-mcp.exe non è accanto a MentorSlicer.exe: questa build esegue il sidecar dai sorgenti con Node.js."
+
+msgid "Copy command"
+msgstr "Copia comando"
+
+msgid "Enable the service with the button below."
+msgstr "Abilita il servizio con il pulsante qui sotto."
+
+msgid "Replace the placeholder with the folder of the MentorSlicer sources."
+msgstr "Sostituisci il segnaposto con la cartella dei sorgenti di MentorSlicer."
+
+msgid "Codex is configured the same way: see the README in the sidecar folder (Codex section)."
+msgstr "Codex si configura allo stesso modo: vedi il README nella cartella del sidecar (sezione Codex)."
+
+msgid "Status:"
+msgstr "Stato:"
+
+msgid "Active"
+msgstr "Attivo"
+
+msgid "Descriptor: %s"
+msgstr "Descrittore: %s"
+
+msgid "Enabled, but the service runs in another MentorSlicer window"
+msgstr "Abilitato, ma il servizio è attivo in un'altra finestra di MentorSlicer"
+
+msgid "Copied"
+msgstr "Copiato"
+
+# Overrides the untranslated entry of CrealityPrint_it.po (also used by Plate Settings).
+msgid "Disable"
+msgstr "Disattiva"
+
+# 2026-10-24: third-party libraries page.
+msgid "MentorSlicer is based on Creality Print, OrcaSlicer, BambuStudio and PrusaSlicer"
+msgstr "MentorSlicer si basa su Creality Print, OrcaSlicer, BambuStudio e PrusaSlicer"
+
+msgid "This software uses open source components whose copyright and other proprietary rights belong to their respective owners. Versions refer to the Windows build"
+msgstr "Questo software usa componenti open source i cui diritti d'autore e di proprietà appartengono ai rispettivi titolari. Le versioni si riferiscono alla build per Windows"
+
+# 2026-10-25: third-party libraries page, purpose, latest version and update check.
+msgid "Check for updates"
+msgstr "Verifica aggiornamenti"
+
+msgid "Asks GitHub, GitLab and NuGet for the latest release of each library. Nothing is sent besides the requests; the result is kept for the next time."
+msgstr "Chiede a GitHub, GitLab e NuGet l'ultima versione di ogni libreria. Non viene inviato nulla oltre alle richieste; il risultato viene conservato per la volta successiva."
+
+msgid "Checking %d of %d..."
+msgstr "Verifica %d di %d..."
+
+msgid "Latest versions as of %s (reference check)."
+msgstr "Ultime versioni al %s (controllo di riferimento)."
+
+msgid "Last online check: %s."
+msgstr "Ultimo controllo online: %s."
+
+msgid "No library to update."
+msgstr "Nessuna libreria da aggiornare."
+
+msgid "Libraries to update: %d."
+msgstr "Librerie da aggiornare: %d."
+
+msgid "Checks failed: %d."
+msgstr "Controlli non riusciti: %d."
+
+msgid "Library"
+msgstr "Libreria"
+
+msgid "Used for"
+msgstr "A cosa serve"
+
+msgid "In use"
+msgstr "In uso"
+
+msgid "Latest"
+msgstr "Ultima"
+
+msgid "Status"
+msgstr "Stato"
+
+msgid "Up to date"
+msgstr "Aggiornata"
+
+msgid "Update recommended"
+msgstr "Da aggiornare"
+
+msgid "Newer version available, kept on purpose."
+msgstr "C'è una versione più recente, lasciata apposta."
+
+msgid "Newer version available, to re-check."
+msgstr "C'è una versione più recente, da ricontrollare."
+
+msgid "Newer version available."
+msgstr "C'è una versione più recente."
+
+msgid "Not checked online."
+msgstr "Non controllata online."
+
+msgid "Last check failed:"
+msgstr "Ultimo controllo non riuscito:"
+
+msgid "GitHub request limit reached (60 per hour): try again later."
+msgstr "Raggiunto il limite di richieste di GitHub (60 l'ora): riprova più tardi."
+
+msgid "Release list not found."
+msgstr "Elenco delle versioni non trovato."
+
+msgid "No release in the expected format."
+msgstr "Nessuna versione nel formato previsto."
+
+msgid "Repairs STL meshes (normals, holes) when models are loaded."
+msgstr "Ripara le mesh STL (normali, buchi) quando si caricano i modelli."
+
+msgid "2D rasterization of layer images for supports."
+msgstr "Rasterizzazione 2D delle immagini dei layer per i supporti."
+
+msgid "Arc fitting: turns short G-code segments into arcs (G2/G3)."
+msgstr "Interpolazione ad arco: trasforma i segmenti corti del G-code in archi (G2/G3)."
+
+msgid "Imports GLB/glTF, FBX, DAE, 3DS, PLY and OFF models."
+msgstr "Importa modelli GLB/glTF, FBX, DAE, 3DS, PLY e OFF."
+
+msgid "Data compression used by OpenVDB."
+msgstr "Compressione dei dati usata da OpenVDB."
+
+msgid "Patched fork used by OpenVDB: a newer version can change the results."
+msgstr "Fork modificato usato da OpenVDB: una versione più recente può cambiare i risultati."
+
+msgid "General C++ building blocks (files, threads, network, text) used everywhere."
+msgstr "Componenti C++ di base (file, thread, rete, testo) usati ovunque."
+
+msgid "Updating it means rebuilding almost every other dependency; no relevant security issue."
+msgstr "Aggiornarla obbliga a ricompilare quasi tutte le altre dipendenze; nessun problema di sicurezza rilevante."
+
+msgid "Saves undo/redo snapshots and painted data."
+msgstr "Salva gli stati di annulla/ripeti e i dati dipinti."
+
+msgid "Header-only, no useful changes in the newer release."
+msgstr "Solo header, nessuna novità utile nella versione più recente."
+
+msgid "Exact geometry: mesh booleans (cut, merge, negative volumes)."
+msgstr "Geometria esatta: operazioni booleane sulle mesh (taglio, unione, volumi negativi)."
+
+msgid "A newer version can change boolean results; if ever, follow OrcaSlicer (5.6.3)."
+msgstr "Una versione più recente può cambiare i risultati delle booleane; semmai, seguire OrcaSlicer (5.6.3)."
+
+msgid "2D polygon operations (offsets, intersections) of the slicing engine."
+msgstr "Operazioni 2D sui poligoni (offset, intersezioni) del motore di slicing."
+
+msgid "Slicing engine geometry: a newer version can change the G-code."
+msgstr "Geometria del motore di slicing: una versione più recente può cambiare il G-code."
+
+msgid "Newer 2D polygon library used by some engine features."
+msgstr "Libreria 2D dei poligoni più recente, usata da alcune funzioni del motore."
+
+msgid "Linear algebra: vectors, matrices and transformations."
+msgstr "Algebra lineare: vettori, matrici e trasformazioni."
+
+msgid "A newer version can change the G-code: update only together with OrcaSlicer."
+msgstr "Una versione più recente può cambiare il G-code: aggiornarla solo insieme a OrcaSlicer."
+
+msgid "Reads the XML inside 3MF and AMF projects."
+msgstr "Legge l'XML dentro i progetti 3MF e AMF."
+
+msgid "Fast number parsing (G-code, settings)."
+msgstr "Lettura veloce dei numeri (G-code, impostazioni)."
+
+msgid "Decodes the RTSP camera video of older Creality printers."
+msgstr "Decodifica il video RTSP della telecamera delle stampanti Creality più vecchie."
+
+msgid "8.1 is the series of the monthly LGPL builds (BtbN) used by the fork: move on when a monthly build of the newer series exists."
+msgstr "La 8.1 è la serie delle build LGPL mensili (BtbN) usate dal fork: passare alla serie nuova quando ne esiste una build mensile."
+
+msgid "Renders fonts for text on models (Open Cascade)."
+msgstr "Disegna i caratteri del testo sui modelli (Open Cascade)."
+
+msgid "Loads the OpenGL functions of the 3D view."
+msgstr "Carica le funzioni OpenGL della vista 3D."
+
+msgid "No benefit from a newer version."
+msgstr "Nessun vantaggio da una versione più recente."
+
+msgid "OpenGL extension loader."
+msgstr "Caricatore delle estensioni OpenGL."
+
+msgid "OpenGL window library (dependency of the build)."
+msgstr "Libreria per le finestre OpenGL (dipendenza della build)."
+
+msgid "Arbitrary-precision numbers for CGAL."
+msgstr "Numeri a precisione arbitraria per CGAL."
+
+msgid "Precompiled, never reads user files."
+msgstr "Precompilata, non legge mai file dell'utente."
+
+msgid "Translations of the interface."
+msgstr "Traduzioni dell'interfaccia."
+
+msgid "USB devices such as the 3D mouse."
+msgstr "Dispositivi USB come il mouse 3D."
+
+msgid "Menus and tools drawn in the 3D view (gizmos, legend)."
+msgstr "Menu e strumenti disegnati nella vista 3D (gizmo, legenda)."
+
+msgid "Heavily modified by Bambu and Orca."
+msgstr "Molto modificata da Bambu e Orca."
+
+msgid "Move and rotate handles in the 3D view."
+msgstr "Maniglie per spostare e ruotare nella vista 3D."
+
+msgid "HTTP/HTTPS connections (print hosts, this update check)."
+msgstr "Connessioni HTTP/HTTPS (print host, questa verifica degli aggiornamenti)."
+
+msgid "Mesh geometry: picking and measuring in the 3D view."
+msgstr "Geometria delle mesh: selezione e misure nella vista 3D."
+
+msgid "JPEG images (textures, thumbnails)."
+msgstr "Immagini JPEG (texture, miniature)."
+
+msgid "Automatic arrangement of objects on the plate."
+msgstr "Disposizione automatica degli oggetti sul piatto."
+
+msgid "Noise patterns for fuzzy skin."
+msgstr "Rumore per la superficie ruvida (fuzzy skin)."
+
+msgid "PNG images (icons, thumbnails, textures)."
+msgstr "Immagini PNG (icone, miniature, texture)."
+
+msgid "TIFF images in the interface toolkit."
+msgstr "Immagini TIFF nella libreria dell'interfaccia."
+
+msgid "Fuzzy matching in the settings search."
+msgstr "Ricerca approssimata nella ricerca delle impostazioni."
+
+msgid "Mesh cutting (Cut tool)."
+msgstr "Taglio delle mesh (strumento Taglia)."
+
+msgid "A newer version can change the cut results."
+msgstr "Una versione più recente può cambiare i risultati del taglio."
+
+msgid "Software OpenGL (--sw-renderer) for PCs without a working graphics driver."
+msgstr "OpenGL software (--sw-renderer) per i PC senza un driver grafico funzionante."
+
+msgid "Web pages inside the app (Home, Device, send dialog)."
+msgstr "Pagine web dentro l'app (Home, Dispositivo, finestra di invio)."
+
+msgid "ZIP compression of 3MF files."
+msgstr "Compressione ZIP dei file 3MF."
+
+msgid "Modified by Bambu and Prusa."
+msgstr "Modificata da Bambu e Prusa."
+
+msgid "Precise floating point for CGAL."
+msgstr "Virgola mobile di precisione per CGAL."
+
+msgid "SVG icons and SVG import."
+msgstr "Icone SVG e importazione SVG."
+
+msgid "Reads and writes JSON (profiles, web pages, Print Advisor)."
+msgstr "Legge e scrive JSON (profili, pagine web, Print Advisor)."
+
+msgid "Numerical optimization (automatic arrangement and orientation)."
+msgstr "Ottimizzazione numerica (disposizione e orientamento automatici)."
+
+msgid "A newer version can change the automatic arrangement."
+msgstr "Una versione più recente può cambiare la disposizione automatica."
+
+msgid "Imports STEP CAD files and renders text on models."
+msgstr "Importa i file CAD STEP e disegna il testo sui modelli."
+
+msgid "2026 CVEs in the STEP/IGES/STL readers: update when a release with the fixes is confirmed (large update, STEP API changed)."
+msgstr "CVE del 2026 nei lettori STEP/IGES/STL: aggiornare quando è confermata una versione con le correzioni (aggiornamento grosso, API STEP cambiata)."
+
+msgid "Decodes the textures of imported models."
+msgstr "Decodifica le texture dei modelli importati."
+
+msgid "Built without TIFF (the exposed part); a newer version is a long rebuild with little benefit."
+msgstr "Compilata senza TIFF (la parte esposta); una versione più recente richiede una ricompilazione lunga con pochi vantaggi."
+
+msgid "Used by OpenVDB."
+msgstr "Usata da OpenVDB."
+
+msgid "Tied to OpenVDB."
+msgstr "Legata a OpenVDB."
+
+msgid "3D drawing."
+msgstr "Disegno 3D."
+
+msgid "Encryption for HTTPS and the printer connection (wss); checked within the 3.5 LTS series."
+msgstr "Crittografia per HTTPS e per la connessione alla stampante (wss); controllata nella serie 3.5 LTS."
+
+msgid "Voxel volumes: hollowing and some offsets."
+msgstr "Volumi a voxel: svuotamento e alcuni offset."
+
+msgid "Patched fork: a newer version can change the results."
+msgstr "Fork modificato: una versione più recente può cambiare i risultati."
+
+msgid "Direct base of this fork (printer pages, Creality profiles)."
+msgstr "Base diretta di questo fork (pagine della stampante, profili Creality)."
+
+msgid "A new release is merged with the upstream update procedure, not as a library."
+msgstr "Una nuova versione si integra con la procedura di aggiornamento upstream, non come libreria."
+
+msgid "Base project of the slicer."
+msgstr "Progetto da cui deriva lo slicer."
+
+msgid "Fast image format for G-code thumbnails."
+msgstr "Formato di immagine veloce per le miniature del G-code."
+
+msgid "Convex hulls (placement on the plate, supports)."
+msgstr "Inviluppi convessi (posizionamento sul piatto, supporti)."
+
+msgid "Texture compression for the 3D view."
+msgstr "Compressione delle texture per la vista 3D."
+
+msgid "Compares version numbers (profiles, projects)."
+msgstr "Confronta i numeri di versione (profili, progetti)."
+
+msgid "Parallel computing on all CPU cores."
+msgstr "Calcolo parallelo su tutti i core della CPU."
+
+msgid "Fast hash tables."
+msgstr "Tabelle hash veloci."
+
+msgid "Interface toolkit (windows, buttons, dialogs)."
+msgstr "Libreria dell'interfaccia (finestre, pulsanti, dialoghi)."
+
+msgid "OrcaSlicer fork, long rebuild; no relevant security issue."
+msgstr "Fork di OrcaSlicer, ricompilazione lunga; nessun problema di sicurezza rilevante."
+
+msgid "Compression (PNG, ZIP, network)."
+msgstr "Compressione (PNG, ZIP, rete)."

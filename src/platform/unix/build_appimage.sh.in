@@ -1,0 +1,70 @@
+#!/bin/sh
+APPIMAGETOOLURL="https://github.com/AppImage/appimagetool/releases/latest/download/appimagetool-$(uname -m).AppImage"
+
+
+APP_IMAGE="@SLIC3R_APP_NAME@-V@CREALITYPRINT_VERSION@-x86_64-@PROJECT_VERSION_EXTRA@.AppImage"
+
+# Ship one coherent Pango runtime instead of inheriting the crashing 1.57.0
+# font-family lookup from the target distribution.
+PANGO_RUNTIME="@CREALITY_PANGO_RUNTIME_DIR@"
+for library in libpango-1.0.so.0 libpangoft2-1.0.so.0 libpangocairo-1.0.so.0 libpangoxft-1.0.so.0; do
+    if [ ! -r "$PANGO_RUNTIME/$library" ]; then
+        echo "Missing Pango runtime: build deps target dep_Pango, then reconfigure the application." >&2
+        exit 1
+    fi
+done
+
+wget ${APPIMAGETOOLURL} -O ../appimagetool.AppImage
+chmod +x ../appimagetool.AppImage
+
+if [ -f /.dockerenv ] ; then # Only run if inside of a Docker Container
+sed '0,/AI\x02/{s|AI\x02|\x00\x00\x00|}' -i  ../appimagetool.AppImage
+fi
+
+sed -i -e 's#/usr#././#g' bin/@SLIC3R_APP_CMD@
+mv @SLIC3R_APP_CMD@ AppRun
+chmod +x AppRun
+
+
+
+mkdir -p usr/lib
+cp -a "$PANGO_RUNTIME"/libpango*.so* usr/lib/ || exit 1
+mkdir -p usr/share/licenses/pango
+cp "$PANGO_RUNTIME/../share/licenses/pango/COPYING" usr/share/licenses/pango/ || exit 1
+cp /lib/x86_64-linux-gnu/libusrsctp.so.* usr/lib/
+cp /lib/x86_64-linux-gnu/libsrtp2.so.* usr/lib/
+cp /lib/x86_64-linux-gnu/libasound.so.* usr/lib/
+cp /lib/x86_64-linux-gnu/libopus.so.* usr/lib/
+cp /lib/x86_64-linux-gnu/libspeexdsp.so.* usr/lib/
+cp /lib/x86_64-linux-gnu/libz.so.* usr/lib/
+cp /lib/x86_64-linux-gnu/liblzma.so.* usr/lib/
+cp /lib/x86_64-linux-gnu/libx264.so.* usr/lib/
+cp /usr/lib/x86_64-linux-gnu/libGLU.so.* usr/lib/
+cp /usr/lib/x86_64-linux-gnu/libOpenGL.so.* usr/lib/
+cp /usr/lib/x86_64-linux-gnu/libGLdispatch.so.* usr/lib/
+cp /usr/lib/x86_64-linux-gnu/libexpat.so.* usr/lib/
+cp /usr/lib/x86_64-linux-gnu/libLerc.so.* usr/lib/
+cp /usr/lib/x86_64-linux-gnu/libmspack.so.* usr/lib/
+
+cp resources/images/@SLIC3R_APP_NAME@_192px.png @SLIC3R_APP_NAME@.png
+mkdir -p usr/share/icons/hicolor/192x192/apps
+cp resources/images/@SLIC3R_APP_NAME@_192px.png usr/share/icons/hicolor/192x192/apps/@SLIC3R_APP_NAME@.png
+cat <<EOF > @SLIC3R_APP_NAME@.desktop
+[Desktop Entry]
+Name=@SLIC3R_APP_NAME@
+Exec=AppRun %F
+Icon=@SLIC3R_APP_NAME@
+Type=Application
+Categories=Utility;
+MimeType=model/stl;application/vnd.ms-3mfdocument;application/prs.wavefront-obj;application/x-amf;
+EOF
+
+
+if [ -f /.dockerenv ] ; then # Only run if inside of a Docker Container
+  ../appimagetool.AppImage --appimage-extract-and-run . $([ ! -z "${container}" ] && echo '--appimage-extract-and-run')
+else
+  ../appimagetool.AppImage . $([ ! -z "${container}" ] && echo '--appimage-extract-and-run')
+fi
+
+mv @SLIC3R_APP_NAME@-$(uname -m).AppImage ${APP_IMAGE}
+chmod +x ${APP_IMAGE}

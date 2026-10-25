@@ -1,0 +1,24 @@
+From 5b4c7e3f1ea1c0a7a4f21b2c39c0f7b93f1f8b21 Mon Sep 17 00:00:00 2001
+From: buildfix <noreply@example.com>
+Date: Thu, 20 Nov 2025 10:00:00 +0800
+Subject: [PATCH] MPFR: Fix LoongArch __int128 type token
+
+Use valid `unsigned __int128` instead of invalid `unsigned __int128__` in
+mpfr-longlong.h so that LoongArch builds succeed with GCC.
+
+---
+ src/mpfr-longlong.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/mpfr-longlong.h b/src/mpfr-longlong.h
+index abcdef0..abcdef1 100644
+--- a/src/mpfr-longlong.h
++++ b/src/mpfr-longlong.h
+@@ -1168,7 +1168,7 @@
+     UDItype __u = (u), __v = (v); \
+     (w0) = __u * __v; \
+-    (w1) = (unsigned __int128__) __u * __v >> 64; \
++    (w1) = (unsigned __int128) __u * __v >> 64; \
+   } while (0)
+-- 
+2.27.0

@@ -1,0 +1,98 @@
+# F6 - repository and resources (doc/specs/F6-repository-risorse-spec.md). One entry per line; "#" starts a comment.
+# Kept on purpose: .claude/skills/upstream-update, doc/MCP/upstream-update-plan.md, scripts/app_store.entitlements,
+# scripts/build_with_progress.ps1, tests/print-advisor, tests/regression, src/tracy/public, src/tracy/LICENSE.
+
+# CMake options and names removed from code
+word:SLIC3R_PERL_XS
+word:SLIC3R_BUILD_SANDBOXES
+word:SLIC3R_BUILD_TESTS
+word:FIREBASE_SDK_DIR
+word:run_creality_on_e_cores
+word:GoogleService-Info.plist
+word:NotoSansKR-Regular.ttf
+word:NotoSansKR-Bold.ttf
+re:add_subdirectory\((xs|sandboxes|compare_3mf)\)   # the tests block is covered by word:SLIC3R_BUILD_TESTS; src/mcut has its own add_subdirectory(tests)
+re:deps/Darwin
+re:Creality_doc/
+re:SoftFever_doc/
+
+# Root junk and dev tools
+file:F008四包参数差异.csv
+file:F008四包参数差异.xlsx
+file:MATERIALLISTMANAGER.ipch
+file:src/slic3r/GUI/mrgtmp0
+file:clang-format.exe
+file:.githooks
+file:clang-tidy
+file:Creality_doc
+file:ai_code_check
+file:benchmarks
+file:compare_3mf
+file:parameter_history
+file:tools/vswhere.exe
+file:.vscode/creality-build-button
+file:.vscode/creality-print-build-button.vsix
+
+# Perl bindings and sandboxes
+file:xs
+file:t
+file:lib
+file:Build.PL
+file:sandboxes
+
+# Creality CI, submodule, Firebase
+file:JenkinsPipeline
+file:JenkinsPipeline.MacAppStore
+file:Jenkinsfile
+file:Jenkinsfile.offline
+file:.gitmodules
+file:GoogleService-Info.plist
+file:deps/Darwin
+file:Readme.txt
+file:SECURITY.md
+file:CMakePresets.json
+
+# Old build scripts
+file:build_deps.bat
+file:build_ninja_vs2012_debug.bat
+file:build_ninja_vs2019_debug.bat
+file:build_release.bat
+file:build_release_vs2022_arm64.bat
+file:build_vs2022_unified.bat
+file:extract_deps.bat
+file:orca_build_release.bat
+file:project_build.bat
+file:start.bat
+file:start1.bat
+file:test_build.bat
+file:run_creality_on_e_cores.bat
+file:scripts/sync_web.bat
+file:scripts/generate_creality_presets.py
+file:scripts/jenkins_package_build.bat
+
+# ARM64 binaries and fonts
+file:deps/mesa/win-arm64
+file:deps/WebView2/lib/winARM64
+file:deps/GMP/gmp/lib/win-arm64
+file:deps/MPFR/mpfr/lib/winARM64
+file:deps/CR_TPMS/cr_tpms/lib/winARM64
+file:resources/fonts/NotoSansKR-Bold.ttf
+file:resources/fonts/NotoSansKR-Regular.ttf
+
+# Tests (c1 + c2), tracy, Creality doc
+file:tests/engine_test
+file:tests/CMakeLists.txt
+file:tests/libslic3r
+file:tests/fff_print
+file:tests/gui
+file:tests/data
+file:tests/catch2
+file:tests/runtest.py
+file:src/tracy/profiler
+file:src/tracy/server
+file:src/tracy/CMakeLists.txt
+file:doc/bugfixes
+file:doc/images
+file:doc/requirements
+file:doc/simple-mode
+file:doc/bed-types.md

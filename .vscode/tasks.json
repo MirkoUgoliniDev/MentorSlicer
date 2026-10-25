@@ -1,0 +1,74 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Chiudi MentorSlicer di build",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile", "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/tools/close-build-instance.ps1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "statusbar": { "hide": true }
+      },
+      "presentation": { "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build EXE MentorSlicer",
+      "dependsOn": ["Chiudi MentorSlicer di build"],
+      "type": "shell",
+      "command": "call \"C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\Tools\\VsDevCmd.bat\" -arch=x64 && call build_exe_only.bat",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "shell": { "executable": "cmd.exe", "args": ["/d", "/c"] },
+        "statusbar": { "label": "$(tools) Build EXE", "tooltip": "Compila solo MentorSlicer.exe (build\\src\\Release), senza install" }
+      },
+      "presentation": { "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": ["$msCompile"],
+      "group": { "kind": "build", "isDefault": true }
+    },
+    {
+      "label": "Build Install MentorSlicer",
+      "dependsOn": ["Chiudi MentorSlicer di build"],
+      "type": "shell",
+      "command": "call \"C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\Tools\\VsDevCmd.bat\" -arch=x64 && call build_release_vs2022.bat",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "shell": { "executable": "cmd.exe", "args": ["/d", "/c"] },
+        "statusbar": { "label": "$(package) Build Install", "tooltip": "Build completa con target install (build\\OrcaSlicer)" }
+      },
+      "presentation": { "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": ["$msCompile"],
+      "group": "build"
+    },
+    {
+      "label": "Pubblica stabile MentorSlicer",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile", "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/tools/publish-stable.ps1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "statusbar": { "label": "$(rocket) Pubblica stabile", "tooltip": "Copia la build provata in C:\\MentorSlicer (chiude la copia stabile se aperta)" }
+      },
+      "presentation": { "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Avvia MentorSlicer",
+      "type": "process",
+      "command": "${workspaceFolder}/build/src/Release/MentorSlicer.exe",
+      "options": {
+        "cwd": "${workspaceFolder}/build/src/Release",
+        "statusbar": { "label": "$(play) Avvia MentorSlicer", "tooltip": "Avvia build\\src\\Release\\MentorSlicer.exe" }
+      },
+      "presentation": { "panel": "dedicated", "reveal": "silent" },
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+# F2 - interface: tabs (Home, Prepare, Preview, Device only), AI/Pro switch, feedback/cloud upload/floating AI button,
+# wider filament cards, wider chamber card (web patch 11). One entry per line; "#" starts a comment.
+# Item 1: Online Models / AI Creation tabs and the unused tab positions
+word:tpOnlineModel
+word:tpAICreation
+word:tpMonitor
+word:tpMultiDevice
+word:tpProject
+word:tpCalibration
+word:tpAuxiliary
+word:toDebugTool
+word:m_webmodellibrary_view
+word:m_ai_creation_view
+word:get_modellibrary_view
+word:get_ai_creation_view
+word:ensure_web_model_view_ready
+word:update_model_webviews_user_agent
+word:reload_region_sensitive_views
+word:get_ai_creation_webaddress
+word:is_printer_view
+word:tab_ai_creation
+word:tab_ai_creation_active
+word:tab_online_model_active
+# Item 2: AI/Pro switch, More button, Easy-mode preference
+word:EasyModeSwitchCtrl
+word:OnMore
+word:ID_TOP_MORE
+word:m_more_item
+word:m_easy_mode_switch_ctrl
+word:m_easy_mode_switch_item
+word:m_action_spacer_items
+word:m_easy_mode_checkbox
+word:create_item_easymode_checkbox
+word:m_is_easy_mode
+# not listed on purpose: set_begin_guide_version_mode (still sent by the homepage web bundle, now ignored by GUI_App),
+# easy_print_mode (AppConfig forces "0"; comments in MCPChatPanel), pro_mode (AppConfig erases the section),
+# toolbar_more (icons still used by the 3D canvas "more" toolbar item), Update_easy_mode_flag (kept, called by post_init)
+# Item 3: floating AI button on the 3D canvas
+file:resources/web/image/ai_chat_float_logo.svg
+word:_render_ai_chat_toggle
+word:_ensure_ai_chat_logo_tex
+word:m_ai_chat_logo_tex
+word:m_ai_chat_float_pos
+word:m_ai_chat_float_pos_loaded
+word:m_ai_chat_float_pos_user_override
+word:m_ai_chat_float_dragging
+word:m_ai_chat_float_dragged_this_action
+word:kProModeLayoutSection
+word:kAIChatFloatPosOverrideKey
+word:kAIChatFloatPosXKey
+word:kAIChatFloatPosYKey

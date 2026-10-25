@@ -1,0 +1,14 @@
+{
+  "_source": "BorchiaMuro_tubo.stl, ASA K1C - pezzi grandi, K1C, sliced 2026-10-19 by Creality Print 7.3 Alpha (feature/mcp-advisor); trimmed to 5 of 431 layers",
+  "heat_soak_time": 10,
+  "heat_soak_bed_temp": 100,
+  "support_air_filtration": true,
+  "auxiliary_fan": true,
+  "gcode_flavor": "klipper",
+  "machine_start_command": "START_PRINT",
+  "brim_layers": 3,
+  "layers_in_file": 5,
+  "first_layer_z": 0.2,
+  "brim_objects": 1,
+  "brim_blocks_per_object_layer": 1
+}

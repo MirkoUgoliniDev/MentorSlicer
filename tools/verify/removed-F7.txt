@@ -1,0 +1,154 @@
+# F7 - easy mode and Home (doc/specs/F7-easy-mode-home-spec.md). One entry per line; "#" starts a comment.
+# Decisions: Home kept (option B, web patches 14 and 15); EasyPrintSender was already gone (F3);
+# the dead half of simple/filamentMapping deleted; GLGizmoSimplePaint removed from Pro altogether.
+# Kept on purpose (not listed): easy_mode as a word in two comments (GLShadersManager.cpp, SlicerBridgeActionsProcess.cpp),
+# ImGuiFilamentPanel in a comment of FilamentMappingService.hpp, ActionID::LIST_PRINTERS/SELECT_PRINTER (plain strings,
+# SlicerAction.hpp), is_easy_mode_active (SceneFilamentSourceSnapshotManager, body returns false), easy_print_mode
+# (AppConfig.cpp still forces "0" since F2: libslic3r is out of scope for F7), the shader thumbnail_recolor_no_light (registered, no user).
+
+# 1.1 simple UI files
+file:src/slic3r/GUI/simple/GLCanvas3DSimple.cpp
+file:src/slic3r/GUI/simple/GLObjectManipulateToolbarSimple.cpp
+file:src/slic3r/GUI/simple/GLToolbarSimple.cpp
+file:src/slic3r/GUI/simple/GLSimpleUtils.hpp
+file:src/slic3r/GUI/simple/GUI_ObjectListSimple.cpp
+file:src/slic3r/GUI/simple/filamentSimplePage.cpp
+file:src/slic3r/GUI/simple/SupportSimple.cpp
+file:src/slic3r/GUI/simple/SupportSimple.hpp
+file:src/slic3r/GUI/simple/PrintSettingsPanel.cpp
+file:src/slic3r/GUI/simple/PrintSettingsPanel.hpp
+file:src/slic3r/GUI/simple/DeviceListSimple.cpp
+file:src/slic3r/GUI/simple/DeviceListSimple.hpp
+file:src/slic3r/GUI/simple/SimpleModelMgr.cpp
+file:src/slic3r/GUI/simple/SimpleModelMgr.hpp
+file:src/slic3r/GUI/simple/UploadDialog.cpp
+file:src/slic3r/GUI/simple/UploadDialog.hpp
+# decision 3: dead half of simple/filamentMapping
+file:src/slic3r/GUI/simple/filamentMapping/ImGuiFilamentExtraPage.cpp
+file:src/slic3r/GUI/simple/filamentMapping/ImGuiFilamentPanel.cpp
+file:src/slic3r/GUI/simple/filamentMapping/ImGuiFilamentPanel.hpp
+file:src/slic3r/GUI/simple/filamentMapping/ImGuiSpoolWidget.cpp
+file:src/slic3r/GUI/simple/filamentMapping/ImGuiSpoolWidget.hpp
+file:src/slic3r/GUI/simple/filamentMapping/ImGuiThumbnailPreview.cpp
+file:src/slic3r/GUI/simple/filamentMapping/ImGuiThumbnailPreview.hpp
+file:src/slic3r/GUI/simple/filamentMapping/ResidentFilamentMappingAdapter.cpp
+file:src/slic3r/GUI/simple/filamentMapping/ResidentFilamentMappingAdapter.hpp
+file:src/slic3r/GUI/simple/filamentMapping/ResidentFilamentMappingLogic.cpp
+file:src/slic3r/GUI/simple/filamentMapping/ResidentFilamentMappingLogic.hpp
+file:src/slic3r/GUI/simple/filamentMapping/ResidentFilamentMappingPopupPolicy.cpp
+file:src/slic3r/GUI/simple/filamentMapping/ResidentFilamentMappingPopupPolicy.hpp
+file:src/slic3r/GUI/simple/filamentMapping/ResidentFilamentMappingView.cpp
+file:src/slic3r/GUI/simple/filamentMapping/ResidentFilamentMappingView.hpp
+file:src/slic3r/GUI/simple/filamentMapping/ThumbnailDataRecolor.cpp
+file:src/slic3r/GUI/simple/filamentMapping/ThumbnailDataRecolor.hpp
+# decision 4: the easy-mode paint gizmo
+file:src/slic3r/GUI/Gizmos/GLGizmoSimplePaint.cpp
+file:src/slic3r/GUI/Gizmos/GLGizmoSimplePaint.hpp
+# 2.5 dead web bundles
+file:resources/web/guide/swiper
+file:resources/web/include
+file:resources/web/model
+file:resources/web/homepage2
+file:resources/web/orca
+
+# 1.2 / 1.5 / 1.6 functions, members and readers
+re:easy_mode\(\)
+word:easymode
+word:GLCanvas3DSimple
+word:DeviceListSimple
+word:SimpleDeviceMgr
+word:SimpleModelMgr
+word:Simple_Device_List_Item_Data
+word:get_device_list_data_simple
+word:switch_current_device_simple
+word:check_need_to_change_current_preset
+word:center_3mf_objects_to_plate
+word:PrintSettingsPanel
+word:SupportSimple
+word:UploadDialog
+word:GLSimpleUtils
+word:startTour_Simple
+word:Update_easy_mode_flag
+word:on_easy_mode_switch
+word:easy_mode_on_scene_reloaded
+word:should_hide_easy_mode_scene_side_controls
+word:_init_ui_simple
+word:_init_main_toolbar_simple
+word:_init_object_manipulate_toolbar_simple
+word:_render_object_manipulate_toolbar_simple
+word:_render_overlays_easymode
+word:_reset_simple_toolbar_item_state
+word:_draw_filament_menu_contents
+word:_render_orient_menu_simple
+word:render_preview_top_buttons_simple
+word:enable_easymode_main_toolbar
+word:m_easymode_main_toolbar
+word:m_object_manipulate_toolbar
+word:m_more_tools_expanded
+word:m_imgui_filament_panel
+word:m_print_settings_panel
+word:get_filament_panel
+word:check_filament_mapping_simple
+word:open_filament_toolbar_popup
+word:close_device_list_popup
+word:open_device_list_popup
+word:get_easy_mode_overlay_safe_left_px
+word:get_easy_mode_overlay_safe_right_px
+word:get_easy_mode_overlay_safe_bottom_px
+word:PopupHAlign
+word:compute_toolbar_popup_pos_px
+word:render_card_popup_if_open
+word:ResidentFilamentResizeEdge
+word:ResidentFilamentPanelLayoutState
+word:ResidentFilamentPanelResizeState
+word:m_resident_filament_layout_state
+word:m_resident_filament_resize_state
+word:render_simple_arrange_close_button
+word:consume_simple_arrange_close_requested
+word:s_simple_arrange_close_requested
+word:GizmoImguiRenderSimpleCloseButton
+word:render_simple_gizmo_close_button
+word:is_gizmo_shortcut_available_in_easy_mode
+word:m_add_volume_easy_mode_state
+word:get_png_textures_simple
+word:obj_drawer
+# GLToolbar easy fields and methods
+word:is_always_enable
+word:always_enable
+word:label_below_icon
+word:icon_label_split
+word:render_icon_top_label_bottom_px
+word:render_horizontal_simple
+word:get_width_horizontal_simple
+word:get_height_horizontal_simple
+word:update_hover_state_horizontal_simple
+word:contains_mouse_horizontal_simple
+word:update_items_state_simple
+word:reset_item_state_simple
+word:get_last_bg_rect_px
+word:get_rendered_right_edge_px
+word:set_layout_gap_scale
+word:set_layout_step_scale
+word:m_has_last_bg_rect_px
+# SimplePaint gizmo
+word:GLGizmoSimplePaint
+word:SimplePaint
+word:set_add_filament_handler
+word:m_add_filament_handler
+# filamentMapping classes
+word:ImGuiFilamentExtraPage
+word:ImGuiSpoolWidget
+word:ImGuiThumbnailPreview
+word:ThumbnailDataRecolor
+word:ResidentFilamentMappingLogic
+word:ResidentFilamentMappingAdapter
+word:ResidentFilamentMappingPopupPolicy
+word:ResidentFilamentMappingView
+# SlicerBridge printer actions (1.4)
+word:DoListPrinters
+word:DoSelectPrinter
+word:serialize_device_candidate
+word:matches_device_identity
+word:matches_device_name
+word:matches_device_model
+word:refresh_printer_config_ui

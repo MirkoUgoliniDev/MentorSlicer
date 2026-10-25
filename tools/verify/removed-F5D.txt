@@ -1,0 +1,123 @@
+# F5-D - Bambu core: DeviceManager, NetworkAgent, UserManager, HMS, network plug-in download, dead GUI_App code,
+# plus the F5-D-opt clean-ups (plug-in notifications, UpdatePluginDialog, refresh_plugin_tips, encrypted-log cleanup,
+# resources/printers) and the section 9 decisions (Q1 AMS list, Q7 model depot)
+# (spec doc/specs/F5-codice-bambu-spec.md, sections 5 and 7). One entry per line; "#" starts a comment.
+# Kept on purpose: is_user_login()/is_login()/get_user() (F4 stubs), is_compatibility_version() (constant-false stub),
+# update_http_extra_header(), on_http_error()/EVT_HTTP_ERROR (handler kept, no poster), LegacyTransitiveIncludes.hpp,
+# NotificationType::BBLPluginInstallHint/BBLPluginUpdateAvailable enum values, ams_multi_color_filment,
+# installed_networking/network_plugin_* keys in the guide-page JSON, the makerworld_model_open Home commands
+# (model download by URL, not the Bambu agent), the 3MF schemas.bambulab.com namespaces and wiki.bambulab.com links.
+# Deleted files
+file:src/slic3r/GUI/DeviceManager.cpp
+file:src/slic3r/GUI/DeviceManager.hpp
+file:src/slic3r/GUI/UserManager.cpp
+file:src/slic3r/GUI/UserManager.hpp
+file:src/slic3r/GUI/HMS.cpp
+file:src/slic3r/GUI/HMS.hpp
+file:src/slic3r/GUI/Jobs/UpgradeNetworkJob.cpp
+file:src/slic3r/GUI/Jobs/UpgradeNetworkJob.hpp
+file:src/slic3r/GUI/DownloadProgressDialog.cpp
+file:src/slic3r/GUI/DownloadProgressDialog.hpp
+file:src/slic3r/GUI/WebDownPluginDlg.cpp
+file:src/slic3r/GUI/WebDownPluginDlg.hpp
+file:src/slic3r/GUI/NetworkTestDialog.cpp
+file:src/slic3r/GUI/NetworkTestDialog.hpp
+file:src/slic3r/Utils/NetworkAgent.cpp
+file:src/slic3r/Utils/NetworkAgent.hpp
+file:src/slic3r/Utils/bambu_networking.hpp
+file:src/slic3r/Utils/json_diff.cpp
+file:src/slic3r/Utils/json_diff.hpp
+file:resources/printers
+# Removed classes and types
+word:DeviceManager
+word:MachineObject
+word:NetworkAgent
+word:UserManager
+word:HMSQuery
+word:HMSItem
+word:HMSPanel
+word:UpgradeNetworkJob
+word:DownloadProgressDialog
+word:WebDownPluginDlg
+word:NetworkTestDialog
+word:UpdatePluginDialog
+re:json_diff\.(hpp|cpp)
+# the class name json_diff is also a local variable name in compare_3mf/CompareProjectSettings.cpp (unrelated tool), so the header/source names are checked instead
+word:bambu_networking
+word:InstallProgressFn
+word:WasCancelledFn
+# Removed GUI_App members and API
+word:getAgent
+word:getDeviceManager
+word:get_hms_query
+word:m_agent
+word:m_device_manager
+word:m_user_manager
+word:hms_query
+word:m_networking_compatible
+word:m_networking_need_update
+word:m_networking_cancel_update
+word:m_upgrade_network_job
+word:m_check_network_thread
+word:on_init_network
+word:copy_network_if_available
+word:init_networking_callbacks
+word:restart_networking
+word:remove_old_networking_plugins
+word:updating_bambu_networking
+word:check_networking_version
+word:cancel_networking_install
+word:download_plugin
+word:install_plugin
+word:get_plugin_url
+word:get_http_url
+word:get_model_http_url
+word:open_mall_page_dialog
+word:open_publish_page_dialog
+word:homepage_modeldepot
+word:ShowDownNetPluginDlg
+word:link_to_network_check
+word:on_start_subscribe_again
+word:init_http_extra_header
+word:handle_http_error
+word:check_filaments_in_blacklist
+word:load_filaments_blacklist_config
+word:on_set_selected_machine
+word:on_update_machine_list
+word:EVT_SET_SELECTED_MACHINE
+word:EVT_UPDATE_MACHINE_LIST
+# Removed plug-in notification path (D-N) and refresh_plugin_tips
+word:refresh_plugin_tips
+word:install_network_plugin
+word:show_install_plugin_hint
+word:update_plugin_when_launch
+word:EVT_INSTALL_PLUGIN_NETWORKING
+word:EVT_INSTALL_PLUGIN_HINT
+word:EVT_UPDATE_PLUGINS_WHEN_LAUNCH
+word:bbl_show_plugin_install_notification
+word:bbl_close_plugin_install_notification
+# Removed AMS filament list (Q1)
+word:filament_ams_list
+word:sync_ams_list
+word:load_ams_list
+word:build_filament_ams_list
+word:ams_list_device
+word:ams_filament_ids
+word:add_ams_filaments
+word:selected_ams_filament
+word:m_first_ams_filament
+word:m_last_ams_filament
+# Removed WebGuideDialog / WebViewDialog helpers
+word:DownloadPlugin
+word:InstallPlugin
+word:ShowPluginStatus
+word:OpenModelDetail
+word:ShowNetpluginTip
+word:get_model_mall_detail_url
+# Removed Bambu endpoints
+re:api(-dev|-qa|-pre)?\.bambu(lab|-lab)\.(com|cn)/
+re:status\.bambulab\.(com|cn)
+re:makerhub-(dev|qa|pre)\.bambu-lab\.com
+word:network_plugin.zip
+word:BambuSource
+word:live555

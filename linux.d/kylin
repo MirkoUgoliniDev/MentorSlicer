@@ -1,0 +1,113 @@
+# Kylin/openKylin (麒麟) 基于 Debian/Ubuntu 的适配脚本
+# 使用 apt 包管理器安装所需依赖
+
+FOUND_GTK3=$(dpkg -l libgtk* | grep gtk-3)
+
+REQUIRED_DEV_PACKAGES=(
+    autoconf
+    build-essential
+    cmake
+    eglexternalplatform-dev
+    extra-cmake-modules
+    file
+    gettext
+    git
+    libcurl4-openssl-dev
+    libdbus-1-dev
+    libglew-dev
+    # 麒麟系：使用 gstreamer1.0 套件
+    libgstreamer1.0-dev
+    libgstreamer-plugins-base1.0-dev
+    libgtk-3-dev
+    libmspack-dev
+    libosmesa6-dev
+    libsecret-1-dev
+    libssl-dev
+    libtool
+    libudev-dev
+    libwebkit2gtk-4.0-dev
+    ninja-build
+    patchelf
+    texinfo
+    wget
+    libx264-dev
+    # 如若仓库缺失可注释此项
+    libusrsctp-dev
+    libsrtp2-dev
+    libasound2-dev
+    libopus-dev
+    libspeexdsp-dev
+    # 额外压缩库以提高兼容性
+    libdeflate-dev
+    liblzma-dev
+    # 通用构建工具
+    pkg-config
+    libfontconfig1-dev
+    libfreetype6-dev
+)
+
+if [[ -n "$UPDATE_LIB" ]]
+then
+    # openKylin/Kylin 的 VERSION_ID 可能为字符串（如 "V10"），不做数值比较
+    if [[ -n "$BUILD_DEBUG" ]]
+    then
+        REQUIRED_DEV_PACKAGES+=(libssl-dev libcurl4-openssl-dev gdb valgrind)
+    fi
+
+    # 根据包管理器选择安装方式
+    if command -v apt >/dev/null 2>&1 || command -v apt-get >/dev/null 2>&1; then
+        echo "Detected apt on Kylin/openKylin. Using apt to install build deps..."
+        sudo apt update
+        sudo apt install -y ${REQUIRED_DEV_PACKAGES[@]}
+    elif command -v dnf >/dev/null 2>&1 || command -v yum >/dev/null 2>&1; then
+        echo "Detected dnf/yum on Kylin. Using dnf to install build deps..."
+        # 将 Debian 包名映射到 RPM 系列
+        RPM_DEV_PACKAGES=(
+            autoconf
+            gcc gcc-c++ make
+            cmake
+            eglexternalplatform-devel
+            extra-cmake-modules
+            file
+            gettext
+            git
+            libcurl-devel
+            dbus-devel
+            glew-devel
+            gstreamer1-devel
+            gstreamer1-plugins-base-devel
+            gtk3-devel
+            # libmspack-devel # 可能需启用 EPEL
+            mesa-libOSMesa-devel
+            libsecret-devel
+            openssl-devel
+            libtool
+            systemd-devel
+            webkit2gtk3-devel
+            ninja-build
+            patchelf
+            texinfo
+            wget
+            x264-devel
+            # usrsctp-devel # 可选，仓库可能缺失
+            libsrtp-devel
+            alsa-lib-devel
+            opus-devel
+            speexdsp-devel
+            libdeflate-devel
+            xz-devel
+            pkgconf-pkg-config
+            fontconfig-devel
+            freetype-devel
+        )
+        sudo dnf install -y ${RPM_DEV_PACKAGES[@]} || sudo yum install -y ${RPM_DEV_PACKAGES[@]}
+    else
+        echo "ERROR: 未检测到支持的包管理器 (apt/dnf/yum)。请手动安装依赖。"
+        exit 1
+    fi
+
+    echo -e "Kylin/openKylin package installation completed\n"
+    exit 0
+fi
+
+FOUND_GTK3_DEV=$(dpkg -l libgtk* | grep gtk-3-dev || echo '')

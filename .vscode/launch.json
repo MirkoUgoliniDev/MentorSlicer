@@ -1,0 +1,46 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C3DSlicer: Launch",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "linux": {
+                "type": "lldb",
+                "env": {
+                    "SLIC3R_RESOURCES_DIR": "${workspaceFolder}/resources",
+                    "GDK_SCALE": "1.25",
+                    "GDK_DPI_SCALE": "1.25",
+                    "SLIC3R_DPI_SCALE": "1.25"
+                },
+                "initCommands": [
+                    "breakpoint name configure --disable cpp_exception",
+                    "process handle -p true -s false -n false SIGUSR1",
+                    "settings set target.max-string-summary-length 10000",
+                    "command script import ${workspaceFolder}/.vscode/lldb_formatters.py"
+                ]
+            },
+            "windows": {
+                "type": "cppvsdbg",
+                "program": "${command:cmake.launchTargetPath}",
+                "cwd": "${command:cmake.getLaunchTargetDirectory}",
+                "env": {
+                    "SLIC3R_RESOURCES_DIR": "${workspaceFolder}/resources"
+                }
+            },
+            "osx": {
+                "type": "lldb",
+                "env": {
+                    "SLIC3R_RESOURCES_DIR": "${workspaceFolder}/resources"
+                },
+                "initCommands": [
+                    "settings set target.max-string-summary-length 10000",
+                    "command script import ${workspaceFolder}/.vscode/lldb_formatters.py"
+                ]
+            }
+        }
+    ]
+}

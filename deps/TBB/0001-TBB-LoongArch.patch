@@ -1,0 +1,26 @@
+From cd538b3b57e35e3068e5b1380c3e4e6fabb35b58 Mon Sep 17 00:00:00 2001
+From: lisugui <lisugui@creatily.com>
+Date: Fri, 14 Mar 2025 17:27:59 +0800
+Subject: [PATCH] config notify
+
+---
+ src/tbb/tools_api/ittnotify_config.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/tbb/tools_api/ittnotify_config.h b/src/tbb/tools_api/ittnotify_config.h
+index 8ecc2378..dc291730 100644
+--- a/src/tbb/tools_api/ittnotify_config.h
++++ b/src/tbb/tools_api/ittnotify_config.h
+@@ -345,7 +345,8 @@ ITT_INLINE long
+ __itt_interlocked_increment(volatile long* ptr) ITT_INLINE_ATTRIBUTE;
+ ITT_INLINE long __itt_interlocked_increment(volatile long* ptr)
+ {
+-    return __TBB_machine_fetchadd4(ptr, 1) + 1L;
++    // return __TBB_machine_fetchadd4(ptr, 1) + 1L;
++    return __atomic_fetch_add(ptr, 1L, __ATOMIC_SEQ_CST) + 1L;
+ }
+ #endif /* ITT_SIMPLE_INIT */
+ 
+-- 
+2.27.0.windows.1
+

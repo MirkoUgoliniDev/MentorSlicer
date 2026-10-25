@@ -1,0 +1,198 @@
+From e836804c980fcfb6999a1642be7b9ca85da1512c Mon Sep 17 00:00:00 2001
+From: lisugui <lisugui@creatily.com>
+Date: Fri, 29 Aug 2025 11:23:41 +0800
+Subject: [PATCH] patch
+
+---
+ include/oneapi/tbb/parallel_reduce.h | 154 ++++++++++++---------------
+ 1 file changed, 71 insertions(+), 83 deletions(-)
+
+diff --git a/include/oneapi/tbb/parallel_reduce.h b/include/oneapi/tbb/parallel_reduce.h
+index f591f11..740490f 100644
+--- a/include/oneapi/tbb/parallel_reduce.h
++++ b/include/oneapi/tbb/parallel_reduce.h
+@@ -94,9 +94,45 @@ struct start_reduce : public task {
+     small_object_allocator my_allocator;
+     bool is_right_child;
+ 
+-    task* execute(execution_data&) override;
+-    task* cancel(execution_data&) override;
+-    void finalize(const execution_data&);
++	//! fold the tree and deallocate the task
++	void finalize(const execution_data& ed) {
++		// Get the current parent and wait object before an object destruction
++		node* parent = my_parent;
++		auto allocator = my_allocator;
++		// Task execution finished - destroy it
++		this->~start_reduce();
++		// Unwind the tree decrementing the parent`s reference count
++		fold_tree<tree_node_type>(parent, ed);
++		allocator.deallocate(this, ed);
++	}
++
++	//! Execute parallel_reduce task
++	task* execute(execution_data& ed) {
++		if (!is_same_affinity(ed)) {
++			my_partition.note_affinity(execution_slot(ed));
++		}
++		my_partition.check_being_stolen(*this, ed);
++
++		// The acquire barrier synchronizes the data pointed with my_body if the left
++		// task has already finished.
++		if( is_right_child && my_parent->m_ref_count.load(std::memory_order_acquire) == 2 ) {
++			tree_node_type* parent_ptr = static_cast<tree_node_type*>(my_parent);
++			my_body = (Body*) new( parent_ptr->zombie_space.begin() ) Body(*my_body, split());
++			parent_ptr->has_right_zombie = true;
++		}
++		__TBB_ASSERT(my_body != nullptr, "Incorrect body value");
++
++		my_partition.execute(*this, my_range, ed);
++
++		finalize(ed);
++		return nullptr;
++	}
++
++	//! Cancel parallel_reduce task
++	task* cancel(execution_data& ed) {
++		finalize(ed);
++		return nullptr;
++	}
+ 
+     using tree_node_type = reduction_tree_node<Body>;
+ 
+@@ -178,49 +214,6 @@ private:
+     }
+ };
+ 
+-//! fold the tree and deallocate the task
+-template<typename Range, typename Body, typename Partitioner>
+-void start_reduce<Range, Body, Partitioner>::finalize(const execution_data& ed) {
+-    // Get the current parent and wait object before an object destruction
+-    node* parent = my_parent;
+-    auto allocator = my_allocator;
+-    // Task execution finished - destroy it
+-    this->~start_reduce();
+-    // Unwind the tree decrementing the parent`s reference count
+-    fold_tree<tree_node_type>(parent, ed);
+-    allocator.deallocate(this, ed);
+-}
+-
+-//! Execute parallel_reduce task
+-template<typename Range, typename Body, typename Partitioner>
+-task* start_reduce<Range,Body,Partitioner>::execute(execution_data& ed) {
+-    if (!is_same_affinity(ed)) {
+-        my_partition.note_affinity(execution_slot(ed));
+-    }
+-    my_partition.check_being_stolen(*this, ed);
+-
+-    // The acquire barrier synchronizes the data pointed with my_body if the left
+-    // task has already finished.
+-    if( is_right_child && my_parent->m_ref_count.load(std::memory_order_acquire) == 2 ) {
+-        tree_node_type* parent_ptr = static_cast<tree_node_type*>(my_parent);
+-        my_body = (Body*) new( parent_ptr->zombie_space.begin() ) Body(*my_body, split());
+-        parent_ptr->has_right_zombie = true;
+-    }
+-    __TBB_ASSERT(my_body != nullptr, "Incorrect body value");
+-
+-    my_partition.execute(*this, my_range, ed);
+-
+-    finalize(ed);
+-    return nullptr;
+-}
+-
+-//! Cancel parallel_reduce task
+-template<typename Range, typename Body, typename Partitioner>
+-task* start_reduce<Range, Body, Partitioner>::cancel(execution_data& ed) {
+-    finalize(ed);
+-    return nullptr;
+-}
+-
+ //! Tree node type for parallel_deterministic_reduce.
+ /** @ingroup algorithms */
+ template<typename Body>
+@@ -251,9 +244,38 @@ struct start_deterministic_reduce : public task {
+     typename Partitioner::task_partition_type my_partition;
+     small_object_allocator my_allocator;
+ 
+-    task* execute(execution_data&) override;
+-    task* cancel(execution_data&) override;
+-    void finalize(const execution_data&);
++	//! Fold the tree and deallocate the task
++	void finalize(const execution_data& ed) {
++		// Get the current parent and wait object before an object destruction
++		node* parent = my_parent;
++
++		auto allocator = my_allocator;
++		// Task execution finished - destroy it
++		this->~start_deterministic_reduce();
++		// Unwind the tree decrementing the parent`s reference count
++		fold_tree<tree_node_type>(parent, ed);
++		allocator.deallocate(this, ed);
++	}
++
++	//! Execute parallel_deterministic_reduce task
++	task* execute(execution_data& ed) {
++		if (!is_same_affinity(ed)) {
++			my_partition.note_affinity(execution_slot(ed));
++		}
++		my_partition.check_being_stolen(*this, ed);
++
++		my_partition.execute(*this, my_range, ed);
++
++		finalize(ed);
++		return NULL;
++	}
++
++	//! Cancel parallel_deterministic_reduce task
++	task* cancel(execution_data& ed) {
++		finalize(ed);
++		return NULL;
++	}
++
+ 
+     using tree_node_type = deterministic_reduction_tree_node<Body>;
+ 
+@@ -317,40 +339,6 @@ private:
+     }
+ };
+ 
+-//! Fold the tree and deallocate the task
+-template<typename Range, typename Body, typename Partitioner>
+-void start_deterministic_reduce<Range, Body, Partitioner>::finalize(const execution_data& ed) {
+-    // Get the current parent and wait object before an object destruction
+-    node* parent = my_parent;
+-
+-    auto allocator = my_allocator;
+-    // Task execution finished - destroy it
+-    this->~start_deterministic_reduce();
+-    // Unwind the tree decrementing the parent`s reference count
+-    fold_tree<tree_node_type>(parent, ed);
+-    allocator.deallocate(this, ed);
+-}
+-
+-//! Execute parallel_deterministic_reduce task
+-template<typename Range, typename Body, typename Partitioner>
+-task* start_deterministic_reduce<Range,Body,Partitioner>::execute(execution_data& ed) {
+-    if (!is_same_affinity(ed)) {
+-        my_partition.note_affinity(execution_slot(ed));
+-    }
+-    my_partition.check_being_stolen(*this, ed);
+-
+-    my_partition.execute(*this, my_range, ed);
+-
+-    finalize(ed);
+-    return NULL;
+-}
+-
+-//! Cancel parallel_deterministic_reduce task
+-template<typename Range, typename Body, typename Partitioner>
+-task* start_deterministic_reduce<Range, Body, Partitioner>::cancel(execution_data& ed) {
+-    finalize(ed);
+-    return NULL;
+-}
+ 
+ 
+ //! Auxiliary class for parallel_reduce; for internal use only.
+-- 
+2.27.0.windows.1
+
