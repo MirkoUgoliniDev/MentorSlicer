@@ -197,30 +197,29 @@ If you're running Klipper, it's recommended to add the following configuration t
 resolution: 0.1
 ```
 
-# Supports
-**Creality Print** is an open-source project, and I'm deeply grateful to all my sponsors and backers.   
-Their generous support enables me to purchase filaments and other essential 3D printing materials for the project.   
-Thank you! :)
+# Support the project
+MentorSlicer is a personal, independent project. The best ways to help:
+- ⭐ star the repository, so other makers can find it;
+- report bugs and ideas in the [issues](https://github.com/MirkoUgoliniDev/MentorSlicer/issues), with your printer model and, for print problems, the profiles you used;
+- share your results with the chamber preheat, the multi-layer brim or the Print Advisor.
 
-
+Security issues: see [SECURITY.md](SECURITY.md).
 
 ## Some background
-MentorSlicer is forked from [Creality Print](https://github.com/CrealityOfficial/CrealityPrint) by Creality.  
-Creality Print is originally forked from [Orca Slicer](https://github.com/SoftFever/OrcaSlicer) by SoftFever
-Orca Slicer is forked from [Bambu Studio](https://github.com/bambulab/BambuStudio) by Bambu
-Bambu Studio is forked from [PrusaSlicer](https://github.com/prusa3d/PrusaSlicer) by Prusa Research, which is from [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro Ranellucci and the RepRap community. 
-Creality Print incorporates a lot of features from SuperSlicer by @supermerill
-Creality Print's logo is designed by community member Justin Levine(@freejstnalxndr)  
-
+MentorSlicer is forked from [Creality Print](https://github.com/CrealityOfficial/CrealityPrint) by Creality.
+Creality Print is originally forked from [Orca Slicer](https://github.com/SoftFever/OrcaSlicer) by SoftFever.
+Orca Slicer is forked from [Bambu Studio](https://github.com/bambulab/BambuStudio) by Bambu Lab.
+Bambu Studio is forked from [PrusaSlicer](https://github.com/prusa3d/PrusaSlicer) by Prusa Research, which is from [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro Ranellucci and the RepRap community.
+Creality Print and Orca Slicer incorporate many features from [SuperSlicer](https://github.com/supermerill/SuperSlicer) by @supermerill.
 
 # License
 MentorSlicer is licensed under the GNU Affero General Public License, version 3. MentorSlicer is based on Creality Print by Creality.
 
-Creality Print is licensed under the GNU Affero General Public License, version 3. Creality Print is based on Orca Slicer by Orca Slicer.
+Creality Print is licensed under the GNU Affero General Public License, version 3. Creality Print is based on Orca Slicer by SoftFever.
 
-Orca Slicer is licensed under the GNU Affero General Public License, version 3. Creality Print is based on Bambu Studio by BambuLab.
+Orca Slicer is licensed under the GNU Affero General Public License, version 3. Orca Slicer is based on Bambu Studio by Bambu Lab.
 
-Bambu Studio is licensed under the GNU Affero General Public License, version 3. Bambu Studio is based on PrusaSlicer by PrusaResearch.
+Bambu Studio is licensed under the GNU Affero General Public License, version 3. Bambu Studio is based on PrusaSlicer by Prusa Research.
 
 PrusaSlicer is licensed under the GNU Affero General Public License, version 3. PrusaSlicer is owned by Prusa Research. PrusaSlicer is originally based on Slic3r by Alessandro Ranellucci.
 
@@ -228,8 +227,6 @@ Slic3r is licensed under the GNU Affero General Public License, version 3. Slic3
 
 The GNU Affero General Public License, version 3 ensures that if you use any part of this software in any way (even behind a web server), your software must be released under the same license.
 
-Creality Print includes a pressure advance calibration pattern test adapted from Andrew Ellis' generator, which is licensed under GNU General Public License, version 3. Ellis' generator is itself adapted from a generator developed by Sineos for Marlin, which is licensed under GNU General Public License, version 3.
+MentorSlicer, like Creality Print, includes a pressure advance calibration pattern test adapted from Andrew Ellis' generator, which is licensed under GNU General Public License, version 3. Ellis' generator is itself adapted from a generator developed by Sineos for Marlin, which is licensed under GNU General Public License, version 3.
 
-The bambu networking plugin is based on non-free libraries from Bambulab. It is optional to the Creality Print and provides extended functionalities for Bambulab printer users.
-
-test
+The third-party libraries, with links to their projects, are listed in **Help → Third-party libraries**.
