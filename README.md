@@ -91,7 +91,7 @@ flowchart LR
 # How to install
 **Windows 10/11, 64-bit** (the only platform with a ready-made package).
 
-> **Portable package, no installer.** MentorSlicer is distributed as a zip: you extract it to a folder and run `MentorSlicer.exe`. There is no setup program, so nothing is installed in the system (only the settings and profiles go to `%APPDATA%MentorSlicer`), no administrator rights are needed, and several versions can live side by side. Everything the app needs is inside the folder (DLLs, Visual C++ runtime, MCP server, resources). The trade-offs: no Start menu entry or desktop shortcut is created for you (right-click `MentorSlicer.exe` → *Send to → Desktop (create shortcut)*), and there is no entry in *Installed apps*: to uninstall, delete the folder.
+> **Portable package, no installer.** MentorSlicer is distributed as a zip: you extract it to a folder and run `MentorSlicer.exe`. There is no setup program, so nothing is installed in the system (only the settings and profiles go to `%APPDATA%\MentorSlicer`), no administrator rights are needed, and several versions can live side by side. Everything the app needs is inside the folder (DLLs, Visual C++ runtime, MCP server, resources). The trade-offs: no Start menu entry or desktop shortcut is created for you (right-click `MentorSlicer.exe` → *Send to → Desktop (create shortcut)*), and there is no entry in *Installed apps*: to uninstall, delete the folder.
 
 Steps:
 
