@@ -14,7 +14,7 @@ Differences from Creality Print:
 - data folder `%APPDATA%\MentorSlicer` (`MentorSlicer.conf`). On its first start MentorSlicer copies the Creality Print 7.3 Alpha data folder once and leaves the original untouched;
 - G-code and 3MF files stay compatible with Creality Print (same G-code header and 3MF application tag).
 
-Updates are made by rebuilding the fork; there are no binary releases.
+**⬇️ Download for Windows 10/11 (64-bit): [latest release](https://github.com/MirkoUgoliniDev/MentorSlicer/releases/latest)**, a portable zip, nothing to install. See [How to install](#how-to-install) and [How to test the package](#how-to-test-the-package).
 
 MentorSlicer is not affiliated with or endorsed by Creality.
 
@@ -82,36 +82,41 @@ flowchart LR
 
 
 # How to install
-**Windows**: 
-1.  Build it (see "How to compile"); `tools\publish-stable.ps1` copies a tested build to `C:\MentorSlicer` with a desktop shortcut.
-    - *If you have troubles to run the build, you might need to install following runtimes:*
-      - [MicrosoftEdgeWebView2RuntimeInstallerX64](https://github.com/SoftFever/OrcaSlicer/releases/download/v1.0.10-sf2/MicrosoftEdgeWebView2RuntimeInstallerX64.exe)
-          - [Details of this runtime](https://aka.ms/webview2)
-          - [Alternative Download Link Hosted by Microsoft](https://go.microsoft.com/fwlink/p/?LinkId=2124703)
-      - [vcredist2019_x64](https://github.com/SoftFever/OrcaSlicer/releases/download/v1.0.10-sf2/vcredist2019_x64.exe)
-          -  [Alternative Download Link Hosted by Microsoft](https://aka.ms/vs/17/release/vc_redist.x64.exe)
-          -  This file may already be available on your computer if you've installed visual studio.  Check the following location: `%VCINSTALLDIR%Redist\MSVC\v142`
+**Windows 10/11, 64-bit** (the only platform with a ready-made package):
 
-**Mac**:
-1. Download the DMG for your computer: `arm64` version for Apple Silicon and `x86_64` for Intel CPU.  
-2. Drag CrealityPrint.app to Application folder. 
-3. *If you want to run a build from a PR, you also need following instructions below*  
-    <details quarantine>
-    - Option 1 (You only need to do this once. After that the app can be opened normally.):
-      - Step 1: Hold _cmd_ and right click the app, from the context menu choose **Open**.
-      - Step 2: A warning window will pop up, click _Open_  
-      
-    - Option 2:  
-      Execute this command in terminal: `xattr -dr com.apple.quarantine /Applications/CrealityPrint.app`
-      ```console
-          softfever@mac:~$ xattr -dr com.apple.quarantine /Applications/CrealityPrint.app
-      ```
-    </details>
-    
-**Linux(Ubuntu)**:
- 1. If you run into trouble to execute it, try this command in terminal:  
-    `chmod +x /path_to_appimage/CrealityPrint_Linux.AppImage`
-    
+1. From the [latest release](https://github.com/MirkoUgoliniDev/MentorSlicer/releases/latest) download `MentorSlicer-<version>-win64.zip` and its `.sha256` file.
+2. Optional but recommended, verify the download in PowerShell; the two values must match:
+   ```powershell
+   (Get-FileHash -Algorithm SHA256 .\MentorSlicer-1.0.1-win64.zip).Hash.ToLower()
+   Get-Content .\MentorSlicer-1.0.1-win64.zip.sha256
+   ```
+3. Right-click the zip → **Properties** → tick **Unblock** if present → OK. Then extract it to a folder of your choice, for example `C:\MentorSlicer`. Nothing is installed: the Visual C++ runtime and the MCP server (`mentorslicer-mcp.exe`) are in the folder.
+4. Start `MentorSlicer.exe`. The executables are **not code-signed**, so Windows SmartScreen may show *"Windows protected your PC"*: choose **More info → Run anyway**.
+5. The app needs the Microsoft Edge WebView2 Runtime, included in Windows 11 and in up-to-date Windows 10. If MentorSlicer reports it missing, install it from [Microsoft](https://go.microsoft.com/fwlink/p/?LinkId=2124703).
+
+Data are stored in `%APPDATA%\MentorSlicer`. On the first start, if a Creality Print 7.3 data folder exists, MentorSlicer copies it once (profiles and settings) and never modifies the original. To update, extract the new zip over the old folder (close MentorSlicer first); to uninstall, delete the folder and, if you want, `%APPDATA%\MentorSlicer`.
+
+**From source**: see [How to compile](#how-to-compile). `tools\publish-stable.ps1` copies a tested build to `C:\MentorSlicer` with a desktop shortcut, and `tools\make-release.ps1` creates the release zip.
+
+**macOS / Linux**: no package is provided. The code inherited from Creality Print still has the macOS and Linux build scripts, but MentorSlicer has been built and tested only on Windows.
+
+# How to test the package
+
+A quick check that takes about ten minutes and does not touch your existing data or printer.
+
+1. **Start with a separate data folder**, so your profiles stay untouched. In PowerShell, from the extracted folder:
+   ```powershell
+   .\MentorSlicer.exe --datadir "$env:TEMP\MentorSlicer-test"
+   ```
+   You should see the window **"Welcome to MentorSlicer"** (localized). Choose **Skip printer connection for now**, or **Connect printer via LAN** to check that your printer is found once.
+2. **Slice something**: in **Prepare**, pick a printer and filament, add a model (**File → Import**, or right-click the empty plate → **Add testing Primitive**), press **Slice plate** and look at the **Preview**: time and filament usage are shown.
+3. **New options**: in the process settings (**Advanced** on), search for *Brim layers* and *Brim-object gap on upper brim layers*; in the filament settings, *Heat soak time*. Set *Brim layers* to 3, slice again and check the brim in the preview.
+4. **Print Advisor** (optional, needs Claude Code): open **AI Integration → Print Advisor MCP…**, press **Enable** and copy the command. Since this test uses `--datadir`, the copied command already includes the matching `MENTORSLICER_ADVISOR_DESCRIPTOR`. Run it in a terminal (it replaces an existing `mentorslicer-advisor` registration), start Claude Code and ask *"Read my print context with the Print Advisor"*: Claude should list your printer, filament and process profiles. Afterwards remove the test registration with `claude mcp remove mentorslicer-advisor -s user`, and register again the command shown by a normal start of MentorSlicer.
+5. **Third-party libraries**: **Help → Third-party libraries → Check for updates** should complete and show the date of the check.
+6. **Clean up**: close MentorSlicer and delete `%TEMP%\MentorSlicer-test`.
+
+If something fails, please open an [issue](https://github.com/MirkoUgoliniDev/MentorSlicer/issues) with the steps, your Windows version and, if available, the log files in `%TEMP%\MentorSlicer-test\MentorSlicer\7.3 Alpha\log` (or `%APPDATA%\MentorSlicer\log` for a normal start).
+
 # Command line slicing
 
 MentorSlicer can run slicing jobs from the command line without opening the normal GUI workflow. Use the `--slice` action with one or more input model/project files.
