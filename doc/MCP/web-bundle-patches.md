@@ -406,6 +406,24 @@ var aliyunOssSdk={exports:{}};(function(C,U){…})(aliyunOssSdk);
 
 The whole statement pair is removed (cleanup of 2026-10-24). `aliyunOssSdk` is its only top-level name and appears nowhere else (the patch refuses to apply if another reference exists). Checked as patch 23: no code outside it references a name it declares, the bundle still parses, no new unresolved name; it no longer uses globals such as `Deno`, `WritableStream`, `SharedArrayBuffer`, `WeakRef` or `Atomics`. The global `regeneratorRuntime` it also installed is set by another polyfill of the bundle and read by nobody outside the SDK. `commonjsRequire` in front of it stays: other modules use it. About 730 KB less.
 
+### 27. First-run screen: "Welcome to MentorSlicer", no cloud subtitle
+
+The first-run screen of the Home (shown with an empty data folder) said "Welcome to Creality Print" and "Add printers and manage print jobs from the cloud", in each of its 24 languages (found while testing the 1.0.1 release package, 2026-10-25). The two render calls are patched instead of the 24 translations:
+
+```js
+toDisplayString$1(U.$t("Welcome to Creality Print"))
+toDisplayString$1(U.$t("Add printers and manage print jobs from the cloud"))
+```
+
+become
+
+```js
+toDisplayString$1(/*PA:27*/U.$t("Welcome to Creality Print").replace(/Creality Print/g,"MentorSlicer"))
+toDisplayString$1(/*PA:27b*/"")
+```
+
+The title keeps its translation with the app name swapped (every translation keeps the literal "Creality Print"); the subtitle is empty because MentorSlicer has no cloud. Each `$t("…")` call is unique in the bundle.
+
 ## Related native code
 
 These C++ changes are part of the branch and need no manual work:

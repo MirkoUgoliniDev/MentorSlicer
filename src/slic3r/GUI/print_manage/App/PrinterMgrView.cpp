@@ -1562,6 +1562,12 @@ void PrinterMgrView::scan_device(const std::string& request_id)
             prefix.push_back("creality");
             prefix.push_back("Creality");
             std::vector<std::string> vtIp,vtBoxIp,vtKlipperIp;
+            // A printer reached through several network interfaces (e.g. Wi-Fi and a VPN) or
+            // announcing several services is listed once per address.
+            auto push_unique = [](std::vector<std::string>& list, const std::string& address) {
+                if (std::find(list.begin(), list.end(), address) == list.end())
+                    list.push_back(address);
+            };
             auto vtDevice = cxnet::syncDiscoveryService(prefix);
             for (auto& item : vtDevice) {
                 if (m_scanExit.load(std::memory_order_acquire))
@@ -1570,7 +1576,7 @@ void PrinterMgrView::scan_device(const std::string& request_id)
                 std::string answer = item.answer;
                 if (answer.substr(0, 8) == "_CXSWBox")
                 {
-                    vtBoxIp.push_back(item.machineIp);
+                    push_unique(vtBoxIp, item.machineIp);
                 }
                 else
                 {
@@ -1583,13 +1589,13 @@ void PrinterMgrView::scan_device(const std::string& request_id)
                         if (strMachineType == "00")
                         {
                             //??????
-                            vtKlipperIp.push_back(item.machineIp + ":"+strMoonrakerPort);
+                            push_unique(vtKlipperIp, item.machineIp + ":"+strMoonrakerPort);
                         }
                     }
                     else
                     {
                         //if (vtIp.size() < 50)
-                            vtIp.push_back(item.machineIp);
+                            push_unique(vtIp, item.machineIp);
                     }
                 }
             }

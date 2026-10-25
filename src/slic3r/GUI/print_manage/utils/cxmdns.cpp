@@ -153,6 +153,11 @@ namespace cxnet
 
 					char ip[16] = { 0 };
 					sscanf(fromaddrstr.str, "%[^:]", ip);
+					// The query goes out on every interface (e.g. Wi-Fi and a VPN adapter), so the
+					// same printer can answer more than once: keep one entry per address and name.
+					for (const auto& known : retmachineInfos)
+						if (known.machineIp == ip && known.answer == answer_name)
+							return;
 					retmachineInfos.push_back({ ip, answer_name });
 				}
 			}

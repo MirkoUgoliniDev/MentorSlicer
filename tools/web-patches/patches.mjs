@@ -713,4 +713,25 @@ export const patches = [
       },
     ],
   },
+  // 27 --------------------------------------------------------------------
+  {
+    id: "27",
+    title: "Homepage first-run screen: \"Welcome to MentorSlicer\", no cloud subtitle",
+    dir: HOME,
+    fileContains: "Add printers and manage print jobs from the cloud",
+    edits: [
+      { // the title keeps its translation (24 languages) with the app name swapped at render time
+        marker: "/*PA:27*/",
+        applied: /\/\*PA:27\*\//,
+        find: new RegExp(String.raw`(?<t>${ID})\.\$t\("Welcome to Creality Print"\)`, "g"),
+        replace: (m, v) => fill(String.raw`/*PA:27*/@@t@@.$t("Welcome to Creality Print").replace(/Creality Print/g,"MentorSlicer")`, v),
+      },
+      { // "Add printers and manage print jobs from the cloud": there is no cloud in MentorSlicer
+        marker: "/*PA:27b*/",
+        applied: /\/\*PA:27b\*\//,
+        find: new RegExp(String.raw`${ID}\.\$t\("Add printers and manage print jobs from the cloud"\)`, "g"),
+        replace: () => `/*PA:27b*/""`,
+      },
+    ],
+  },
 ];
