@@ -1,30 +1,35 @@
 ---
 name: print-advisor-implementation
-description: Plan or implement the Creality Print Print Advisor MCP feature. Use for tasks involving its native module, MCP sidecar, defect recommendations, approval flow, or handoff in doc/MCP/handoff.md.
+description: "Plan or implement a change to the native (C++) side of the MentorSlicer Print Advisor: local API routes, confirmation dialogs, profile copies, printer commands, preheat/cooldown monitor, telemetry, verdict archive, engine options. Use for Print Advisor features and fixes in src/slic3r/GUI/simple/printAdvisor or print_manage/App; for the TypeScript MCP sidecar use print-advisor-mcp."
 ---
 
-Use `doc/MCP/handoff.md` as the feature brief, then verify all code assumptions against the current repository. Do not treat the handoff as proof that a named API or lifecycle hook exists.
+## Ground truth
+
+`CLAUDE.md` is authoritative for the current state and the safety rules ("Print Advisor (MCP)", "Regole di sicurezza (non rilassarle)", "Richieste concorrenti", "Insidie trovate", "Build: cose da sapere"). `doc/MCP/handoff.md` is the original brief and is outdated (it still describes a read-only MVP); where they disagree, `CLAUDE.md` wins. Verify every code assumption against the repository.
+
+The feature is complete and in use (about 50 MCP tools, profile copies, printer commands, monitors). Extend it; do not "restore" a read-only state or remove existing tools unless asked.
 
 ## Work sequence
 
-1. Read the handoff and repository instructions. Inspect the current git diff and preserve unrelated user changes.
-2. Verify existing bridge/config APIs, GUI thread dispatch, lifecycle, dependencies, and build integration before choosing seams.
-3. Keep domain logic in `src/slic3r/GUI/simple/printAdvisor/` where possible. Separate context acquisition, defect catalog, recommendations, patch validation, transport, and UI approval.
-4. Implement the smallest end-to-end milestone. Prefer read-only context and recommendations before adding mutations.
-5. Keep MCP transport outside the domain logic. Confirm current official MCP SDK and Claude Code/Codex setup docs when changing protocol or setup claims.
-6. Review the diff for scope, thread safety, lifecycle, data minimization, and regressions. Run checks only when requested or required by repository instructions.
+1. Read the relevant `CLAUDE.md` sections and the code involved. Inspect the current git diff and preserve unrelated user changes.
+2. Verify existing APIs, GUI-thread dispatch (`CallAfter`), lifecycle and build integration before choosing seams (the `print-advisor-architect` agent can do this read-only).
+3. Place code by responsibility: validation and domain behavior in C++ (`src/slic3r/GUI/simple/printAdvisor/`, `print_manage/App/DeviceTelemetryCache.*`, `PrintAdvisorMonitor.*`, `simple/bridge/`); guide texts (defects, material sheets, calibration formulas) and tool schemas in the sidecar `tools/print-advisor-mcp/src/`. New C++ sources go in `PrintAdvisor.cmake`.
+4. Hooks in Creality files: 1–3 lines with `PRINT-ADVISOR` markers, listed in `doc/MCP/upstream-touch-points.md`.
+5. When the user chooses among several features, collect all answers first, then implement them together with **one build**.
+6. Build, then verify with the MCP smoke test (`npm run smoke` in `tools/print-advisor-mcp`, app running, service enabled) before saying it works. Have the diff reviewed (`print-advisor-reviewer` agent).
 
-## Product invariants
+## Product invariants (summary; the full list is in CLAUDE.md and must not be relaxed)
 
-- MVP is read-only. It must not change profiles, send files, start a print, or control devices.
-- The LLM is hosted by Claude Code or Codex; do not embed a model/provider in Creality Print.
-- Recommendations must use the active printer/material/process context, include units, state assumptions and confidence, and suggest a way to verify.
-- Ask diagnostic questions when material condition, printer setup, or symptom details materially affect the recommendation. Avoid universal parameter values.
-- The full feature includes targeted writing to a specific filament or process preset, not only recommendations. Create a user copy and preserve the source; map every setting to its canonical owning preset; validate allowlist/ranges; bind preview to an unchanged context; require explicit in-app approval; save and verify the copy; keep selecting the new preset as a separate action; support conflict-aware rollback.
-- Do not pass credentials, cloud account data, arbitrary paths, or unnecessary project data to the model.
-- Keep changes narrowly scoped. Any change outside the module, build integration, or essential adapter/lifecycle seam needs a demonstrated reason.
+- The Print Advisor never starts a print. The LLM lives in the MCP client, never inside MentorSlicer.
+- Every change needs an in-app confirmation (`AdvisorConfirmDialog`, or the dedicated verdict window / Save dialog of `export_profile`) and a re-check of the state and of the server stop flag after it. The only exceptions are the three in `CLAUDE.md` (exhaust guard, slow cooldown, preheat auto-off); never add another.
+- Profiles: always a user copy inheriting like "Salva come", only the differences stored, never auto-selected, never over a system profile; writable keys per `advisor_key_writable`; limits per `check_advisor_safety`, `machine_limits` and the filament nozzle range; calibration limits; profiles with unsaved changes rejected; rename/delete only for Advisor copies.
+- Recommendations use the active printer/material/process context, include units, assumptions, confidence and a verification step; ask diagnostic questions instead of universal values.
+- Never send the session token, descriptor contents, arbitrary paths or unnecessary project data to the client. Files are written inside `<data_dir>`, or at a path the user picks in a native Save dialog; never at a path supplied by the client.
+
+## Conventions
+
+CRLF sources (keep line endings); code comments in English; replies to the user in Italian, short. Pitfalls: numbers with `std::locale::classic()`, `CNumericLocalesSetter`, `delete_preset_keep_selection`.
 
 ## Completion report
 
-Summarize what changed, why, checks run, and unresolved risks. Link files with absolute paths when reporting in Codex.
-
+Summarize what changed, why, checks run (build, smoke, G-code tests if the engine changed), and what still needs a test with the printer.

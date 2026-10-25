@@ -49,7 +49,7 @@ file:.gitmodules
 file:GoogleService-Info.plist
 file:deps/Darwin
 file:Readme.txt
-file:SECURITY.md
+# file:SECURITY.md   re-added on purpose for the public repository (2026-10-25)
 file:CMakePresets.json
 
 # Old build scripts
@@ -92,7 +92,7 @@ file:src/tracy/profiler
 file:src/tracy/server
 file:src/tracy/CMakeLists.txt
 file:doc/bugfixes
-file:doc/images
+# file:doc/images   re-added on purpose: README image doc/images/brim-layers.svg (2026-10-25)
 file:doc/requirements
 file:doc/simple-mode
 file:doc/bed-types.md

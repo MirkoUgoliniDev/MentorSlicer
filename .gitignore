@@ -58,3 +58,6 @@ flatbuild
 /AGENTS.md
 tests/regression/out/
 /src/libslic3r/buildinfo.h
+
+# Claude Code personal settings (permission approvals, local paths)
+.claude/settings.local.json

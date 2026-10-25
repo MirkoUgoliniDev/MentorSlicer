@@ -33,48 +33,48 @@ Non vanno in conflitto, ma dipendono dalle API elencate più sotto.
 
 | File | Aggancio | Scopo | Da controllare all'aggiornamento |
 |---|---|---|---|
-| `src/slic3r/CMakeLists.txt` | 1 riga: `include(.../PrintAdvisor.cmake)` prima di `add_library(libslic3r_gui ...)` | aggiunge i nostri sorgenti a `SLIC3R_GUI_SOURCES` | nome della variabile, posizione dopo `option(GUI_SIMPLE ...)` |
-| `GUI/GUI_App.cpp` | include + `advisor_on_shutdown()` all'inizio di `OnExit` | arresto del server | `OnExit` esiste ancora |
-| `GUI/GUI_App.cpp` (`fork-update`) | nessuno: il controllo aggiornamenti di Creality (`EVT_SLIC3R_VERSION_ONLINE`, `AppUpdater`, `UpdateVersionDialog`, `process_update_packages`) e il gancio `advisor_show_fork_update_notice` sono stati eliminati in F1 | - | se un aggiornamento di Creality reintroduce il controllo versioni, va tolto di nuovo (vedi `doc/specs/F1-privacy-rete-spec.md`, voce 2) |
-| `GUI/MainFrame.cpp` | include; `advisor_on_app_init()` dopo `start_http_server()`; `advisor_on_shutdown()` in `shutdown()`; `advisor_create_ai_menu()` in `init_menubar_as_editor` | avvio, arresto, voce **Integrazione AI → Print Advisor MCP** (finestra `AdvisorInfoDialog` con Abilita/Disattiva) | i tre punti; `viewMenu` è ancora un `wxMenu*` |
-| `print_manage/App/PrinterMgrView.cpp` | include; `incoming` non più `const`; `if (advisor_handle_page_message(incoming)) return;` in `OnScriptMessage` | risposta della pagina alla foto della telecamera, prima del log | forma di `OnScriptMessage` |
-| `print_manage/App/PrinterMgrView.hpp` | `is_page_loaded()` (accesso a `m_browser`, `m_webview_loaded_successfully`, privati) | sapere se la pagina dispositivi è pronta | nomi dei due membri |
-| `print_manage/App/SendToPrinter.cpp` | include `PrintAdvisorPageBridge.hpp`; 1 riga `advisor_append_send_page_data(top_level_json);` prima del `dump` in `get_onlygcode_plate_data_on_show` e `get_plate_data_on_show` | aggiunge `advisor_chamber_temps` (`{host: boxTemp}` dalla `DeviceTelemetryCache`) al messaggio `update_plate_data` della finestra di invio; la pagina (patch web 10) mostra l'avviso "camera fredda" per ASA/ABS | i due punti esistono ancora e il messaggio si chiama ancora `update_plate_data` con `filament_types` e `plate_extruders` |
-| `print_manage/App/WebSocketProxySession.cpp` | include; in `Session`: `is_open()`, `TryEnqueueText()`; in `Manager::Impl`: base `advisor_link::DeviceSender`, `SendToDeviceHost()`, membro `advisor_hosts`, 4 righe `advisor_hosts.publish(...)` (fine di `Submit`, evento `open`, sessione finita, `Shutdown`), `on_device_message` sui messaggi del dispositivo, `on_session_finished`, registrazione nel costruttore di `Manager` | invio di messaggi alla stampante sulla connessione della pagina; telemetria | nomi privati usati: `m_state`, `State::Open/Closing`, `m_finished`, `m_close_requested`, `m_write_queue`, `m_write_in_progress`, `m_queued_bytes`, `MAX_*`, `PumpWrite`, `sessions`, `runtime.executor()`, `accepting`, `shutting_down`, `is_device_connection()`, `host()` |
-| `print_manage/RemotePrinterManager.*` | `hasPendingUpload()` | il monitor non agisce durante un caricamento | `m_mtxUpload`, `m_latestTaskByAddress`, `m_tasksById`, `terminal` |
-| `simple/bridge/SlicerBridge.hpp` | `AnalyzeOverhang` spostata da privata a pubblica | analisi degli sbalzi | firma della funzione |
-| `simple/bridge/SlicerBridgeActionsConfig.cpp` | `item["is_vector"]` nello schema | il server distingue le opzioni vettoriali | `BuildConfigSchemaArray` |
-| `libslic3r/AppConfig.cpp` | default `print_advisor_mcp_enabled = false` | Print Advisor spento di default | `set_defaults` |
+| `src/slic3r/CMakeLists.txt` | 1 riga: `include(.../PrintAdvisor.cmake)` prima di `add_library(libslic3r_gui ...)` | aggiunge i nostri sorgenti a `SLIC3R_GUI_SOURCES` | nome della variabile, posizione subito prima di `add_library(libslic3r_gui ...)` (`option(GUI_SIMPLE ...)` è stata tolta in F9) |
+| `src/slic3r/GUI/GUI_App.cpp` | include + `advisor_on_shutdown()` all'inizio di `OnExit` | arresto del server | `OnExit` esiste ancora |
+| `src/slic3r/GUI/GUI_App.cpp` (`fork-update`) | nessuno: il controllo aggiornamenti di Creality (`EVT_SLIC3R_VERSION_ONLINE`, `AppUpdater`, `UpdateVersionDialog`, `process_update_packages`) e il gancio `advisor_show_fork_update_notice` sono stati eliminati in F1 | - | se un aggiornamento di Creality reintroduce il controllo versioni, va tolto di nuovo (vedi `doc/specs/F1-privacy-rete-spec.md`, voce 2) |
+| `src/slic3r/GUI/MainFrame.cpp` | include; `advisor_on_app_init()` dopo `start_http_server()`; `advisor_on_shutdown()` in `shutdown()`; `advisor_create_ai_menu()` in `init_menubar_as_editor` | avvio, arresto, voce **Integrazione AI → Print Advisor MCP** (finestra `AdvisorInfoDialog` con Abilita/Disattiva) | i tre punti; il menu `aiMenu` è ancora aggiunto con `m_topbar->AddDropDownSubMenu` e `m_menubar->Append` |
+| `src/slic3r/GUI/print_manage/App/PrinterMgrView.cpp` | include; `incoming` non più `const`; `if (advisor_handle_page_message(incoming)) return;` in `OnScriptMessage` | risposta della pagina alla foto della telecamera, prima del log | forma di `OnScriptMessage` |
+| `src/slic3r/GUI/print_manage/App/PrinterMgrView.hpp` | `is_page_loaded()` (accesso a `m_browser`, `m_webview_loaded_successfully`, privati) | sapere se la pagina dispositivi è pronta | nomi dei due membri |
+| `src/slic3r/GUI/print_manage/App/SendToPrinter.cpp` | include `PrintAdvisorPageBridge.hpp`; 1 riga `advisor_append_send_page_data(top_level_json);` prima del `dump` in `get_onlygcode_plate_data_on_show` e `get_plate_data_on_show` | aggiunge `advisor_chamber_temps` (`{host: boxTemp}` dalla `DeviceTelemetryCache`) al messaggio `update_plate_data` della finestra di invio; la pagina (patch web 10) mostra l'avviso "camera fredda" per ASA/ABS | i due punti esistono ancora e il messaggio si chiama ancora `update_plate_data` con `filament_types` e `plate_extruders` |
+| `src/slic3r/GUI/print_manage/App/WebSocketProxySession.cpp` | include; in `Session`: `is_open()`, `TryEnqueueText()`; in `Manager::Impl`: base `advisor_link::DeviceSender`, `SendToDeviceHost()`, membro `advisor_hosts`, 4 righe `advisor_hosts.publish(...)` (fine di `Submit`, evento `open`, sessione finita, `Shutdown`), `on_device_message` sui messaggi del dispositivo, `on_session_finished`, registrazione nel costruttore di `Manager` | invio di messaggi alla stampante sulla connessione della pagina; telemetria | nomi privati usati: `m_state`, `State::Open/Closing`, `m_finished`, `m_close_requested`, `m_write_queue`, `m_write_in_progress`, `m_queued_bytes`, `MAX_*`, `PumpWrite`, `sessions`, `runtime.executor()`, `accepting`, `shutting_down`, `is_device_connection()`, `host()` |
+| `src/slic3r/GUI/print_manage/RemotePrinterManager.*` | `hasPendingUpload()` | il monitor non agisce durante un caricamento | `m_mtxUpload`, `m_latestTaskByAddress`, `m_tasksById`, `terminal` |
+| `src/slic3r/GUI/simple/bridge/SlicerBridge.hpp` | `AnalyzeOverhang` spostata da privata a pubblica | analisi degli sbalzi | firma della funzione |
+| `src/slic3r/GUI/simple/bridge/SlicerBridgeActionsConfig.cpp` | `item["is_vector"]` nello schema | il server distingue le opzioni vettoriali | `BuildConfigSchemaArray` |
+| `src/libslic3r/AppConfig.cpp` | default `print_advisor_mcp_enabled = false` | Print Advisor spento di default | `set_defaults` |
 
 ### Motore e schede
 
 | File | Tema | Scopo | Da controllare |
 |---|---|---|---|
-| `libslic3r/PrintConfig.hpp` | `heat-soak`, `brim-layers` | 4 opzioni nelle macro `PRINT_CONFIG_CLASS_*` (`heat_soak_time`, `heat_soak_bed_temp`, `brim_layers`, `brim_layers_object_gap`) | nomi nuovi uguali a opzioni di Creality/Orca |
-| `libslic3r/PrintConfig.cpp` | `heat-soak`, `brim-layers` | definizioni, limiti, testi | `init_fff_params` |
-| `libslic3r/Preset.cpp` | `heat-soak`, `brim-layers` | chiavi in `s_Preset_print_options` / `s_Preset_filament_options` | le due liste |
-| `libslic3r/Print.cpp` | `heat-soak` | invalidazione del solo G-code | `invalidate_state_by_config_options` |
-| `libslic3r/PrintObject.cpp` | `brim-layers` | invalidazione del solo G-code (`brim_layers`, `brim_layers_object_gap`) | stessa funzione |
-| `libslic3r/GCode.hpp` | `brim-layers` | `m_brim_last_layer` | vicino a `m_objsWithBrim` |
-| `libslic3r/GCode.cpp` | `brim-layers` | azzeramento in `do_export`; funzioni `set_brim_path_height`/`append_repeated_brim`; blocco brim di `process_layer` (sostituisce `object_first_layer`); sui layer > 0 il brim è ritagliato con `brim_layers_object_gap` | logica del brim di Creality, `extrude_entity`, `brim_map_by_instance`, `lslices` |
-| `libslic3r/GCode.cpp` | `heat-soak` | soak prima di `machine_start_gcode`, con il ramo Klipper | condizione `gcode_flavor != gcfKlipper ...`, `_print_first_layer_bed_temperature`, `set_exhaust_fan`, `set_additional_fan`, `sync_bed_temperature` |
-| `print_manage/App/SendToPrinter.cpp` | `heat-soak` | tempo di stampa con il soak nella pagina di invio | `get_gcode_display_info` |
-| `GUI/Tab.cpp` | `brim-layers`, `heat-soak` | righe nelle schede Processo (`brim_layers`, `brim_layers_object_gap`) e Filamento | `TabPrint::build`, `TabFilament::build` |
-| `GUI/Tab.cpp` | `chamber-ui` | opzioni della camera disattivate sulle Creality senza riscaldatore | `TabFilament::toggle_options`, `is_creality_vendor` |
-| `GUI/ConfigManipulation.cpp` | `brim-layers` | `brim_layers` attiva solo con brim e senza raft; `brim_layers_object_gap` solo se inoltre `brim_layers` > 1 | `toggle_print_fff_options` |
+| `src/libslic3r/PrintConfig.hpp` | `heat-soak`, `brim-layers` | 4 opzioni nelle macro `PRINT_CONFIG_CLASS_*` (`heat_soak_time`, `heat_soak_bed_temp`, `brim_layers`, `brim_layers_object_gap`) | nomi nuovi uguali a opzioni di Creality/Orca |
+| `src/libslic3r/PrintConfig.cpp` | `heat-soak`, `brim-layers` | definizioni, limiti, testi | `init_fff_params` |
+| `src/libslic3r/Preset.cpp` | `heat-soak`, `brim-layers` | chiavi in `s_Preset_print_options` / `s_Preset_filament_options` | le due liste |
+| `src/libslic3r/Print.cpp` | `heat-soak` | invalidazione del solo G-code | `invalidate_state_by_config_options` |
+| `src/libslic3r/PrintObject.cpp` | `brim-layers` | invalidazione del solo G-code (`brim_layers`, `brim_layers_object_gap`) | stessa funzione |
+| `src/libslic3r/GCode.hpp` | `brim-layers` | `m_brim_last_layer` | vicino a `m_objsWithBrim` |
+| `src/libslic3r/GCode.cpp` | `brim-layers` | azzeramento in `do_export`; funzioni `set_brim_path_height`/`append_repeated_brim`; blocco brim di `process_layer` (sostituisce `object_first_layer`); sui layer > 0 il brim è ritagliato con `brim_layers_object_gap` | logica del brim di Creality, `extrude_entity`, `brim_map_by_instance`, `lslices` |
+| `src/libslic3r/GCode.cpp` | `heat-soak` | soak prima di `machine_start_gcode`, con il ramo Klipper | condizione `gcode_flavor != gcfKlipper ...`, `_print_first_layer_bed_temperature`, `set_exhaust_fan`, `set_additional_fan`, `sync_bed_temperature` |
+| `src/slic3r/GUI/print_manage/App/SendToPrinter.cpp` | `heat-soak` | tempo di stampa con il soak nella pagina di invio | `get_gcode_display_info` |
+| `src/slic3r/GUI/Tab.cpp` | `brim-layers`, `heat-soak` | righe nelle schede Processo (`brim_layers`, `brim_layers_object_gap`) e Filamento | `TabPrint::build`, `TabFilament::build` |
+| `src/slic3r/GUI/Tab.cpp` | `chamber-ui` | opzioni della camera disattivate sulle Creality senza riscaldatore | `TabFilament::toggle_options`, `is_creality_vendor` |
+| `src/slic3r/GUI/ConfigManipulation.cpp` | `brim-layers` | `brim_layers` attiva solo con brim e senza raft; `brim_layers_object_gap` solo se inoltre `brim_layers` > 1 | `toggle_print_fff_options` |
 | `resources/images/process/ProcessConfig.json` | `brim-layers` | voci `brim_layers` e `brim_layers_object_gap` nel gruppo Brim (nessun marcatore: è JSON) | gruppo "Brim" |
-| `GUI/GUI_ObjectList.cpp` | `uaf-fix` | `is_model_part()` letto prima di `delete_volume` | `del_subobject_from_object` |
+| `src/slic3r/GUI/GUI_ObjectList.cpp` | `uaf-fix` | non più presente: l'uso dopo la liberazione stava nel blocco analytics `mark_modified` di Creality (`is_model_part()` dopo `delete_volume`), tolto con le analytics | se un aggiornamento riporta quel blocco in `del_subobject_from_object`, leggere `is_model_part()` prima di `delete_volume` o togliere di nuovo il blocco |
 
 ### Correzioni di build (`build-fix`)
 
 | File | Correzione |
 |---|---|
-| `src/CMakeLists.txt` | Breakpad disattivato se mancano header o libreria. Attenzione: la regione `PRINT-ADVISOR BEGIN/END` spezza in due il blocco `if(ENABLE_BREAKPAD)` di Creality (`add_definitions(-DUSE_BREAKPAD)` è spostato dopo il controllo). Va riapplicata come unità, non togliendo solo le righe fra i marcatori. |
-| `libslic3r/CMakeLists.txt` | GMP/MPFR presi dal prefisso delle dipendenze (Strawberry Perl) |
-| `libslic3r/AppConfig.cpp` | C4309 (indice `int` su `npos`), C4101 |
-| `libslic3r/PresetBundle.cpp` | C4018, C4390 |
-| `libslic3r/MeshBoolean.cpp`, `admesh/stlinit.cpp` | C4018 |
-| `libslic3r/AutomationMgr.cpp`, `GUI/AutoConvert3mfMgr.cpp` | STL4038: tolto `<format>` inutilizzato |
+| `src/CMakeLists.txt` | Breakpad: non più una correzione. Breakpad è stato tolto del tutto in F9 (`deps/breakpad`, `ENABLE_BREAKPAD`, vedi `tools/verify/removed-F9.txt`): se un aggiornamento lo riporta, va tolto di nuovo. |
+| `src/libslic3r/CMakeLists.txt` | GMP/MPFR presi dal prefisso delle dipendenze (Strawberry Perl) |
+| `src/libslic3r/AppConfig.cpp` | C4309 (indice `int` su `npos`), C4101 |
+| `src/libslic3r/PresetBundle.cpp` | C4018, C4390 |
+| `src/libslic3r/MeshBoolean.cpp`, `src/admesh/stlinit.cpp` | C4018 |
+| `AutomationMgr.cpp` (libslic3r), `AutoConvert3mfMgr.cpp` (GUI) | STL4038: tolto `<format>` inutilizzato. I due file sono stati poi tolti dal fork: se un aggiornamento li riporta, vanno tolti di nuovo. |
 
 Se Creality corregge da sé lo stesso punto, si prende la loro versione e si toglie il blocco.
 
@@ -107,4 +107,4 @@ Se una di queste cambia firma o comportamento, va adattato il nostro codice, non
 ## Lato web e traduzioni
 
 - Le patch alle pagine compilate sono in `web-bundle-patches.md`.
-- Le stringhe del menu ora stanno in `simple/printAdvisor/PrintAdvisorHooks.cpp`: va aggiunto a `localization/i18n/list.txt` perché `xgettext` le estragga ancora (le traduzioni esistenti restano valide). Stessa cosa per `PrintAdvisorVerdict.cpp` (finestra dell'esito di fine stampa); le traduzioni italiane stanno in `localization/i18n/it/PrintAdvisor_it.po`.
+- Le stringhe del menu ora stanno in `src/slic3r/GUI/simple/printAdvisor/PrintAdvisorHooks.cpp`, che è in `localization/i18n/list.txt` (insieme a `PrintAdvisorVerdict.cpp`, finestra dell'esito di fine stampa) perché `xgettext` le estragga: se un aggiornamento riscrive `list.txt`, le due righe vanno rimesse; le traduzioni italiane stanno in `localization/i18n/it/PrintAdvisor_it.po`.

@@ -55,7 +55,7 @@ word:cleanup_partial_downloads
 file:.github/ISSUE_TEMPLATE/bug_report.yml
 file:.github/ISSUE_TEMPLATE/config.yml
 file:.github/ISSUE_TEMPLATE/feature_request.yml
-file:.github/dependabot.yml
+# file:.github/dependabot.yml   re-added on purpose for the public repository (2026-10-25)
 file:.github/pull_request_template.md
 file:.github/workflows/build_all.yml
 file:.github/workflows/build_check_cache.yml

@@ -2,9 +2,19 @@
 
 Obiettivo: quando Creality pubblica una nuova versione, riportarci sopra il Print Advisor e le altre modifiche in poche ore, senza sorprese.
 
-## Situazione attuale (2026-10-19)
+## Base attuale (2026-10-25)
 
-- **Base**: il nostro branch `feature/mcp-advisor` parte da `59ae8cbb`, cioè dal tag ufficiale **`v7.3.0`** (`release-260930`).
+- **Base Creality**: **`v7.3.0`** (`59ae8cbb0437dcc7236e27433ecd4aeb52be0244`, `release-260930`). Va aggiornata qui e nella skill `.claude/skills/upstream-update/SKILL.md` a ogni aggiornamento: da git non si ricava più.
+- **Repository**: `MirkoUgoliniDev/MentorSlicer` è pubblico, con la storia ripartita da un solo commit (`65e6380`, "MentorSlicer 1.0.1"), ramo `main`. **Non ha la storia di Creality** e non deve riaverla: quella storia contiene la password di notarizzazione e le chiavi Firebase tolte apposta. Quindi niente remote `upstream`, niente `git fetch` di Creality nel repository, niente merge di un tag di Creality.
+- **Come si aggiorna**: il merge a tre vie si fa in un **clone separato** di Creality (`C:\Lavori\CPP\CrealityPrint-upstream`): lì si mette l'albero di MentorSlicer come un commit sopra `v7.3.0`, si fa il merge del nuovo tag (la base del merge è `v7.3.0`), si risolvono i conflitti, si applicano le patch web e i controlli, e in MentorSlicer torna solo l'albero finale (commit senza genitori), come un unico commit su un ramo `update/<tag>` di `main`. La procedura passo per passo è la skill `upstream-update` (si avvia solo a richiesta, `/upstream-update`).
+- **Dopo F1–F9**: il fork ha tolto circa 190.000 righe di codice di Creality. Un aggiornamento riporterebbe quel codice come conflitti modifica/cancellazione (si tiene la cancellazione) o come file nuovi senza conflitto: per questo dopo la patch si rilanciano le liste `tools/verify/removed-F*.txt` con `tools/verify-phase.mjs`.
+- **Backup in sola lettura**: `C:\Lavori\backup\CPP\CrealityPrint` (ramo `feature/mcp-advisor` al 2026-10-19, remote `upstream` di Creality, tag fino a `v7.3.0`). Non va usato per lavorarci.
+
+La descrizione che segue è la situazione del 2026-10-19 e il piano di preparazione di allora (fase 1, fatta: agganci di 1–3 righe, `PrintAdvisor.cmake`, patch web come script, traduzioni separate, test). I nomi dei rami e i comandi git della fase 2 originale non valgono più.
+
+## Situazione al 2026-10-19 (storica)
+
+- **Base**: il branch di allora `feature/mcp-advisor` partiva da `59ae8cbb`, cioè dal tag ufficiale **`v7.3.0`** (`release-260930`).
 - **File nostri**: circa 8.400 righe, che in un aggiornamento quasi non creano conflitti:
   - `src/slic3r/GUI/simple/printAdvisor/*`;
   - `print_manage/App/PrintAdvisorMonitor.*`;
@@ -93,19 +103,23 @@ Le pagine `resources/web/**/assets/*.js` sono codice minificato, che Creality ri
 
 ## Fase 2: procedura a ogni nuova versione di Creality
 
-1. **Recuperare la nuova versione**: `git fetch upstream --tags`, poi leggere il changelog e la differenza fra il vecchio e il nuovo tag nei file dell'elenco dei punti di contatto.
-2. **Creare il branch di lavoro**: `git switch -c update/v7.x upstream/v7.x`, poi `git merge feature/mcp-advisor`. Il merge si preferisce al rebase perché i conflitti si risolvono una volta sola, e rerere li ricorda.
-3. **Risolvere i conflitti** seguendo l'elenco dei punti di contatto:
+Aggiornata il 2026-10-25 per la storia ripartita da zero; i comandi esatti sono nella skill `upstream-update`.
+
+1. **Recuperare la nuova versione** nel clone separato `C:\Lavori\CPP\CrealityPrint-upstream` (`git fetch origin --tags`), poi leggere il changelog e la differenza fra la base registrata e il nuovo tag nei file dell'elenco dei punti di contatto (più `git grep -l PRINT-ADVISOR`).
+2. **Merge nel clone separato**: ramo da `v7.3.0`, `git read-tree -u --reset` dell'albero di `main` di MentorSlicer, commit, poi `git merge <tag>` (rerere attivo nel clone). Mai il contrario: niente oggetti di Creality nel repository di MentorSlicer.
+3. **Risolvere i conflitti** seguendo l'elenco dei punti di contatto (nel merge, "ours" è MentorSlicer, "theirs" è Creality):
    - per le API di Creality cambiate si adatta il nostro aggancio, mai la loro logica;
-   - per i bundle web si prendono **i loro** file nuovi, poi si passa al punto 4.
+   - per i bundle web si prende il file nuovo di Creality (`git checkout <tag> -- <file>`), poi si passa al punto 4;
+   - per i file tolti in F1–F9 e modificati da Creality si tiene la cancellazione; i file nuovi di Creality si guardano uno per uno.
+   - Sempre nel clone: patch web, liste `removed-F*.txt` e controllo dei segreti (chiavi `AIza…`, password Apple). Poi l'albero finale torna in MentorSlicer come commit **senza genitori** (`git commit-tree`, `git fetch` in `FETCH_HEAD`, `git read-tree -u -m HEAD FETCH_HEAD`) e diventa **un solo** commit su `update/<tag>`: così nessun commit intermedio con i bundle non ripuliti finisce nella storia pubblica.
 4. **Applicare le patch web**: `apply-web-patches.mjs --check`, poi `--apply`. Se un punto d'aggancio non si trova più, si aggiorna l'espressione nello script e il documento delle patch.
-5. **Dipendenze**: se il nuovo tag ha cambiato `deps/`, `build_release_vs2022.bat deps`, che è lungo; altrimenti `build_exe_only.bat`.
+5. **Dipendenze e build**: se il nuovo tag ha cambiato `deps/`, prima `build_release_vs2022.bat deps`, che è lungo; poi in ogni caso `build_exe_only.bat`.
 6. **Test automatici** 1.6.1–1.6.4. Se un test fallisce, si corregge prima di andare avanti.
 7. **Prove con la stampante** dalla lista 1.6.5.
 8. **Chiusura**:
-   - merge nel nostro branch e tag `advisor-v7.x-1`;
-   - push sul fork;
-   - aggiornare `CLAUDE.md` con le novità di Creality che ci riguardano.
+   - controllo che la radice della storia sia ancora solo `65e6380`, poi `git merge --ff-only update/<tag>` in `main`;
+   - push di `main` solo dopo aver chiesto all'utente; mai `git push --tags`;
+   - aggiornare la base registrata (qui e nella skill) e `CLAUDE.md` con le novità di Creality che ci riguardano.
 
 **Tempo stimato**:
 - 1–3 ore per una versione minore;

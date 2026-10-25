@@ -554,7 +554,7 @@ export const patches = [
           return { le: head[1], ie: head[2], de: head[3], ze: call[1] };
         },
         locals: ["seen", "g", "p", "key", "only", "shown", "ms"],
-        replace: (m, v) => m[0] + fill(String.raw`/*PA:19*/;window.advisorOpenSingle=()=>{const shown=document.querySelector(".print-params-item");if(shown&&shown.offsetParent!==null||!@@ie@@.value)return;const seen=new Map;for(const g of @@de@@.data.printerList||[])for(const p of g&&g.list||[]){if(!p||!p.address)continue;const key=p.deviceType==1&&p.identity!=null?p.identity:p.address;seen.has(key)||seen.set(key,p)}if(seen.size!==1)return;const[[,only]]=seen;try{@@ze@@(only.name,only.address)}catch(err){console.log("advisor open-single failed",err)}}`, v),
+        replace: (m, v) => m[0] + fill(String.raw`/*PA:19*/;window.advisorOpenSingle=()=>{const shown=document.querySelector(".print-params-item");if(shown&&shown.offsetParent!==null||!@@ie@@.value)return;const seen=new Map;for(const g of @@de@@.data.printerList||[])for(const p of g&&g.list||[]){if(!p||!p.address)continue;const key=p.deviceType==1&&p.identity!=null?p.identity:p.address;seen.has(key)||seen.set(key,p)}if(seen.size!==1)return;const[[,only]]=seen;try{@@ze@@(only.name,only.address)}catch(err){console.log("advisor open-single failed",err)}};`, v),
       },
       { // command sent by the native side when the Device tab is selected (after init_device)
         marker: "/*PA:19.2*/",

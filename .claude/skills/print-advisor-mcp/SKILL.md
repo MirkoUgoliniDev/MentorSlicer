@@ -1,27 +1,37 @@
 ---
 name: print-advisor-mcp
-description: Build or document the MCP sidecar and its connection to the Creality Print Print Advisor module for Claude Code and Codex.
+description: "Build, change or document the MCP sidecar of the MentorSlicer Print Advisor (tools/print-advisor-mcp, server mentorslicer-advisor, packaged as mentorslicer-mcp.exe). Use for MCP tool schemas, guide texts, timeouts and retries, smoke tests, the packaged exe, and Claude Code/Codex registration (claude mcp add, scope user)."
 ---
 
-Use this skill for MCP tool schemas, stdio server work, local application transport, and client setup documentation.
+## Ground truth
+
+`CLAUDE.md` ("Print Advisor (MCP)", "Architettura", "Richieste concorrenti", "Regole di sicurezza") and `tools/print-advisor-mcp/README.md` are authoritative. `doc/MCP/handoff.md` is the original brief and is outdated.
 
 ## Boundaries
 
-- Claude Code or Codex is the MCP host and supplies the LLM. Creality Print contains the domain service and application state, not an LLM integration.
-- MCP adapter owns protocol framing and tool schemas. The native Print Advisor owns validation and domain behavior. Do not duplicate profile logic in the adapter.
-- The former `MCPChatPanel`/`CxAgentClientBridge` code (Creality's in-app AI chat) was removed in cleanup phase F3; it was an application-side agent integration, never an external MCP server. `SlicerBridge` (`simple/bridge/`) stays and is what the Print Advisor reuses.
-- Start with read-only tools. Do not expose a mutation tool until Creality Print can independently verify explicit in-app approval.
+- Claude Code or Codex is the MCP host and supplies the LLM. MentorSlicer contains the domain service and application state, not an LLM integration.
+- The sidecar owns protocol framing, tool schemas and guide texts (defects, material sheets, calibration formulas). The native Print Advisor owns validation and domain behavior; do not duplicate profile logic in the sidecar.
+- Tools are registered in `src/index.ts` and `src/tools/*.ts`; the expected list is `scripts/tools-expected.json` (about 50). HTTP client: `src/appClient.ts`.
+- Creality's in-app AI chat (`MCPChatPanel`, CxAgent) was removed in phase F3. `SlicerBridge` (`simple/bridge/`) stays and is what the Print Advisor reuses.
 
 ## Tool contract
 
-Use narrow, typed schemas and bounded output. Include context/version identifiers, preset identity, units, structured errors, and only settings needed for diagnosis. Define stable errors for app unavailable, stale context, invalid input, unsupported setting, timeout, and approval required. Make requests idempotent where feasible; never silently retry a mutation.
+- Every tool that changes something calls a C++ endpoint that asks for an in-app confirmation (`AdvisorConfirmDialog`, or the dedicated verdict / Save dialog). Client-side tool confirmation is not approval in MentorSlicer. A new change tool is exposed only after its endpoint enforces the confirmation, the re-check after the dialog and the 409 rules. The Print Advisor never starts a print.
+- Narrow, typed schemas and bounded output; units, preset identity and structured errors (app not running, stale context, invalid input, unsupported setting, timeout, 409 busy, 503).
+- Retries: a 503 (the server did not read the request) is retried automatically up to 3 times; never retry a change that got 409 or timed out.
+- Timeouts: pass the right constant of `appClient.ts` at the call site (`mutationTimeoutMs`/`guiReadTimeoutMs` 610 s for changes and GUI-thread reads, `slowReadTimeoutMs` 15 s for photo, log, support volumes, archive and slice start, `readTimeoutMs` 5 s for other reads; default 610 s for a POST, 5 s for a GET). A POST that only reads goes in `readOnlyRoutes` (method + path), so its timeout is reported as safe to retry.
+- Never include secrets (session token, descriptor contents) in tool descriptions, results or logs; no arbitrary file paths or shell commands.
 
-## Local transport and trust
+## Local transport
 
-Prefer a client-launched stdio MCP sidecar and a narrow authenticated loopback channel to the running application, unless repository constraints establish a better supported option. Verify available dependencies and current official SDK/client documentation before choosing implementation details. Bind only to loopback, use a short-lived session secret, cap message sizes and timeouts, validate every payload, and shut down cleanly. Do not accept arbitrary file paths or shell commands.
+Stdio sidecar plus loopback HTTP API on `127.0.0.1` with a session token; the descriptor is `%APPDATA%\MentorSlicer\cache\print-advisor\endpoint.json` (`MENTORSLICER_ADVISOR_DESCRIPTOR` only for a copy started with `--datadir`).
 
-Never include secrets in MCP tool descriptions, prompts, results, or logs. Do not assume client-side tool confirmation is the same as approval in the Creality Print UI.
+## Setup and packaging
 
-## Documentation
+- Registration: `claude mcp add mentorslicer-advisor --scope user --transport stdio -- "<MentorSlicer folder>\mentorslicer-mcp.exe"` (the Print Advisor MCP… window shows the exact command). Old `local` registrations (`node … tsx … src/index.ts`, `creality-print-advisor`) must be removed, otherwise they hide the user one.
+- The exe is a Node.js single executable built by `scripts/build-exe.mjs` via `tools\build-mcp-exe.bat` (called by the build scripts); Node is needed only on the build machine.
+- Codex setup is documented in the README but not verified on the development PC; keep that caveat. Verify official MCP SDK and client documentation before changing setup claims.
 
-Document installation, launch command, client configuration, supported client versions, trust implications, verification, and troubleshooting for Claude Code and Codex. Keep configuration examples separate if their formats differ and verify each against official documentation at implementation time.
+## Verify
+
+`npm ci`, `npm run typecheck`, `npm run smoke` (app running, service enabled), `node scripts/smoke.mjs --exe dist/mentorslicer-mcp.exe`. Update `scripts/tools-expected.json` with `--update-expected` only for an intended tool list change. Code comments in English.

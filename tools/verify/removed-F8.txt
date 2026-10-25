@@ -4,7 +4,7 @@
 # htCrealityPrint/class CrealityPrint, vendor "Creality" and its profiles, CREALITYPRINT_VERSION*/DATA_VERSION,
 # crealityprintlink:// and crealityprint://, CREALITYPRINT_OPENGL_* env vars, the "Creality-Slicer" web user agent,
 # the gettext domain CrealityPrint (.po/.mo, SLIC3R_I18N_DOMAIN), source file names (src/CrealityPrint*.cpp, *.rc.in).
-# The allow: lines for the transition (DataDirectoryMigration, close-build-instance.ps1, publish-stable.ps1) go away
+# The allow: lines for the transition (DataDirectoryMigration, close-build-instance.ps1, publish-stable.ps1, make-release.ps1) go away
 # when the old copy C:\CrealityPrint-Advisor is deleted.
 re:CrealityPrint\.exe
 word:CrealityPrint_Slicer
@@ -38,5 +38,6 @@ allow:src/libslic3r/DataDirectoryMigration.cpp      # legacy exe name and folder
 allow:src/libslic3r/DataDirectoryMigration.hpp      # LEGACY_CREALITY_DATA_RELATIVE, LEGACY_CREALITY_EXE
 allow:tools/close-build-instance.ps1                # closes/probes the old-name build exe and legacy endpoint during the transition
 allow:tools/publish-stable.ps1                      # skips a stale pre-F8 exe/DLL, removes the old "Creality Print Advisor" shortcut
+allow:tools/make-release.ps1                        # excludes a stale pre-F8 exe/DLL from the release zip
 allow:tests/print-advisor/fixtures/brim3-soak10.expected.json   # historical "_source" text
 allow:package                                       # installer not migrated unless E5 is done
