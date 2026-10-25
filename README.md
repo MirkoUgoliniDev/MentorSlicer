@@ -6,6 +6,13 @@
 
 <p align="center"><b>A Creality Print fork with an AI print advisor, chamber preheat and multi-layer brim</b></p>
 
+<p align="center">
+  <a href="https://github.com/MirkoUgoliniDev/MentorSlicer/releases/download/v1.0.1/MentorSlicer-1.0.1-win64.zip"><img src="https://img.shields.io/badge/Download-MentorSlicer%201.0.1%20for%20Windows%20(64--bit%2C%20zip%2C%20211%20MB)-22A06B?style=for-the-badge&logo=windows&logoColor=white" alt="Download MentorSlicer 1.0.1 for Windows (64-bit zip, 211 MB)"></a>
+</p>
+<p align="center">
+  <a href="https://github.com/MirkoUgoliniDev/MentorSlicer/releases/latest">All releases and SHA-256</a> · <a href="#how-to-install">How to install</a> · <a href="#how-to-test-the-package">How to test the package</a>
+</p>
+
 MentorSlicer is a fork of [Creality Print](https://github.com/CrealityOfficial/CrealityPrint) 7.3, an open source slicer for FDM printers. It adds the **Print Advisor**: a local service that an MCP client (Claude Code, Codex) uses to read the slicing context, diagnose defects, propose profile changes and control a LAN printer, with every change confirmed by the user inside the app. The LLM stays in the client; the app contains only the domain service.
 
 Differences from Creality Print:
@@ -14,7 +21,7 @@ Differences from Creality Print:
 - data folder `%APPDATA%\MentorSlicer` (`MentorSlicer.conf`). On its first start MentorSlicer copies the Creality Print 7.3 Alpha data folder once and leaves the original untouched;
 - G-code and 3MF files stay compatible with Creality Print (same G-code header and 3MF application tag).
 
-**⬇️ Download for Windows 10/11 (64-bit): [latest release](https://github.com/MirkoUgoliniDev/MentorSlicer/releases/latest)**, a portable zip, nothing to install. See [How to install](#how-to-install) and [How to test the package](#how-to-test-the-package).
+**⬇️ Download for Windows 10/11 (64-bit): [MentorSlicer-1.0.1-win64.zip](https://github.com/MirkoUgoliniDev/MentorSlicer/releases/download/v1.0.1/MentorSlicer-1.0.1-win64.zip)** (211 MB), a portable zip, nothing to install. Checksum and notes on the [release page](https://github.com/MirkoUgoliniDev/MentorSlicer/releases/latest).
 
 MentorSlicer is not affiliated with or endorsed by Creality.
 
@@ -84,7 +91,7 @@ flowchart LR
 # How to install
 **Windows 10/11, 64-bit** (the only platform with a ready-made package):
 
-1. From the [latest release](https://github.com/MirkoUgoliniDev/MentorSlicer/releases/latest) download `MentorSlicer-<version>-win64.zip` and its `.sha256` file.
+1. Download **[MentorSlicer-1.0.1-win64.zip](https://github.com/MirkoUgoliniDev/MentorSlicer/releases/download/v1.0.1/MentorSlicer-1.0.1-win64.zip)** (211 MB). On the [release page](https://github.com/MirkoUgoliniDev/MentorSlicer/releases/latest) the same file and its `.sha256` are under **Assets**, at the bottom.
 2. Optional but recommended, verify the download in PowerShell; the two values must match:
    ```powershell
    (Get-FileHash -Algorithm SHA256 .\MentorSlicer-1.0.1-win64.zip).Hash.ToLower()
