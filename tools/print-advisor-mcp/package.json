@@ -10,15 +10,15 @@
     "test:gcode": "node ../../tests/print-advisor/check-gcode.mjs"
   },
   "dependencies": {
-    "@modelcontextprotocol/server": "^2.0.0",
+    "@modelcontextprotocol/server": "^2.4.0",
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@modelcontextprotocol/client": "^2.3.1",
-    "@types/node": "^20.19.43",
+    "@modelcontextprotocol/client": "^2.4.0",
+    "@types/node": "^26.6.6",
     "esbuild": "^0.28.2",
     "postject": "^1.0.0-alpha.6",
     "tsx": "^4.20.0",
-    "typescript": "^6.0.0"
+    "typescript": "^7.0.2"
   }
 }
